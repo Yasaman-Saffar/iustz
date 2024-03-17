@@ -1,8 +1,14 @@
 #include<iostream>
 #include<fstream>
 #include<vector>
-#include<tuple>
+#include<conio.h>//baraye seda
+#include<windows.h>//baraye seda
 using namespace std;
+//baraye rangi shodan
+#define RESET   "\033[0m"
+#define ORANGE    "\033[38;5;208m"
+#define GRAY    "\033[38;5;8m"
+#define RED		"\033[31m"//germez shodan
 
 class Weapon{
 public:
@@ -86,8 +92,9 @@ public:
     Michelangelo(string name , string gender , int age , int level , int hp , int stamina , int money) : Player(name , gender , age , level , hp , stamina , money){}
     void information() override
     {
-        cout << "Information Of Michelangelo :" << endl;
+        cout << ORANGE << "Information Of Michelangelo :" << endl;
         Player::information(); 
+        cout << RESET;
     }
     /*void attack() override
     {
@@ -116,8 +123,9 @@ public:
 	Dumbledore(string name , string gender , int age , int level , int hp , int stamina , int money) : Player(name , gender , age , level , hp , stamina , money){}
     void information() override
     {
-        cout << "Information Of Dumbledore :" << endl;
+        cout << GRAY << "Information Of Dumbledore :" << endl;
         Player::information(); 
+        cout << RESET;
     }
     /*void attack() override
     {
@@ -181,7 +189,7 @@ public:
     }
     void ShowOfShop(Player& player)
     {
-    	cout << "Wellcome To Shop " << player.getName() << " :]"<< endl;
+    	cout << GRAY << "Wellcome To Shop " << player.getName() << " :]"<< endl;
     	cout << "Here You Can Find Weapons To Fight Zombies!" << endl;
     	cout << "Your Money = " << player.Money << "$" << endl;
     	cout << "Cold Weapons :" << endl;
@@ -217,17 +225,23 @@ public:
     {
     	while(true)
     	{
-    		cout << "Please Enter Your Choice." << endl;
+    		cout << GRAY << "Please Enter Your Choice." << endl;
     		int number;
-    		cin >> number;
     		while(true)
     		{
+    			cout << GRAY;
+    			cin >> number;
     			if(!(number >= 1 && number <= 15))
-    				cout << "Invalid Choice! Please Enter A Valid Number.(1-15)" << endl;
+    			{
+    				cout << RED << "Invalid Choice! Please Enter A Valid Number.(1-15)" << RESET << endl;
+    				Beep(500 , 800);//tolide seda ba 500 hertz va be modate 800 milisaniye
+				}
 
     			else
     				break;
     		}
+    		if(number == 15)
+    			break;
     		string NameOfWeapon = weapons[number - 1].name;
     		int PriceOfWeapon = weapons[number - 1].price;
     		int DamageOfWeapon = weapons[number - 1].damage;
@@ -235,17 +249,21 @@ public:
     		{
             	backpack.AddWeapon(NameOfWeapon , DamageOfWeapon);
     			player.Money -= PriceOfWeapon;
-    			cout << NameOfWeapon << " Is Now In Your Backpack." << endl << "Your Money: " << player.Money << "$" << endl ;
+    			cout << GRAY << NameOfWeapon << " Is Now In Your Backpack." << endl << "Your Money: " << player.Money << "$" << endl ;
     			break;
 			}
-			cout << "Sorry! You Don't Have Enough Money To Buy " << NameOfWeapon << "." << endl;
+			cout << GRAY << "Sorry! You Don't Have Enough Money To Buy " << NameOfWeapon << "." << endl;
 			cout << "Do You Want To Buy Something Else?" << endl;
 			cout << "1- No.Leaving The Shop." << endl;
-			cout << "2- Yes." << endl;
+			cout << "2- Yes." << RESET << endl;
 			int num;
+			cout << GRAY;
 			cin >> num;
 			if(num == 1)
+			{
+				cout << RESET;
 				break;
+			}
 		}
 		return true;
 	}
@@ -314,15 +332,20 @@ public:
     	{
     		cout << "Please Enter Your Choice." << endl;
     		int number;
-    		cin >> number;
     		while(true)
     		{
+    			cin >> number;
     			if(!(number >= 1 && number <= 15))
-    				cout << "Invalid Choice! Please Enter A Valid Number.(1-15)" << endl;
+    			{
+    				cout << RED << "Invalid Choice! Please Enter A Valid Number.(1-15)" << RESET << endl;
+    				Beep(500 , 800);//tolide seda ba 500 hertz va be modate 800 milisaniye
+				}
 
     			else
     				break;
     		}
+    		if(number == 15)
+    			break;
     		string NameOfWeapon = weapons[number - 1].name;
     		int PriceOfWeapon = weapons[number - 1].price;
     		int DamageOfWeapon = weapons[number - 1].damage;
@@ -371,7 +394,7 @@ public:
     }
     void ShowOfShop(Player& player)
     {
-    	cout << "Wellcome To Shop " << player.getName() << " :]"<< endl;
+    	cout << ORANGE <<  "Wellcome To Shop " << player.getName() << " :]"<< endl;
     	cout << "Here You Can Find Weapons To Fight Zombies!" << endl;
     	cout << "Your Money = " << player.Money << "$" << endl;
     	cout << "Cold Weapons :" << endl;
@@ -407,19 +430,23 @@ public:
     {
     	while(true)
     	{
-    		cout << "Please Enter Your Choice." << endl;
+    		cout << ORANGE << "Please Enter Your Choice." << endl;
     		int number;
-    		cin >> number;
-    		if(number == 15)
-    			break;
     		while(true)
     		{
+    			cout << ORANGE;
+    			cin >> number;
     			if(!(number >= 1 && number <= 15))
-    				cout << "Invalid Choice! Please Enter A Valid Number.(1-15)" << endl;
+    			{
+    				cout << RED << "Invalid Choice! Please Enter A Valid Number.(1-15)" << RESET << endl;
+    				Beep(500 , 800);//tolide seda ba 500 hertz va be modate 800 milisaniye
+				}
 
     			else
     				break;
     		}
+    		if(number == 15)
+    			break;
     		string NameOfWeapon = weapons[number - 1].name;
     		int PriceOfWeapon = weapons[number - 1].price;
     		int DamageOfWeapon = weapons[number - 1].damage;
@@ -427,17 +454,21 @@ public:
     		{
             	backpack.AddWeapon(NameOfWeapon , DamageOfWeapon);
     			player.Money -= PriceOfWeapon;
-    			cout << NameOfWeapon << " Is Now In Your Backpack." << endl << "Your Money: " << player.Money << "$" << endl ;
+    			cout << NameOfWeapon <<ORANGE << " Is Now In Your Backpack." << endl << "Your Money: " << player.Money << "$" << endl ;
     			break;
 			}
-			cout << "Sorry! You Don't Have Enough Money To Buy " << NameOfWeapon << "." << endl;
+			cout << ORANGE << "Sorry! You Don't Have Enough Money To Buy " << NameOfWeapon << "." << endl;
 			cout << "Do You Want To Buy Something Else?" << endl;
 			cout << "1- No.Leaving The Shop." << endl;
-			cout << "2- Yes." << endl;
+			cout << "2- Yes." << RESET << endl;
 			int num;
+			cout << ORANGE;
 			cin >> num;
 			if(num == 1)
+			{
+				cout << RESET;
 				break;
+			}
 		}
 		return true;
 	}
@@ -500,7 +531,8 @@ void ShowMenue(Player &player , ShopOfM &shopm , ShopOfJ &shopj , ShopOfD &shopd
 		}
 		else
 		{
-			cout << "Invalid Choice! Please Enter A Valid Number.(1-3)" << endl;
+			cout << RED << "Invalid Choice! Please Enter A Valid Number.(1-3)" << RESET << endl;
+    		Beep(500 , 800);//tolide seda ba 500 hertz va be modate 800 milisaniye
 		}
 	}
 
