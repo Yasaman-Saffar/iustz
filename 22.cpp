@@ -410,6 +410,8 @@ public:
     		cout << "Please Enter Your Choice." << endl;
     		int number;
     		cin >> number;
+    		if(number == 15)
+    			break;
     		while(true)
     		{
     			if(!(number >= 1 && number <= 15))
