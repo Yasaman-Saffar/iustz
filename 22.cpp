@@ -162,7 +162,7 @@ private:
 
 public:
 	friend void ShowMenue(Player &player , ShopOfM &shopm , ShopOfJ &shopj , ShopOfD &shopd , BackPack& backpack);
-    Shop()
+    ShopOfD()
     {
         weapons.push_back(Weapon("Stupefy : Throw Somthing" , 40 , 20));
         weapons.push_back(Weapon("SecfumSempra : To Injure" , 20 , 20));
@@ -257,7 +257,7 @@ private:
 
 public:
 	friend void ShowMenue(Player &player , ShopOfM &shopm , ShopOfJ &shopj , ShopOfD &shopd , BackPack& backpack);
-    Shop()
+    ShopOfJ()
     {
         weapons.push_back(Weapon("Sword" , 40 , 20));
         weapons.push_back(Weapon("Dagger" , 20 , 20));
@@ -352,7 +352,7 @@ private:
 
 public:
 	friend void ShowMenue(Player &player , ShopOfM &shopm , ShopOfJ &shopj , ShopOfD &shopd , BackPack& backpack);
-    Shop()
+    ShopOfM()
     {
         weapons.push_back(Weapon("Sword" , 40 , 20));
         weapons.push_back(Weapon("Dagger" , 20 , 20));
