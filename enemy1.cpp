@@ -15,8 +15,8 @@ private:
     int Stamina;
 
     Enemy(ifstream readFile);                        // Opens the respective file and reads level of player from it                                    // coefficient: ordinary=1 and stronger=1.2?
-    double sword = 5 * Level * HP * e / 100;         // Level>=5. Level is first derived from a file.
-    double knife = 2 * Level * HP * e / 100;         // Level>=2
+    double sword = 5 * Level * e / 100;         // Level>=5. Level is first derived from a file.
+    double knife = 2 * Level * e / 100;         // Level>=2
     double throwingStars = 1 * Level * HP * e / 100; // Level>=1
 protected:
     double e;
