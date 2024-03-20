@@ -11,7 +11,6 @@ using namespace std;
 #define GRAY "\033[38;5;8m"
 #define RED "\033[31m" // germez shodan
 
-class Enemy;
 class Player
 {
 private:
@@ -54,7 +53,7 @@ private:
     // Enemy(ifstream readFile);                        // Opens the respective file and reads level of player from it                                    // coefficient: ordinary=1 and stronger=1.2?
     double sword = 5 * Level * e / 100;              // Level>=5. Level is first derived from a file.
     double knife = 2 * Level * e / 100;              // Level>=2
-    double throwingStars = 1 * Level * HP * e / 100; // Level>=1
+    double throwingStars = 1 * Level * e / 100; // Level>=1
 
 public:
     double Weapon(); // randomly chooses a weapon between the three above. It is called when the enemy attacks and reduces the player's HP.
