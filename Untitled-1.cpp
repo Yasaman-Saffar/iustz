@@ -599,7 +599,6 @@ characters* PreChar(characters* Player, CharFactory charfactorty, BackPack* back
 
     string line;
     string WName;
-    int damage;
     int num = 1;
     int damage = 0;
     while(getline(PreChar, line)) //quantification
