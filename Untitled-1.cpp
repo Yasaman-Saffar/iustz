@@ -224,19 +224,30 @@ public:
                     cout << ORANGE "'Do You Want To Buy Something Else?' The Saller Says." << endl;
                     cout << "1- No.(You Will Leave The Shop)." << endl;
                     cout << "2- Yes." << endl;
-                    cin >> number;
-                    cout << endl;
-                    if(number == 1)
+                    while(true)
                     {
-                        cout << "'Thanks For Your Purchase. Good Luck!'" << endl;
-                        return;
-                    }
-                    if(number == 2)
-                    {
-                        cout << "'What Do You Want To Buy To Defeat Zombies?'(Enter The Number)" << endl;
-                        cin >> number;
-                        cout << endl;
-                    }
+                    	int num;
+                    	cin >> num;
+                    	cout << endl;
+                    	if(num == 1)
+                    	{
+                        	cout << "'Thanks For Your Purchase. Good Luck!'" << endl;
+                        	return;
+                    	}
+                    	if(num == 2)
+                    	{
+                        	cout << "'What Do You Want To Buy To Defeat Zombies?'(Enter The Number)" << endl;
+                        	cin >> number;
+                        	cout << endl;
+                        	break;
+                    	}
+                    	else
+                    	{
+                    		cout << RED << "Please enter a valid number(1 or 2): " << RESET << endl;
+                    		cout << ORANGE;
+            				Beep(500 , 800);
+						}
+					}
                     cout << RESET;
                 }
             }
@@ -356,19 +367,30 @@ public:
                     cout << BLUE << "'Do You Want To Buy Something Else?' The Saller Says." << endl;
                     cout << "1- No.(You will leave the shop)." << endl;
                     cout << "2- Yes." << endl;
-                    cin >> number;
-                    cout << endl;
-                    if(number == 1)
+                     while(true)
                     {
-                        cout << "'Thanks For Your Purchase. Good Luck!'" << endl;
-                        return;
-                    }
-                    if(number == 2)
-                    {
-                        cout << "'What Do You Want To Buy To Defeat Zombies?'(Enter The Number)" << endl;
-                        cin >> number;
-                        cout << endl;
-                    }
+                    	int num;
+                    	cin >> num;
+                    	cout << endl;
+                    	if(num == 1)
+                    	{
+                        	cout << "'Thanks For Your Purchase. Good Luck!'" << endl;
+                        	return;
+                    	}
+                    	if(num == 2)
+                    	{
+                        	cout << "'What Do You Want To Buy To Defeat Zombies?'(Enter The Number)" << endl;
+                        	cin >> number;
+                        	cout << endl;
+                        	break;
+                    	}
+                    	else
+                    	{
+                    		cout << RED << "Please enter a valid number(1 or 2): " << RESET << endl;
+                    		cout << BLUE;
+            				Beep(500 , 800);
+						}
+					}
                     cout << RESET;
                 }
             }
@@ -490,19 +512,30 @@ public:
                     cout << GRAY << "'Do You Want To Buy Something Else?' The Saller Says." << endl;
                     cout << "1- No.(You Will Leave The Shop)." << endl;
                     cout << "2- Yes." << endl;
-                    cin >> number;
-                    cout << endl;
-                    if(number == 1)
+                    while(true)
                     {
-                        cout << "'Thanks For Your Purchase. Good Luck!'" << endl;
-                        return;
-                    }
-                    if(number == 2)
-                    {
-                        cout << "'What Do You Want To Buy To Defeat Zombies?'(Enter The Number)" << endl;
-                        cin >> number;
-                        cout << endl;
-                    }
+                    	int num;
+                    	cin >> num;
+                    	cout << endl;
+                    	if(num == 1)
+                    	{
+                        	cout << "'Thanks For Your Purchase. Good Luck!'" << endl;
+                        	return;
+                    	}
+                    	if(num == 2)
+                    	{
+                        	cout << "'What Do You Want To Buy To Defeat Zombies?'(Enter The Number)" << endl;
+                        	cin >> number;
+                        	cout << endl;
+                        	break;
+                    	}
+                    	else
+                    	{
+                    		cout << RED << "Please enter a valid number(1 or 2): " << RESET << endl;
+                    		cout << GRAY;
+            				Beep(500 , 800);
+						}
+					}
                     cout << RESET;
                 }
             }
