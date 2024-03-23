@@ -624,7 +624,7 @@ characters* PreChar(characters* Player, CharFactory charfactorty, BackPack* back
     system("cls");
     bool isValidName = false;
     ifstream PreChar;
-    while(!isValidName) //openning the file
+    while(!isValidName) //Openning the file
     {
         cout << "Please Enter The Name You Made Your Character With: " << endl << "(1) Back" << endl;;
         string name;
@@ -643,7 +643,7 @@ characters* PreChar(characters* Player, CharFactory charfactorty, BackPack* back
     string WName;
     int num = 1;
     int damage = 0;
-    while(getline(PreChar, line)) //quantification
+    while(getline(PreChar, line)) //Quantification
     {
         if(num == 1)
         {
@@ -668,12 +668,12 @@ characters* PreChar(characters* Player, CharFactory charfactorty, BackPack* back
             Player->Money = stoi(line);
         if(num >= 8)
         {
-            if(num % 2 == 0)
+            if(num % 2 == 0)//First line is the name of weapon
                 WName = line;
-            else
+            else//Second line is the damage of weapon
             {
                 damage = stoi(line);
-                backpack->AddWeapon(WName, damage);
+                backpack->AddWeapon(WName, damage);//Quantification the weapon
             }
         }
         num += 1;
@@ -695,20 +695,19 @@ void ChoosingChar()
     BackPack* backpack = new BackPack;
     CharFactory charfactorty;
 
-    while(!isValid) //creating new characters
-                    // or utilizing existing ones
+    while(!isValid)
     {
         cout << "Do You Want To: " << endl <<
         "(1) Create A New Character?" << endl 
         << "or" << endl <<
         "(2) Continue With Previous Characters?" << endl;
         cin >> choice1;
-        if(choice1 == 1)
+        if(choice1 == 1)//Creating new characters
         {
             system("cls");
             cout << "Enter Your Name: " << endl;
             cin >> name;
-            if(!isDupName(name))
+            if(!isDupName(name))//To check if a name already contains a character
             {
                 cout << RED << "You Have An Unfinished Game " << name << "!" << endl << "Finish It Or Enter Another Name." << RESET << endl << endl;
                 isValid = false;
@@ -752,9 +751,9 @@ void ChoosingChar()
                 }
             }
 	    }
-        if(choice1 == 2)
+        if(choice1 == 2)//Utilizing existing characters
         {
-            player = PreChar(player, charfactorty, backpack);
+            player = PreChar(player, charfactorty, backpack);//Chosing 
             if(player != nullptr)
                 isValid = true;
         }
@@ -781,14 +780,14 @@ void SavePlayer(characters* Player, BackPack* backpack)
     File << Player->getType() << endl
     	 << Player->getName() << endl
     	 << Player->getAge() << endl
-	 << Player->getGender() << endl
+	     << Player->getGender() << endl
          << Player->Stamina << endl
-	 << Player->HP << endl
+	     << Player->HP << endl
          << Player->Money << endl;
         for(auto weapons : backpack->getWeapons())
             File << weapons.first << endl << weapons.second << endl;
 	
-    if(isDupName(Player->getName()))
+    if(isDupName(Player->getName()))//To prevent outputting a name twice
         Names << Player->getName() << endl;
     exit(1);
 }
