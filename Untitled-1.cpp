@@ -5,11 +5,20 @@
 #include <string>
 #include <vector>
 #include <sstream>
+#include <chrono> 
+#include <thread> 
 #include<conio.h>//for sound of error
 #include<windows.h>//for sound of error
 using namespace std;
 
-//for collor of text
+//clear the console screen 
+#ifdef _WIN32
+#define CLEAR "cls"
+#else
+#define CLEAR "clear"
+#endif
+
+//for color of text
 #define RESET   "\033[0m"
 #define ORANGE    "\033[38;5;208m"
 #define GRAY    "\033[38;5;8m"
@@ -98,7 +107,7 @@ public:
 
     void ShowInfo()
     {
-        cout << "Level|" << Level << "|   " << "Hp| = " << HP << "|   "<< "Stamina|" << Stamina << "|   " << "Money|" << Money << "|   " << endl;
+        cout << "Level|" << Level << "|   " << "HP|" << HP << "|   "<< "Stamina|" << Stamina << "|   " << "Money|" << Money << "|   " << endl;
     }
     void ShowMoney()
     {
@@ -107,7 +116,6 @@ public:
     virtual void ShowShop(characters*&) = 0;
     virtual void BuyWeapon(characters*&, BackPack*&) = 0;
     //virtual void Attack() = 0;*******
-    //func for save in file********
 };
 class Michelangelo : public characters
 {
@@ -224,30 +232,19 @@ public:
                     cout << ORANGE "'Do You Want To Buy Something Else?' The Saller Says." << endl;
                     cout << "1- No.(You Will Leave The Shop)." << endl;
                     cout << "2- Yes." << endl;
-                    while(true)
+                    cin >> number;
+                    cout << endl;
+                    if(number == 1)
                     {
-                    	int num;
-                    	cin >> num;
-                    	cout << endl;
-                    	if(num == 1)
-                    	{
-                        	cout << "'Thanks For Your Purchase. Good Luck!'" << endl;
-                        	return;
-                    	}
-                    	if(num == 2)
-                    	{
-                        	cout << "'What Do You Want To Buy To Defeat Zombies?'(Enter The Number)" << endl;
-                        	cin >> number;
-                        	cout << endl;
-                        	break;
-                    	}
-                    	else
-                    	{
-                    		cout << RED << "Please enter a valid number(1 or 2): " << RESET << endl;
-                    		cout << ORANGE;
-            				Beep(500 , 800);
-						}
-					}
+                        cout << "'Thanks For Your Purchase. Good Luck!'" << endl;
+                        return;
+                    }
+                    if(number == 2)
+                    {
+                        cout << "'What Do You Want To Buy To Defeat Zombies?'(Enter The Number)" << endl;
+                        cin >> number;
+                        cout << endl;
+                    }
                     cout << RESET;
                 }
             }
@@ -342,8 +339,8 @@ public:
             }
             if(!(number >= 1 && number <= 16))
             {
-                cout << RED << "'We don't have such weapon!'" << endl;
-				cout << "Please enter a valind number(1-16)" << RESET << endl;
+                cout << RED << "'We Don't Have Such Weapon!'" << endl;
+				cout << "Please Enter A Valind Number(1-16)" << RESET << endl;
 				Beep(500 , 800);
             }
             else
@@ -365,32 +362,21 @@ public:
                         cout << RED << "Sorry! You Don't Have Enough Money To Buy " << NameOfWeapon << "." << RESET << endl;
                     }
                     cout << BLUE << "'Do You Want To Buy Something Else?' The Saller Says." << endl;
-                    cout << "1- No.(You will leave the shop)." << endl;
+                    cout << "1- No.(You Will Leave The Shop)." << endl;
                     cout << "2- Yes." << endl;
-                     while(true)
+                    cin >> number;
+                    cout << endl;
+                    if(number == 1)
                     {
-                    	int num;
-                    	cin >> num;
-                    	cout << endl;
-                    	if(num == 1)
-                    	{
-                        	cout << "'Thanks For Your Purchase. Good Luck!'" << endl;
-                        	return;
-                    	}
-                    	if(num == 2)
-                    	{
-                        	cout << "'What Do You Want To Buy To Defeat Zombies?'(Enter The Number)" << endl;
-                        	cin >> number;
-                        	cout << endl;
-                        	break;
-                    	}
-                    	else
-                    	{
-                    		cout << RED << "Please enter a valid number(1 or 2): " << RESET << endl;
-                    		cout << BLUE;
-            				Beep(500 , 800);
-						}
-					}
+                        cout << "'Thanks For Your Purchase. Good Luck!'" << endl;
+                        return;
+                    }
+                    if(number == 2)
+                    {
+                        cout << "'What Do You Want To Buy To Defeat Zombies?'(Enter The Number)" << endl;
+                        cin >> number;
+                        cout << endl;
+                    }
                     cout << RESET;
                 }
             }
@@ -427,7 +413,7 @@ public:
     virtual void ShowShop(characters* &player) override
     {
     	cout << endl;
-    	cout << GRAY << "'Hi Brave, you choosed the best shop! Here you can find anything you need.'" << endl;
+    	cout << GRAY << "'Hi Brave, You Choosed The Best Shop! Here You Can Find Anything You Need.'" << endl;
         cout << "Your Money: " << player->Money << "$" << endl << endl;
     	cout << "Cold Weapons :" << endl;
 
@@ -487,7 +473,7 @@ public:
             if(!(number >= 1 && number <= 16))
             {
                 cout << RED << "'We Don't Have Such Weapon!'" << endl;
-				cout << "Please enter a valind number(1-16)" << RESET << endl;
+				cout << "Please Enter A Valind Number(1-16)" << RESET << endl;
 				Beep(500 , 800);
             }
             else
@@ -512,30 +498,19 @@ public:
                     cout << GRAY << "'Do You Want To Buy Something Else?' The Saller Says." << endl;
                     cout << "1- No.(You Will Leave The Shop)." << endl;
                     cout << "2- Yes." << endl;
-                    while(true)
+                    cin >> number;
+                    cout << endl;
+                    if(number == 1)
                     {
-                    	int num;
-                    	cin >> num;
-                    	cout << endl;
-                    	if(num == 1)
-                    	{
-                        	cout << "'Thanks For Your Purchase. Good Luck!'" << endl;
-                        	return;
-                    	}
-                    	if(num == 2)
-                    	{
-                        	cout << "'What Do You Want To Buy To Defeat Zombies?'(Enter The Number)" << endl;
-                        	cin >> number;
-                        	cout << endl;
-                        	break;
-                    	}
-                    	else
-                    	{
-                    		cout << RED << "Please enter a valid number(1 or 2): " << RESET << endl;
-                    		cout << GRAY;
-            				Beep(500 , 800);
-						}
-					}
+                        cout << "'Thanks For Your Purchase. Good Luck!'" << endl;
+                        return;
+                    }
+                    if(number == 2)
+                    {
+                        cout << "'What Do You Want To Buy To Defeat Zombies?'(Enter The Number)" << endl;
+                        cin >> number;
+                        cout << endl;
+                    }
                     cout << RESET;
                 }
             }
@@ -559,54 +534,76 @@ public:
 
 };
 
+void clearConsole(double seconds) 
+{
+    this_thread::sleep_for(chrono::duration<double>(seconds));
+    system(CLEAR);
+}
+bool isDupName(string name)
+{
+    system("cls");
+    ifstream names("characters/CharNames.txt");
+    string line;
+    while(getline(names, line))
+    {
+        if(line == name)
+        {
+            cout << "You Have An Unfinished Game " << name << "!" << endl << "Finish It Or Enter Another Name." << endl;
+            return false;
+        }
+    }
+    return true;
+}
 void Game(characters* Player, BackPack* &backpack)
 {
     srand(time(0));
     while(true)
     {
+	clearConsole(0.8);
         int RandNum = rand() % 2;
         switch (RandNum)
         {
-       		case 0:
+       	case 0:
             	//cout << "There is an enemy against you.";
-            	break;
-        	case 1:
+            break;
+        case 1:
             	cout << "You Are Entering The Shop..." << endl;
             	Player->ShowShop(Player);
             	Player->BuyWeapon(Player, backpack);
-            	break;
-        	default:
+            break;
+        default:
             	break;
         }
     }
 }
 void ChoosingChar();
-characters* PreChar(characters* Player, CharFactory charfactorty)
+characters* PreChar(characters* Player, CharFactory charfactorty, BackPack* backpack)
 {
+    system("cls");
     bool isValidName = false;
     ifstream PreChar;
-    //while(!isValidName) //openning the file
-    //{
-        cout << "Please Enter The Name You Made Your Character With: " << endl;
+    while(!isValidName) //openning the file
+    {
+        cout << "Please Enter The Name You Made Your Character With: " << endl << "(1) Back" << endl;;
         string name;
         cin >> name;
         PreChar.open("characters/" + name + ".txt");
-        if(!(PreChar.is_open()))
-        {
-        	cout << RED << "Sorry, No Character Exists With This Name." << RESET << endl;
-        	ChoosingChar();
-		}
+	    
+        if(!(PreChar.is_open()) && name != "1")
+            cout << RED << "Sorry, No Character Exists With This Name." << RESET << endl;
         if(PreChar.is_open())
             isValidName = true;
-    //}
+        if(name == "1")
+            return nullptr;
+    }
 
     string line;
+    string WName;
     int damage;
     int num = 1;
-    BackPack* backpack = new BackPack;
+    int damage = 0;
     while(getline(PreChar, line)) //quantification
     {
-        istringstream iss(line);
         if(num == 1)
         {
             if(line == "JonSnow")
@@ -630,12 +627,16 @@ characters* PreChar(characters* Player, CharFactory charfactorty)
             Player->Money = stoi(line);
         if(num >= 8)
         {
-            iss >> line >> damage;
-            backpack->AddWeapon(line, damage);
+            if(num % 2 == 0)
+                WName = line;
+            else
+            {
+                damage = stoi(line);
+                backpack->AddWeapon(WName, damage);
+            }
         }
         num += 1;
-    }   
-    cout << "Welcome Back " << Player->getName() << "!" << endl; 
+    }    
     return Player;
 }
 void ChoosingChar()
@@ -665,36 +666,42 @@ void ChoosingChar()
         {
             cout << "Enter Your Name: " << endl;
             cin >> name;
-            cout << "Enter Your Age: " << endl;
-            cin >> age;
-            cout << "Enter Your Gender(Male/Female): " << endl;
-            cin >> gender;
-            cout << endl;
-            cout << "The End Of Time Has Come And Every Being Is In a Battle For Existence." << endl;
-            cout << "The Greatest Heroes From Across The World Have Risen To Defend It." << endl; 
-            cout << "Which Hero Would You Choose To Join In Safeguarding Our World?" << endl;
-            cout << "(1) JonSnow" << endl;
-			cout << "(2) Dumbledore" << endl;
-			cout << "(3) Michelangelo" << endl;
-            cin >> choice2;
-            cout << endl;
-            if(choice2 == 1)
-            	player = charfactorty.createChar(1, name, age, gender, 0, 50, 100, 30);
-            if(choice2 == 2)
-                player = charfactorty.createChar(2, name, age, gender, 0, 50, 100, 30);
-            if(choice2 == 3)
-                player = charfactorty.createChar(3, name, age, gender, 0, 50, 100, 30);
+            if(!isDupName(name))
+                isValid = false;
+            else
+            {
+                cout << "Enter Your Age: " << endl;
+                cin >> age;
+                cout << "Enter Your Gender(Male/Female): " << endl;
+                cin >> gender;
+                system("cls");
 
-            isValid = true;
-        }
+                cout << "The End Of Time Has Come And Every Being Is In A Battle For Existence." << endl 
+                << "The Greatest Heroes From Across The World Have Risen To Defend It." << endl 
+                << "Which Hero Would You Choose To Join In Safeguarding Our World?" << endl
+                << "(1) JonSnow" << endl << "(2) Dumbeldore" << endl << "(3) Michelangelo" << endl;
+                cin >> choice2;
+                if(choice2 == 1)
+                    player = charfactorty.createChar(1, name, age, gender, 0, 50, 50, 100);
+                if(choice2 == 2)
+                    player = charfactorty.createChar(2, name, age, gender, 0, 50, 50, 100);
+                if(choice2 == 3)
+                    player = charfactorty.createChar(3, name, age, gender, 0, 50, 50, 100);
+
+                isValid = true;
+            }
+	}
         if(choice1 == 2)
         {
-            player = PreChar(player, charfactorty);
-            isValid = true;
+            player = PreChar(player, charfactorty, backpack);
+            if(player != nullptr)
+                isValid = true;
+            cout << "Welcome back " << player->getName() << "!" << endl; 
         }
         if(!(choice1 == 1 || choice1 == 2))
         {
-            cout << RED << "Please enter a valid number(1 or 2): " << RESET << endl;
+	    system("cls");
+            cout << RED << "Please Enter A Valid Number(1 or 2): " << RESET << endl;
             Beep(500 , 800);
             isValid = false;
         }
@@ -705,21 +712,23 @@ void ChoosingChar()
 void SavePlayer(characters* Player, BackPack* backpack)
 {
     ofstream File("Characters/" + Player->getName() + ".txt");
+    ofstream Names("characters/CharNames.txt");
     if(!(File.is_open()))
     {
         cerr << "An Issue Occurred While Saving This Character.";
         return;
     }
-    File << Player->getType() << endl;
-    File << Player->getName() << endl;
-    File << Player->getAge() << endl;
-	File << Player->getGender() << endl ;
-    File << Player->Stamina << endl;
-	File << Player->HP << endl;
-    File << Player->Money << endl;
+    File << Player->getType() << endl
+    	 << Player->getName() << endl
+    	 << Player->getAge() << endl
+	 << Player->getGender() << endl
+         << Player->Stamina << endl
+	 << Player->HP << endl
+         << Player->Money << endl;
         for(auto weapons : backpack->getWeapons())
-            File << weapons.first << " " << weapons.second << endl;
-         
+            File << weapons.first << endl << weapons.second << endl;
+	
+    Names << Player->getName() << endl;
     exit(1);
 }
 int main()
