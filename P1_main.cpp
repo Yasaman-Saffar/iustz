@@ -843,7 +843,7 @@ void ChoosingChar()
 }
 void SavePlayer(characters* Player, BackPack* backpack)
 {
-    ofstream File("Characters/" + Player->getName() + ".txt");
+    ofstream File("characters/" + Player->getName() + ".txt");
     ofstream Names("characters/CharNames.txt", ios::app);
     if(!(File.is_open()))
     {
