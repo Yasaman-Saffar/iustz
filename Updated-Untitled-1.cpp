@@ -357,7 +357,7 @@ public:
             if(number == 16) 
             {
                 SavePlayer(player, backpack);
-		    exit(1)
+		    exit(1);
             }
             if(!(number >= 1 && number <= 16))
             {
