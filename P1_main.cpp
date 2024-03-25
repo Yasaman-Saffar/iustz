@@ -599,7 +599,7 @@ public:
 };
 double Enemy::Weapon() 
 {
-    Stamina += 3;
+    Stamina -= 3;
     int Rand = rand() % 100 + 1;
     if (Rand <= 33 && Level >= 1)
     {
