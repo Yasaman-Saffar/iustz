@@ -847,7 +847,8 @@ void SavePlayer(characters* Player, BackPack* backpack)
     ofstream Names("characters/CharNames.txt", ios::app);
     if(!(File.is_open()))
     {
-        cerr << "An Issue Occurred While Saving This Character.";
+        cerr << "An Issue Occurred While Saving This Character.\n";
+	exit(1);
         return;
     }
     File << Player->getType() << endl
