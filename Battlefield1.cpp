@@ -596,7 +596,7 @@ public:
     void damage(double playerAttack) { HP = HP - playerAttack; }
     void levelUp() { Level+=1; }    
     double Weapon(); // randomly chooses a weapon between the three above. It is called when the enemy attacks and reduces the player's HP.
-    virtual void zombieName () { cout << "NO name\n"; }
+    virtual string zombieName () { return "no name"; }
 
 };
 double Enemy::Weapon() 
@@ -631,7 +631,7 @@ class zombie : public Enemy
 {
 public:
     zombie(int PlayerLevel, double E) : Enemy(PlayerLevel, 1) {} // Initializes e from Enemy to 1
-    void zombieName() override { cout << "Zombie\n"; }
+    string zombieName() override { return "Zombie"; }
 };
 
 
@@ -639,7 +639,7 @@ class strongZombie : public Enemy
 {
 public:
     strongZombie(int PlayerLevel, double E) : Enemy(PlayerLevel, 1.2) {} // Initializes e from Enemy to 1.2
-    void zombieName() override { cout << "Strong Zombie\n"; }
+    string zombieName() override { return "Strong Zombie"; }
 };
 
 //*****//
@@ -874,11 +874,11 @@ void SavePlayer(characters* Player, BackPack* backpack)
 //*************************************************************************************//
 
 
-
+void showCharInfo(characters& playerObj, Enemy* enemyPtr);
 int main ()
 {
     //creating an examplary player object
-    Dumbledore dum = Dumbledore("p", 19, "female", 1, 50, 100, 100);
+    Dumbledore dum1 = Dumbledore("p", 19, "female", 1, 50, 100, 100);
 
     cout << "You've come to a dangerous place. Beware of the creatures lurking in the shadow.\n";
     cout << "There is an enemy against you!\n";
@@ -890,36 +890,38 @@ int main ()
     {
         case 1: 
             {
-                zom = new zombie(dum.getLevel(), 1);
+                zom = new zombie(dum1.getLevel(), 1);
                 break;
             }
         case 2:
             {
-                zom = new zombie(dum.getLevel(), 1);
+                zom = new zombie(dum1.getLevel(), 1);
                 break;
             }
         case 3:
             {
-                zom = new zombie(dum.getLevel(), 1);
+                zom = new zombie(dum1.getLevel(), 1);
                 break;
             }
         case 4:
             {
-                zom = new strongZombie(dum.getLevel(), 1.2);
+                zom = new strongZombie(dum1.getLevel(), 1.2);
                 break;
             }
     }
-    zom->zombieName();
+    cout << zom->zombieName() << endl;
     cout << zom->getHP() << endl;
     cout << zom->getStamina() << endl;
 
-    
-    while ( zom->getHP() > 0 && ( dum.getHP() > 0 || false ) ) 
+    int choice1(0);
+
+    // while ( zom->getHP() > 0 && ( dum1.getHP() > 0 || false ) )
+    while (choice1 != 4)
     {
         cout << "What would you like to do? (Attack ends your turn.)\n";
         //options_1
-        int choice1;
         cout << "1. Attack\n2. Inventory\n3. Character\n4. Exit Game\n";
+        cin >> choice1;
         switch(choice1)
         {
             case 1:
@@ -931,14 +933,45 @@ int main ()
             case 3:
             //calling member functions to show player's name,
             // character, HP, stamina, money and enemy's name, HP and stamina
+            showCharInfo(dum1, zom);
             break;
             case 4:
             // save player's info
+            cout << "Exiting the game...\n";
             exit(0);
             break;
             default:
             cout << "Please enter a valid number (1, 2, 3 or 4).\n";
             break;
         }
+    }
+}
+
+void showCharInfo(characters& playerObj, Enemy* enemyPtr)
+{
+    system("cls");
+    cout << "Your Character:\n";
+    cout << "Name: " << playerObj.getName() << endl
+        << "Age: " << playerObj.getAge() << endl
+        << "Gender: " << playerObj.getGender() << endl
+        << "Level: " << playerObj.getLevel() << endl
+        << "HP: " << playerObj.getHP() << endl
+        << "Stamina: " << playerObj.getStamina() << endl;
+    cout << endl << "Your Enemy:\n";
+    cout << "Enemy type: " << enemyPtr->zombieName() << endl
+        << "HP: " << enemyPtr->getHP() << endl
+        << "Stamina: " << enemyPtr->getStamina() << endl;
+    cout << "\n1. Back\n";
+    int goBack;
+    cin >> goBack;
+    while (goBack != 1)
+    {
+        cout << "Please enter 1 to go back.\n";
+        cin >> goBack;
+    }
+    if (goBack == 1) 
+    { 
+        system("cls");
+        return; 
     }
 }
