@@ -60,7 +60,7 @@ public:
         {
         	if(number < 1 && number > i + 1)
         	{
-        		cout << RED << "Please Enter A Valid Number(1-" << i + 1 << ") :" << RESET << endl;
+        		cout << RED << "Please Enter A Valid Number(1-" << i + 1 << ") :" << endl;
 				Beep(500 , 800); //error
 			}
 			else if(number == i + 1)
@@ -78,9 +78,10 @@ class characters;
 
 void SavePlayer(characters*, BackPack*);
 void ChoosingChar();
-void clearConsole();
+void clearConsole(double);
 
-class characters{
+class characters
+{
 private:
     string Name;
     int Age;
@@ -91,6 +92,9 @@ protected:
     int Level;
     int Stamina;
     int HP;
+    string textColor;
+    vector<Weapon> weapons;
+
 public:
     int Money;
     characters() = default;
@@ -105,36 +109,154 @@ public:
     void setGender(string gender) {Gender = gender;}
     string getType() {return Type;}
     int getLevel() { return Level; }
+    void setLevel(int level) {Level = level;}
     double getHP() { return HP; }
     void setHP(double hp1) { HP = hp1; }
     int getStamina() { return Stamina; }
     void setStamina(int stam1) { Stamina = stam1; }
+    string getcolor() {return textColor;}
     void levelUp() {Level += 1;}
     virtual double attack() { return 8; } //DEFINITION NEEDED!!!!
     void damage(double enemyWeapon) { HP = HP - enemyWeapon; } // the parameter is the member function of Enemy
 
     void ShowInfo()
     {
-        cout << "Level|" << Level << "|   " << "HP|" << HP << "|   "<< "Stamina|" << Stamina << "|   " << "Money|" << Money << "|   " << endl;
+        cout << textColor << "Your Character: " << RED << "Level|" << Level << "|   " << "HP|" << HP << "|   "<< "Stamina|" << Stamina << "|   " << "Money|" << Money << "|   " << textColor << endl;
     }
     void ShowMoney()
     {
         cout << "Your Money: " << Money << "$";
     }
-    virtual void ShowShop(characters*&) = 0;
-    virtual void BuyWeapon(characters*&, BackPack*&) = 0;
-    //virtual void Attack() = 0;*******
+    void ShowShop(characters* &player)
+    {
+        clearConsole(2);
+    	cout << endl;
+    	cout << textColor << "'Hi Brave, You Chose The Best Shop! Here You Can Find Anything You Need.'" << endl;
+        cout << "Your Money: " << player->Money << "$" << endl << endl;
+    	cout << "Cold Weapons :" << endl;
+
+        for(int i = 0 ; i < 3 ; i++)
+    	{
+        	cout << "(" << i + 1 << ") " << weapons[i].name << " [Damage: -" << weapons[i].damage << " , Price: " << weapons[i].price << "$]" << endl;
+    	}
+
+    	cout << endl;
+		cout << "Firearms :" << endl;
+    	for(int i = 0 ; i < 3 ; i++)
+    	{
+        	cout << "(" << i + 4 << ") " << weapons[i + 3].name << " [Damage: -" << weapons[i + 3].damage << " , Price: " << weapons[i + 3].price << "$]" << endl;
+    	}
+
+    	cout << endl;
+		cout << "Throwing Weapons :" << endl;
+    	for(int i = 0 ; i < 4 ; i++)
+    	{
+        	cout << "(" << i + 7 << ") " << weapons[i + 6].name << " [Damage: -" << weapons[i + 6].damage << " , Price: " << weapons[i + 6].price << "$]" << endl;
+    	}
+
+    	cout << endl;
+		cout << "Consumable Weapons :" << endl;
+    	for(int i = 0 ; i < 2 ; i++)
+    	{
+        	cout << "(" << i + 11 << ") " << weapons[i + 10].name << " [Stamina: +" << weapons[i + 10].damage << " , Price: " << weapons[i + 10].price << "$]" << endl;
+    	}
+    	for(int i = 0 ; i < 2 ; i++)
+    	{
+        	cout << "(" << i + 13 << ") " << weapons[i + 12].name << " [HP: +" << weapons[i + 12].damage << " , Price: " << weapons[i + 12].price << "$]" << endl;
+    	}
+    	cout << endl;
+    	cout << "(15) Nothing (You Will Leave The Shop)" << endl;
+		cout << "(16) Leave The Game" << endl;
+    	cout << player->getcolor();
+    }
+    void BuyWeapon(characters* &player , BackPack* &backpack)
+    {
+        int number = 0;
+        while(true)
+        {
+            cout << textColor << endl;
+            if(!(number == 15 || number == 16))
+            {
+				cout << textColor << "'What Do You Want To Buy To Defeat The Zombies?'(Enter The Number)" << endl;
+				cin >> number;
+				cout << endl;
+			}
+            if(number == 15)
+            {
+                cout << "Leaving The Shop..." << endl;
+                return;
+            }
+            if(number == 16) 
+            {
+                SavePlayer(player, backpack);
+            }
+            if(!(number >= 1 && number <= 16))
+            {
+                cout << RED << "'We Don't Have Such Weapon!'" << endl;
+				cout << "Please Enter A Valind Number(1-16)" << textColor << endl;
+				Beep(500 , 800);
+            }
+			
+                while(true)
+                {
+                    if(number == 15 || number == 16)
+                	    break;
+
+                	cout << textColor;	
+                    string NameOfWeapon = weapons[number - 1].name;
+                    int PriceOfWeapon = weapons[number - 1].price;
+                    int DamageOfWeapon = weapons[number - 1].damage;
+                    if(player->Money >= PriceOfWeapon)
+                    {
+                        backpack->AddWeapon(NameOfWeapon , DamageOfWeapon);
+                        player->Money -= PriceOfWeapon;
+                        cout << NameOfWeapon << " Is Now In Your Backpack." << endl << "Your Money: " << player->Money << "$" << endl ;
+                    }
+                    else
+                    {
+                        cout << RED << "Sorry! You Don't Have Enough Money To Buy " << NameOfWeapon << "." << textColor << endl;
+                    }
+                    cout << textColor << "'Do You Want To Buy Something Else?' The Saller Says." << endl;
+                    cout << "(1) No.(You Will Leave The Shop)" << endl;
+                    cout << "(2) Yes" << endl;
+                    while(true)
+                    {
+                        int num;
+                        cin >> num;
+                        cout << endl;
+                        if(num == 1)
+                        {
+                            system(CLEAR);
+                            cout << "'Thanks For Your Purchase. Good Luck!'" << endl << "Leaving The Shop..." << endl;
+                            return;
+                        }
+                        if(num == 2)
+                        {
+                            cout << "'What Do You Want To Buy To Defeat The Zombies?'(Enter The Number)" << endl;
+                            cin >> number;	
+                            cout << endl;
+                            break;
+                        }
+                        else
+                        {
+                            cout << RED << "Please Enter A Valid Number(1 or 2): " << textColor << endl;
+                            cout << textColor;
+                            Beep(500 , 800);
+                        }
+				    }
+                    cout << textColor;
+                }  
+	    }
+    }
 };
 class Michelangelo : public characters
 {
-private:
-    vector<Weapon> weapons;
-
 public:
     Michelangelo(string name, int age, string gender, int level, int stamina, int hp, int money)
     :characters(name, age, gender, level, stamina, hp, money)
     {
         Type = "Michelangelo";
+        textColor = ORANGE;
         weapons.push_back(Weapon("Sword" , 40 , 20));
         weapons.push_back(Weapon("Dagger" , 20 , 20));
         weapons.push_back(Weapon("Nanchiko" , 20 , 20));
@@ -151,139 +273,15 @@ public:
         weapons.push_back(Weapon("IceMonkey" , 20 , 20)); 
     }
 
-    //shop
-    virtual void ShowShop(characters* &player) override
-    {
-        clearConsole();
-    	cout << endl;
-    	cout << ORANGE << "'Hi Brave, You've Chosen The Best Shop! Here You Can Find Anything You Need.'" << endl;
-        cout << "Your Money: " << player->Money << "$" << endl << endl;
-    	cout << "Cold Weapons :" << endl;
-
-        for(int i = 0 ; i < 3 ; i++)
-    	{
-        	cout << "(" << i + 1 << ") " << weapons[i].name << " [Damage: -" << weapons[i].damage << " , Price: " << weapons[i].price << "$]" << endl;
-    	}
-
-    	cout << endl;
-		cout << "Firearms :" << endl;
-    	for(int i = 0 ; i < 3 ; i++)
-    	{
-        	cout << "(" << i + 4 << ") " << weapons[i + 3].name << " [Damage: -" << weapons[i + 3].damage << " , Price: " << weapons[i + 3].price << "$]" << endl;
-    	}
-
-    	cout << endl;
-		cout << "Throwing Weapons :" << endl;
-    	for(int i = 0 ; i < 4 ; i++)
-    	{
-        	cout << "(" << i + 7 << ") " << weapons[i + 6].name << " [Damage: -" << weapons[i + 6].damage << " , Price: " << weapons[i + 6].price << "$]" << endl;
-    	}
-
-    	cout << endl;
-		cout << "Consumable Weapons :" << endl;
-    	for(int i = 0 ; i < 2 ; i++)
-    	{
-        	cout << "(" << i + 11 << ") " << weapons[i + 10].name << " [Stamina: +" << weapons[i + 10].damage << " , Price: " << weapons[i + 10].price << "$]" << endl;
-    	}
-    	for(int i = 0 ; i < 2 ; i++)
-    	{
-        	cout << "(" << i + 13 << ") " << weapons[i + 12].name << " [HP: +" << weapons[i + 12].damage << " , Price: " << weapons[i + 12].price << "$]" << endl;
-    	}
-    	cout << endl;
-    	cout << "(15) Nothing (You Will Leave The Shop)" << endl;
-		cout << "(16) Leave The Game" << endl;
-    	cout << RESET;
-    }
-    virtual void BuyWeapon(characters* &player , BackPack* &backpack) override
-    {
-        int number = 0;
-        while(true)
-        {
-            cout << ORANGE << endl;
-            if(!(number == 15 || number == 16))
-            {
-				cout << ORANGE << "'What Do You Want To Buy To Defeat The Zombies?'(Enter The Number)" << endl;
-				cin >> number;
-				cout << endl;
-			}
-            if(number == 15)
-            {
-                cout << "Leaving The Shop..." << endl;
-                return;
-            }
-            if(number == 16) 
-            {
-                SavePlayer(player, backpack);
-            }
-            if(!(number >= 1 && number <= 16))
-            {
-                cout << RED << "'We Don't Have Such Weapon!'" << endl;
-				cout << "Please Enter A Valind Number(1-16)" << RESET << endl;
-				Beep(500 , 800);
-            }
-			
-                while(true)
-                {
-                    if(number == 15 || number == 16)
-                	    break;
-
-                	cout << ORANGE;	
-                    string NameOfWeapon = weapons[number - 1].name;
-                    int PriceOfWeapon = weapons[number - 1].price;
-                    int DamageOfWeapon = weapons[number - 1].damage;
-                    if(player->Money >= PriceOfWeapon)
-                    {
-                        backpack->AddWeapon(NameOfWeapon , DamageOfWeapon);
-                        player->Money -= PriceOfWeapon;
-                        cout << NameOfWeapon << " Is Now In Your Backpack." << endl << "Your Money: " << player->Money << "$" << endl ;
-                    }
-                    else
-                    {
-                        cout << RED << "Sorry! You Don't Have Enough Money To Buy " << NameOfWeapon << "." << RESET << endl;
-                    }
-                    cout << ORANGE << "'Do You Want To Buy Something Else?' The Saller Says." << endl;
-                    cout << "(1) No.(You Will Leave The Shop)" << endl;
-                    cout << "(2) Yes" << endl;
-                    while(true)
-                    {
-                        int num;
-                        cin >> num;
-                        cout << endl;
-                        if(num == 1)
-                        {
-                            system("cls");
-                            cout << "'Thanks For Your Purchase. Good Luck!'" << endl << "Leaving The Shop..." << endl;
-                            return;
-                        }
-                        if(num == 2)
-                        {
-                            cout << "'What Do You Want To Buy To Defeat The Zombies?'(Enter The Number)" << endl;
-                            cin >> number;	
-                            cout << endl;
-                            break;
-                        }
-                        else
-                        {
-                            cout << RED << "Please Enter A Valid Number(1 or 2): " << RESET << endl;
-                            cout << ORANGE;
-                            Beep(500 , 800);
-                        }
-				    }
-                    cout << RESET;
-                }  
-	    }
-    }
 };
 class Dumbledore : public characters
 {
-private:
-    vector<Weapon> weapons;
-    
 public:
     Dumbledore(string name, int age, string gender, int level, int stamina, int hp, int money)
     :characters(name, age, gender, level, stamina, hp, money)
     {
         Type = "Dumbledore";
+        textColor = BLUE;
         weapons.push_back(Weapon("Stupefy (Throwing Somthing)" , 40 , 20));
         weapons.push_back(Weapon("SecfumSempra (To Injure)" , 20 , 20));
         weapons.push_back(Weapon("Crucio (To Torture)" , 20 , 20));
@@ -299,140 +297,15 @@ public:
         weapons.push_back(Weapon("Fiantodon (Protect)" , 20 , 20));
         weapons.push_back(Weapon("Episci (Prevent Bleeding)" , 20 , 20));
     }
-
-    //shop
-    virtual void ShowShop(characters* &player) override
-    {
-        clearConsole();
-    	cout << endl;
-    	cout <<	BLUE << "'Hi Brave, You've Chosen The Best Shop! Here You Can Find Anything You Need.'" << endl;
-        cout << "Your Money: " << player->Money << "$" << endl << endl;
-    	cout << "Cold Weapons :" << endl;
-
-        for(int i = 0 ; i < 3 ; i++)
-    	{
-        	cout << "(" << i + 1 << ") " << weapons[i].name << " [Damage: -" << weapons[i].damage << " , Price: " << weapons[i].price << "$]" << endl;
-    	}
-
-    	cout << endl;
-		cout << "Firearms :" << endl;
-    	for(int i = 0 ; i < 3 ; i++)
-    	{
-        	cout << "(" << i + 4 << ") " << weapons[i + 3].name << " [Damage: -" << weapons[i + 3].damage << " , Price: " << weapons[i + 3].price << "$]" << endl;
-    	}
-
-    	cout << endl;
-		cout << "Throwing Weapons :" << endl;
-    	for(int i = 0 ; i < 4 ; i++)
-    	{
-        	cout << "(" << i + 7 << ") " << weapons[i + 6].name << " [Damage: -" << weapons[i + 6].damage << " , Price: " << weapons[i + 6].price << "$]" << endl;
-    	}
-
-    	cout << endl;
-		cout << "Consumable Weapons :" << endl;
-    	for(int i = 0 ; i < 1 ; i++)
-    	{
-        	cout << "(" << i + 11 << ") " << weapons[i + 10].name << " [Stamina: +" << weapons[i + 10].damage << " , Price: " << weapons[i + 10].price << "$]" << endl;
-    	}
-    	for(int i = 0 ; i < 3 ; i++)
-    	{
-        	cout << "(" << i + 12 << ") " << weapons[i + 11].name << " [HP: +" << weapons[i + 11].damage << " , Price: " << weapons[i + 11].price << "$]" << endl;
-    	}
-    	cout << endl;
-    	cout << "(15) Nothing (You Will Leave The Shop)" << endl;
-		cout << "(16) Leave The Game" << endl;
-    	cout << RESET;
-    }
-    virtual void BuyWeapon(characters* &player , BackPack* &backpack) override
-    {
-        int number = 0;
-        while(true)
-        {
-            cout << BLUE << endl;
-            if(!(number == 15 || number == 16))
-            {
-				cout << BLUE << "'What Do You Want To Buy To Defeat The Zombies?'(Enter The Number)" << endl;
-				cin >> number;
-				cout << endl;
-			}
-            if(number == 15)
-            {
-                cout << "Leaving The Shop..." << endl;
-                return;
-            }
-            if(number == 16) 
-            {
-                SavePlayer(player, backpack);
-            }
-            if(!(number >= 1 && number <= 16))
-            {
-                cout << RED << "'We Don't Have Such Weapon!'" << endl;
-				cout << "Please Enter A Valind Number(1-16)" << RESET << endl;
-				Beep(500 , 800);
-            }
-			
-                while(true)
-                {
-                    if(number == 15 || number == 16)
-                	    break;
-
-                	cout << BLUE;	
-                    string NameOfWeapon = weapons[number - 1].name;
-                    int PriceOfWeapon = weapons[number - 1].price;
-                    int DamageOfWeapon = weapons[number - 1].damage;
-                    if(player->Money >= PriceOfWeapon)
-                    {
-                        backpack->AddWeapon(NameOfWeapon , DamageOfWeapon);
-                        player->Money -= PriceOfWeapon;
-                        cout << NameOfWeapon << " Is Now In Your Backpack." << endl << "Your Money: " << player->Money << "$" << endl ;
-                    }
-                    else
-                    {
-                        cout << RED << "Sorry! You Don't Have Enough Money To Buy " << NameOfWeapon << "." << RESET << endl;
-                    }
-                    cout << BLUE << "'Do You Want To Buy Something Else?' The Saller Says." << endl;
-                    cout << "(1) No.(You Will Leave The Shop)" << endl;
-                    cout << "(2) Yes" << endl;
-                    while(true)
-                    {
-                        int num;
-                        cin >> num;
-                        cout << endl;
-                        if(num == 1)
-                        {
-                            system("cls");
-                            cout << "'Thanks For Your Purchase. Good Luck!'" << endl << "Leaving The Shop..." << endl;
-                            return;
-                        }
-                        if(num == 2)
-                        {
-                            cout << "'What Do You Want To Buy To Defeat The Zombies?'(Enter The Number)" << endl;
-                            cin >> number;	
-                            cout << endl;
-                            break;
-                        }
-                        else
-                        {
-                            cout << RED << "Please Enter A Valid Number(1 or 2): " << RESET << endl;
-                            cout << BLUE;
-                            Beep(500 , 800);
-                        }
-				    }
-                    cout << RESET;
-                }  
-	    }
-    }
 };
 class JonSnow : public characters
 {
-private:
-    vector<Weapon> weapons;
-
 public:
     JonSnow(string name, int age, string gender, int level, int stamina, int hp, int money)
     :characters(name, age, gender, level, stamina, hp, money)
     {
         Type = "JonSnow";
+        textColor = GRAY;
         weapons.push_back(Weapon("Sword" , 40 , 20));
         weapons.push_back(Weapon("Dagger" , 20 , 20));
         weapons.push_back(Weapon("Chopper" , 20 , 20));
@@ -447,129 +320,6 @@ public:
         weapons.push_back(Weapon("Meat" , 20 , 20));
         weapons.push_back(Weapon("BluePotion" , 20 , 20));
         weapons.push_back(Weapon("RedPotion" , 20 , 20));
-    }
-
-    //shop
-    virtual void ShowShop(characters* &player) override
-    {
-        clearConsole();
-    	cout << endl;
-    	cout << GRAY << "'Hi Brave, You've Chosen The Best Shop! Here You Can Find Anything You Need.'" << endl;
-        cout << "Your Money: " << player->Money << "$" << endl << endl;
-    	cout << "Cold Weapons :" << endl;
-
-        for(int i = 0 ; i < 3 ; i++)
-    	{
-        	cout << "(" << i + 1 << ") " << weapons[i].name << " [Damage: -" << weapons[i].damage << " , Price: " << weapons[i].price << "$]" << endl;
-    	}
-
-    	cout << endl;
-		cout << "Firearms :" << endl;
-    	for(int i = 0 ; i < 3 ; i++)
-    	{
-        	cout << "(" << i + 4 << ") " << weapons[i + 3].name << " [Damage: -" << weapons[i + 3].damage << " , Price: " << weapons[i + 3].price << "$]" << endl;
-    	}
-
-    	cout << endl;
-		cout << "Throwing Weapons :" << endl;
-    	for(int i = 0 ; i < 4 ; i++)
-    	{
-        	cout << "(" << i + 7 << ") " << weapons[i + 6].name << " [Damage: -" << weapons[i + 6].damage << " , Price: " << weapons[i + 6].price << "$]" << endl;
-    	}
-
-    	cout << endl;
-		cout << "Consumable Weapons :" << endl;
-    	for(int i = 0 ; i < 2 ; i++)
-    	{
-        	cout << "(" << i + 11 << ") " << weapons[i + 10].name << " [Stamina: +" << weapons[i + 10].damage << " , Price: " << weapons[i + 10].price << "$]" << endl;
-    	}
-    	for(int i = 0 ; i < 2 ; i++)
-    	{
-        	cout << "(" << i + 13 << ") " << weapons[i + 12].name << " [HP: +" << weapons[i + 12].damage << " , Price: " << weapons[i + 12].price << "$]" << endl;
-    	}
-    	cout << endl;
-    	cout << "(15) Nothing (You Will Leave The Shop)" << endl;
-		cout << "(16) Leave The Game" << endl;
-		cout << RESET;
-    }
-    virtual void BuyWeapon(characters* &player , BackPack* &backpack) override
-    {
-        int number = 0;
-        while(true)
-        {
-            cout << GRAY << endl;
-            if(!(number == 15 || number == 16))
-            {
-				cout << GRAY << "'What Do You Want To Buy To Defeat The Zombies?'(Enter The Number)" << endl;
-				cin >> number;
-				cout << endl;
-			}
-            if(number == 15)
-            {
-                cout << "Leaving The Shop..." << endl;
-                return;
-            }
-            if(number == 16) 
-            {
-                SavePlayer(player, backpack);
-            }
-            if(!(number >= 1 && number <= 16))
-            {
-                cout << RED << "'We Don't Have Such Weapon!'" << endl;
-				cout << "Please Enter A Valind Number(1-16)" << RESET << endl;
-				Beep(500 , 800);
-            }
-			
-                while(true)
-                {
-                    if(number == 15 || number == 16)
-                	    break;
-
-                	cout << GRAY;	
-                    string NameOfWeapon = weapons[number - 1].name;
-                    int PriceOfWeapon = weapons[number - 1].price;
-                    int DamageOfWeapon = weapons[number - 1].damage;
-                    if(player->Money >= PriceOfWeapon)
-                    {
-                        backpack->AddWeapon(NameOfWeapon , DamageOfWeapon);
-                        player->Money -= PriceOfWeapon;
-                        cout << NameOfWeapon << " Is Now In Your Backpack." << endl << "Your Money: " << player->Money << "$" << endl ;
-                    }
-                    else
-                    {
-                        cout << RED << "Sorry! You Don't Have Enough Money To Buy " << NameOfWeapon << "." << RESET << endl;
-                    }
-                    cout << GRAY << "'Do You Want To Buy Something Else?' The Saller Says." << endl;
-                    cout << "(1) No.(You Will Leave The Shop)" << endl;
-                    cout << "(2) Yes" << endl;
-                    while(true)
-                    {
-                        int num;
-                        cin >> num;
-                        cout << endl;
-                        if(num == 1)
-                        {
-                            system("cls");
-                            cout << "'Thanks For Your Purchase. Good Luck!'" << endl << "Leaving The Shop..." << endl;
-                            return;
-                        }
-                        if(num == 2)
-                        {
-                            cout << "'What Do You Want To Buy To Defeat The Zombies?'(Enter The Number)" << endl;
-                            cin >> number;	
-                            cout << endl;
-                            break;
-                        }
-                        else
-                        {
-                            cout << RED << "Please Enter A Valid Number(1 or 2): " << RESET << endl;
-                            cout << GRAY;
-                            Beep(500 , 800);
-                        }
-				    }
-                    cout << RESET;
-                } 
-	    }
     }
 };
 
@@ -655,9 +405,10 @@ public:
 
 };
 
-void clearConsole() 
+void clearConsole(double seconds) 
 {
-    system("cls");
+    this_thread::sleep_for(chrono::duration<double>(seconds));
+    system(CLEAR);
 }
 bool isDupName(string name)
 {
@@ -666,8 +417,12 @@ bool isDupName(string name)
     while(getline(names, line))
     {
         if(line == name)
+	{
+	    names.close();
             return false;
+	}
     }
+    names.close();
     return true;
 }
 void Game(characters* Player, BackPack* &backpack)
@@ -675,7 +430,7 @@ void Game(characters* Player, BackPack* &backpack)
     srand(time(0));
     while(true)
     {
-        clearConsole();
+        clearConsole(2);
         int RandNum = rand() % 2;
         switch (RandNum)
         {
@@ -734,14 +489,16 @@ characters* PreChar(characters* Player, CharFactory charfactorty, BackPack* back
         if(num == 4)
             Player->setGender(line);
         if(num == 5)
-            Player->setStamina(stoi(line));
+            Player->setLevel(stoi(line));
         if(num == 6)
-            Player->setHP(stoi(line));
+            Player->setStamina(stoi(line));
         if(num == 7)
+            Player->setHP(stoi(line));
+        if(num == 8)
             Player->Money = stoi(line);
-        if(num >= 8)
+        if(num >= 9)
         {
-            if(num % 2 == 0)//First line is the name of weapon
+            if(num % 2 == 1)//First line is the name of weapon
                 WName = line;
             else//Second line is the damage of weapon
             {
@@ -752,6 +509,7 @@ characters* PreChar(characters* Player, CharFactory charfactorty, BackPack* back
         num += 1;
     }    
     cout << "Welcome back " << Player->getName() << "!" << endl; 
+    PreChar.close();
     return Player;
 }
 void ChoosingChar()
@@ -851,18 +609,21 @@ void SavePlayer(characters* Player, BackPack* backpack)
 	exit(1);
         return;
     }
-    File << Player->getType() << endl
-    	 << Player->getName() << endl
-    	 << Player->getAge() << endl
-	     << Player->getGender() << endl
-         << Player->getStamina() << endl
-	     << Player->getHP() << endl
-         << Player->Money << endl;
+    File << Player->getType() << endl;
+    File << Player->getName() << endl;
+    File << Player->getAge() << endl;
+	File << Player->getGender() << endl;
+    File << Player->getLevel() << endl;
+    File << Player->getStamina() << endl;
+	File << Player->getHP() << endl;
+    File << Player->Money << endl;
         for(auto weapons : backpack->getWeapons())
             File << weapons.first << endl << weapons.second << endl;
 	
     if(isDupName(Player->getName()))//To prevent outputting a name twice
         Names << Player->getName() << endl;
+    File.close();
+    Names.close();
     exit(1);
 }
 int main()
