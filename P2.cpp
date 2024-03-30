@@ -527,22 +527,22 @@ double Enemy::Weapon()
     int Rand = rand() % 100 + 1;
     if (Rand <= 33 && Level >= 1)
     {
-        wea = "throwingStar";
+        wea = "ThrowingStar";
         return (1 * Level * e);
     }
     else if (Rand > 33 && Rand <= 66 && Level >= 2)
     {
-        wea = "kife";
+        wea = "Kife";
         return (2 * Level * e);
     }
     else if (Rand > 66 && Level >= 5)
     {
-        wea = "sword";
+        wea = "Sword";
         return (5 * Level * e);
     }
     else
     {
-        wea = "throwingStar";
+        wea = "ThrowingStar";
         return (1 * Level * e);
     }
 }
@@ -615,7 +615,7 @@ void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpa
         << "Stamina: " << playerPtr->getStamina() << endl
         << "Strength: " << playerPtr->getStrength() << endl
 	    << "Inteligence: " << playerPtr->getIntelligence() << endl;
-    cout << endl << GRAY << "Your Enemy\n_______________\n";
+    cout << endl << RED << "Your Enemy\n_______________\n";
     cout << "Enemy type: " << enemyPtr->zombieName() << endl
         << "HP: " << enemyPtr->getHP() << endl
         << "Stamina: " << enemyPtr->getStamina() << RESET << endl;
@@ -728,7 +728,7 @@ void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpa
 		}
 		else 
 		{
-			cout << RED << "Please Enter A Valid Number(1-3): " << RESET << endl;
+			cout << RED << "Please Enter A Valid Number(1, 2 or 3): " << RESET << endl;
         	Beep(500 , 800);
 		}
 	}
@@ -738,8 +738,8 @@ void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpa
 void Battlefield (characters* PlayerPtr, BackPack* playerBackpack)
 {
     //_____________________________________//
-    cout << "You've come to a dangerous place. Beware of the creatures lurking in the shadow.\n";
-    cout << "There is an enemy against you!\n";
+    cout << "You've Come To A Dangerous Place. Beware Of The Creatures Lurking In The Shadow.\n";
+    cout << "There Is An Enemy Against You!\n";
     //creating an enemy object
     srand ( time(NULL) );
     int rand_1 = rand () % 4 + 1;
@@ -773,7 +773,7 @@ void Battlefield (characters* PlayerPtr, BackPack* playerBackpack)
     // while ( zom->getHP() > 0 && ( PlayerObj.getHP() > 0 || false ) )
     while (choice1 != 4) // Examplary condition
     {
-        cout << "What would you like to do? (Attack ends your turn.)\n";
+        cout << "What Would You Like To Do? (Attack Ends Your Turn.)\n";
         //options_1
         cout << "(1) Attack\n(2) Inventory\n(3) Character\n(4) Exit Battlefield\n(5) Exit Game\n";
         cin >> choice1;
@@ -793,16 +793,16 @@ void Battlefield (characters* PlayerPtr, BackPack* playerBackpack)
             break;
             case 4:
             //Exit battlefield
-            cout << "Exiting battlefield...\n";
+            cout << "Exiting Battlefield...\n";
             return;
             break;
             case 5:
             //save player's info
-            cout << "Exiting the game...\n";
+            cout << "Exiting The Game...\n";
             exit(0);
             break;
             default:
-            cout << "Please enter a valid number (1, 2, 3, 4 or 5).\n";
+            cout << "Please Enter A Valid Number (1, 2, 3, 4 or 5).\n";
             break;
         }
     }
@@ -898,7 +898,7 @@ characters* PreChar(characters* Player, CharFactory charfactorty, BackPack* back
         }
         num += 1;
     }    
-    cout << "Welcome back " << Player->getName() << "!" << endl; 
+    cout << "Welcome Back " << Player->getName() << "!" << endl; 
     PreChar.close();
     return Player;
 }
