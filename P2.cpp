@@ -630,6 +630,8 @@ void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpa
 		cout << endl;
 		int skill = playerPtr->getSkill();
 		int CountOfWeapons = playerBackpack->getWeaponCount();
+		int strength = playerPtr->getStrength();
+		int intelligence = playerPtr->getIntelligence();
 		if(number == 1)
 		{
 			if(skill >= 1)
@@ -651,6 +653,10 @@ void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpa
 					{
 						skill -= 1;
 						playerPtr->setSkill(skill);
+						strength += 1;
+						playerPtr->setStrength(strength);
+						intelligence += 1;
+						playerPtr->setIntelligence(intelligence);
 						cout << "Your Firearms Have Successfully Upgrade By 10." << endl;
 						cout << endl;
 						return;
@@ -697,6 +703,10 @@ void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpa
 					{
 						skill -= 1;
 						playerPtr->setSkill(skill);
+						strength += 1;
+						playerPtr->setStrength(strength);
+						intelligence += 1;
+						playerPtr->setIntelligence(intelligence);
 						cout << "Your Cold Weapons Have Successfully Upgrade By 10." << endl;
 						cout << endl;
 						return;
