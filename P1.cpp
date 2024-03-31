@@ -61,7 +61,7 @@ public:
             else//for throwing and cold weapons and firearme
             	cout << " [Damage = " << weapon.damage;
             if(Bool == true)//show of price of update for upgrade
-            	cout << " ,Price Of Upgrde = " << weapon.priceUp << "$]" << endl;
+            	cout << " ,Price Of Upgrade = " << weapon.priceUp << "$]" << endl;
             else//don't show price of update
             	cout << "]" << endl;
             i++;
