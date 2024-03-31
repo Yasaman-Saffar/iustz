@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <ctime>
-#include<tuple>
 #include <cstdlib>
 #include <string>
 #include <vector>
