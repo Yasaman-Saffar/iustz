@@ -673,9 +673,9 @@ void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpa
 	while(true)//upgrade skills of character
 	{
 		cout << endl;
-		cout << "What Do You Want To Upgrade?(Skill Points:" << playerPtr->getSkill() << ")" << endl;
+		cout << "What Do You Want To Upgrade?(Skill Points: " << playerPtr->getSkill() << ")" << endl;
 		cout << "(1) Strength(Improving Firearm Proficiency)" << endl;
-		cout << "(2) Intelligance(Improving Cold Weapon Proficiency)" << endl;
+		cout << "(2) Intelligence(Improving Cold Weapon Proficiency)" << endl;
 		cout << "(3) Back" << endl;
 		cin >> number;
 		cout << endl;
