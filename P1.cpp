@@ -862,6 +862,7 @@ void Battlefield (characters* PlayerPtr, BackPack* playerBackpack)
             break;
             case 5:
             //save player's info
+	SavePlayer(PlayerPtr, playerBackpack);
             cout << "Exiting The Game...\n";
             exit(0);
             break;
