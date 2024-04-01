@@ -668,9 +668,7 @@ void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpa
 						playerPtr->setSkill(skill);
 						strength += 1;
 						playerPtr->setStrength(strength);
-						intelligence += 1;
-						playerPtr->setIntelligence(intelligence);
-						cout << "Your Firearms Have Successfully Upgrade By 10." << endl;
+						cout << "Your Firearms Have Successfully Upgraded By 10." << endl;
 						cout << endl;
 						return;
 					}
@@ -716,11 +714,9 @@ void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpa
 					{
 						skill -= 1;
 						playerPtr->setSkill(skill);
-						strength += 1;
-						playerPtr->setStrength(strength);
 						intelligence += 1;
 						playerPtr->setIntelligence(intelligence);
-						cout << "Your Cold Weapons Have Successfully Upgrade By 10." << endl;
+						cout << "Your Cold Weapons Have Successfully Upgraded By 10." << endl;
 						cout << endl;
 						return;
 					}
