@@ -18,7 +18,7 @@ using namespace std;
 #define GRAY    "\033[38;5;8m"
 #define BLUE    "\033[94m"
 #define RED		"\033[31m"
-#define PURPLE   "\033[94m"
+#define GREEN   "\033[32m"
 
 class Weapon
 {
@@ -141,10 +141,12 @@ private:
 
 protected:
     string Type;
+    string textColor;
     int Level;
     int Stamina;
+    int maxStamina;
     int HP;
-    string textColor;
+    int maxHp;
     int Strength;
     int Intelligence;
     int Skill;
@@ -154,7 +156,11 @@ public:
     int Money;
     characters() = default;
     characters(string name, int age, string gender, int level, int stamina, int hp, int money , int strength , int intelligence , int skill)
-    :Name(name), Age(age), Gender(gender), Level(level), Stamina(stamina), HP(hp), Money(money) , Strength(strength) , Intelligence(intelligence) , Skill(skill){}
+    :Name(name), Age(age), Gender(gender), Level(level), Stamina(stamina), HP(hp), Money(money) , Strength(strength) , Intelligence(intelligence) , Skill(skill)
+    {
+        maxStamina = 50;
+        maxHp = 100;
+    }
 
     
     string getName() {return Name;}
@@ -177,6 +183,8 @@ public:
 	void setIntelligence(int intelligence) { Intelligence = intelligence; }
 	int getSkill() { return Skill; }
 	void setSkill(int skill) { Skill = skill; }
+    int getMaxHp() {return maxHp;}
+    int getMaxStamina() {return maxStamina;}
 
 
     void levelUp() {Level += 1;}
@@ -310,6 +318,68 @@ public:
    // virtual double IncreaseStamina(string name,int damege) { return 0; }
    // virtual double IncreaseHp(string name,int damege) { return 0; }
 };
+class Dumbledore : public characters
+{
+public:
+    Dumbledore(string name, int age, string gender, int level, int stamina, int hp, int money , int strength , int intelligence , int skill)
+    :characters(name, age, gender, level, stamina, hp, money , strength , intelligence , skill)
+    {
+        Type = "Dumbledore";
+        textColor = BLUE;
+        weapons.push_back(Weapon("Stupefy (Throwing Somthing)" , 40 , 20 , 20 , "Cold", 1));//name, price, price of update, damage of weapons and the number of weapons
+        weapons.push_back(Weapon("SecfumSempra (To Injure)" , 20, 20 , 20 , "Cold", 1));
+        weapons.push_back(Weapon("Crucio (To Torture)" , 20, 20 , 20 , "Cold", 1));
+        weapons.push_back(Weapon("Incendio (Fire)" , 20, 20 , 20 , "Firearm", 1));
+        weapons.push_back(Weapon("Fiendfyre Curse (Dragon)" , 20, 20 , 20 , "Firearm", 1));
+        weapons.push_back(Weapon("Avada Kedavra (To Kill)" , 5000, 20 , 100 , "Firearm", 1));
+        weapons.push_back(Weapon("Redacto (Blow Up)" , 20 , 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("In Caeseros (Rope)" , 20, 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("Serpensortia (Throwing Snake)" , 20, 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("Draught Og Living Death (Go To Death Mode)" , 20, 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("Felix Felicis (Increas Energy)" , 20, 20 , 20 , "ConsumableStamina", 1));
+        weapons.push_back(Weapon("Fiantodon (Protect)" , 20, 20 , 20 , "ConsumableStamina", 1));
+        weapons.push_back(Weapon("Elixir OF Life (Increas HP)" , 20, 20 , 20 , "ConsumableHp", 1));
+        weapons.push_back(Weapon("Episci (Prevent Bleeding)" , 20, 20 , 20 , "ConsumableHp", 1));
+    }
+    //double Damege(string name,int damege) override
+    //{
+    //    if(name=="Stupefy (Throwing Somthing)")
+    //    return damege*(Level/3);
+    //    if(name=="SecfumSempra (To Injure)")
+    //    return damege*(Level/2.5);
+    //    if(name=="Crucio (To Torture)")
+    //    return damege*(Level/2);
+    //    if(name=="Incendio (Fire)")
+    //    return damege*(Level/1.5);
+    //    if(name=="Fiendfyre Curse (Dragon)")
+    //    return damege*(Level);
+    //    if(name=="Avada Kedavra (To Kill)")
+    //    return damege; //hp(enemy)=0
+    //    if(name=="Redacto (Blow Up)")
+    //    return damege*(Level/3);
+    //    if(name=="In Caeseros (Rope)")
+    //    return damege*(Level/2.5);
+    //    if(name=="Serpensortia (Throwing Snake)")
+    //    return damege*(Level/2);
+    //    if(name=="Draught Og Living Death (Go To Death Mode)")
+    //    return damege*(Level/1.5);
+    //}
+    //double IncreaseStamina(string name,int damege) override
+    //{
+    //    if(name=="Felix Felicis (Increas Energy)")
+    //    return damege*(Level/2);
+    //}
+    //double IncreaseHp(string name,int damege) override
+    //{
+    //    if(name=="Elixir OF Life (Increas HP)")
+    //    return damege*(Level/2.5);
+    //    if(name=="Episci (Prevent Bleeding)")
+    //    return damege*(Level/2);
+    //    if(name=="Fiantodon (Protect)")
+    //    return damege*(Level/1.5);
+    //}
+};
+
 class Enemy
 {
 protected:
@@ -319,7 +389,7 @@ protected:
     string wea;
     double e;
 public:
-    Enemy(int PlayerLevel ,double E) : Level(PlayerLevel), HP(100), Stamina(50), wea(""), e(E) {} // The default constructor which initializes both HP and Stamina to 100.
+    Enemy(int PlayerLevel ,double E) : Level(PlayerLevel), HP(70), Stamina(30), wea(""), e(E) {} // The default constructor which initializes both HP and Stamina to 100.
 
     double getHP() { return HP; }
     int getStamina() { return Stamina; }
@@ -362,16 +432,29 @@ private:
     int Intelligence;
     int Skill;
     bool attack;
+    int maxStamina;
+    int maxHp;
     vector<tuple <string,int, string>> weapons;
     EnemyState currentState;
 
 public:
+    int getStrength() {return Strength;}
+    int getIntelligence() {return Intelligence;}
+    vector<tuple <string,int, string>> getWeapons()
+    {
+        return weapons;
+    }
+
+
     Human(int PlayerLevel, double E, characters* Player) : Enemy(PlayerLevel, 1) 
     {
+        srand(time(0));
         Strength = 0;
         Intelligence = 0;
-        Skill = 0;
-        bool attack = false;
+        Skill = 5; //must be zero
+        maxStamina = 50;
+        maxHp = 100;
+        attack = false;
 
         int n = rand() % 3;
         string name;
@@ -387,14 +470,14 @@ public:
         }
 
         int j=0;
-        if(Player->getLevel() < 4)
+        if(PlayerLevel < 4)
             j=2;
         else
             j=4; 
 
-        for(int i=0; i<j; i++)//Adding a health and stamina booster
+        for(int i=0; i<j; i++)//Adding a Hp and stamina booster
         {
-            n = rand() % 4 + 11;
+            n = rand() % 4 + 10;
             name = Player->weapons[n].name;
             booster = Player->weapons[n].damage;
             type = Player->weapons[n].type;
@@ -405,20 +488,23 @@ public:
 
     string zombieName() override { return "Human"; }
 
-    void Action(characters* Player)
+    void Action(characters* Player, EnemyState currentS)//defining actions
     {
-        switch(currentState)
+        switch(currentS)
         {
             case EnemyState::Increase_HP:
             if(!weapons.empty())
             {
                 for(int i=0; i<weapons.size(); i++)
                 {
-                    if(get<2>(weapons[i]) == "ConsumableHp")
+                    if(get<2>(weapons[i]) == "ConsumableHp" && HP < maxHp)
                     {
+                        int preHP = HP;
                         HP += get<1>(weapons[i]);
+                        if(HP > maxHp)
+                            HP = maxHp;
                         weapons.erase(weapons.begin() + i);
-                        cout << PURPLE << "Your Enemy Has Increased His HP By " << get<1>(weapons[i]) <<  Player->getcolor() << endl;
+                        cout << GREEN << "Your Enemy Has Increased His HP By " << HP-preHP << "." << Player->getcolor() << endl;
                     }
                 }
             }
@@ -428,11 +514,14 @@ public:
             {
                 for(int i=0; i<weapons.size(); i++)
                 {
-                    if(get<2>(weapons[i]) == "ConsumableStamina")
+                    if(get<2>(weapons[i]) == "ConsumableStamina" && Stamina < maxStamina)
                     {
-                        HP += get<1>(weapons[i]);
+                        int preStamina = Stamina;
+                        Stamina += get<1>(weapons[i]);
+                        if(Stamina > maxStamina)
+                            Stamina = maxStamina;
                         weapons.erase(weapons.begin() + i);
-                        cout << PURPLE << "Your Enemy Has Increased His Stamina By " << get<1>(weapons[i]) <<  Player->getcolor() << endl;
+                        cout << GREEN << "Your Enemy Has Increased His Stamina By " << Stamina-preStamina << "." << Player->getcolor() << endl;
                     }
                 }
             }
@@ -443,7 +532,7 @@ public:
                 Intelligence += 1;
                 get<1>(weapons[1]) += 10;
                 Skill -= 1;
-                cout << PURPLE << "Your Enemy Has Increased His Intelligence By 1 And Firearm's Damage By 10."<<  Player->getcolor() << endl;
+                cout << GREEN << "Your Enemy Has Increased His Intelligence By 1 And Firearm's Damage By 10."<<  Player->getcolor() << endl;
             }
             break;
             case EnemyState::Upgrade_Strength:
@@ -452,27 +541,17 @@ public:
                 Strength += 1;
                 get<1>(weapons[0]) += 10;
                 Skill -= 1;
-                cout << PURPLE << "Your Enemy Has Increased His Strength By 1 And Firearm's Damage By 10."<<  Player->getcolor() << endl;
+                cout << GREEN << "Your Enemy Has Increased His Strength By 1 And Firearm's Damage By 10."<<  Player->getcolor() << endl;
             }
             break;
             default://attack
             attack = true;
             int i = rand() % 2;
             Player->damage(get<1>(weapons[i]));
+            cout << GREEN <<  "Enemy Is Attacking" << Player->getcolor() << endl;
             break;
         }
     } 
-
-    bool isHungry() {return rand() % 2 == 0;}
-    bool isWeak() {return rand() % 2 == 0;}
-    bool needsInteligance() {return rand() % 2 == 0;}
-    bool needsStrength() {return rand() % 2 == 0;}
-    bool attack() 
-    {
-        int remainder = rand() % 3; 
-        return (remainder == 1 || remainder == 2 || remainder == 3);
-    }
-
     EnemyState UpdateStates()
     {
         int random = rand() % 6;
@@ -488,14 +567,15 @@ public:
             return EnemyState::Upgrade_Inteligance;
         if(random == 4)
             return EnemyState::Upgrade_Strength;
+        return EnemyState::Attack;
     }
     void beforeAttack(characters* Player)
     {
-        int n = 0;
         while(!attack)
         {
-            UpdateStates();
-            Action(Player);
+            currentState = UpdateStates();
+            Action(Player, currentState);
         }
     }
 };
+int main()
