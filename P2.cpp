@@ -24,7 +24,7 @@ using namespace std;
 #define GRAY    "\033[38;5;8m"
 #define BLUE    "\033[94m"
 #define RED		"\033[31m"
-#define GREEN   "\033[32"
+#define GREEN   "\033[32m"
 class Weapon
 {
 public:
@@ -33,18 +33,29 @@ public:
     int priceUp;
     int damage;
     string type;
-    Weapon(string _name , int _price , double _priceUp , int _damage , string _type) : name(_name) , price(_price) , priceUp(_priceUp) , damage(_damage) , type(_type){}
+    int numOfWeas;
+    Weapon(string _name , int _price , double _priceUp , int _damage , string _type, int _numofweas) : name(_name) , price(_price) , priceUp(_priceUp) , damage(_damage) , type(_type), numOfWeas(_numofweas){}
 };
 class BackPack
 {
 private:
     vector<Weapon> BPWeapons;//vector for weapons
 public:
-    void AddWeapon(string name , int price , double priceUp , int damage , string type)
+    void AddWeapon(string name , int price , double priceUp , int damage , string type, int numOfWeas)
     {
-        BPWeapons.push_back(Weapon(name , price , priceUp , damage , type));
+        bool isNew = true;
+        for(int i=0; i<BPWeapons.size(); i++)
+        {
+            if((BPWeapons[i].name) == name)
+            {
+                (BPWeapons[i].numOfWeas) += 1;
+                isNew = false;
+            }
+        }
+        if(isNew)
+            BPWeapons.push_back(Weapon(name , price , priceUp , damage , type, numOfWeas));
     }
-    void InsideTheBackpack(bool Bool)//show of weapons in the backpack
+    void InsideTheBackpack(bool Bool)//show weapons in the backpack
     {
     	if(BPWeapons.size() == 0)//backpack is empty
         {
@@ -57,15 +68,15 @@ public:
         {
             cout <<"(" << i << ") " << weapon.name;
             if(weapon.type == "ConsumableHp")//for hp increas
-            	cout << " [HP Increase = " << weapon.damage << "]" << endl;
+            	cout << " [HP Increase: -" << weapon.damage << "]" << " x" << weapon.numOfWeas << endl;
             else if(weapon.type == "ConsumableStamina")//for stamina increas
-            	cout << " [Stamina Increase = " << weapon.damage << "]" << endl;
-            else//for throwing and cold weapons and firearme
-            	cout << " [Damage = " << weapon.damage;
+            	cout << " [Stamina Increase: -" << weapon.damage << "]" << " x" << weapon.numOfWeas << endl;
+            else//for throwing and cold weapons and firearm
+            	cout << " [Damage: -" << weapon.damage;
             if(Bool == true)//show of price of update for upgrade
-            	cout << " ,Price Of Upgrde = " << weapon.priceUp << "$]" << endl;
+            	cout << " ,Price Of Upgrade: " << weapon.priceUp << "$] x" << weapon.numOfWeas  << endl;
             else//don't show price of update
-            	cout << "]" << endl;
+            	cout << "] x" << weapon.numOfWeas << endl;
             i++;
         }
 	}
@@ -130,28 +141,39 @@ class characters;
 void SavePlayer(characters*, BackPack*);
 void ChoosingChar();
 void clearConsole(double);
-
+//CHARACTERS CLASSES
 class characters
 {
+    friend class Human;
 private:
     string Name;
     int Age;
     string Gender;
+
 protected:
     string Type;
+    string textColor;
     int Level;
     int Stamina;
+    int maxStamina;
     int HP;
-    string textColor;
-    vector<Weapon> weapons;
+    int maxHp;
     int Strength;
     int Intelligence;
     int Skill;
+    vector<Weapon> weapons;
+
 public:
     int Money;
     characters() = default;
     characters(string name, int age, string gender, int level, int stamina, int hp, int money , int strength , int intelligence , int skill)
-    :Name(name), Age(age), Gender(gender), Level(level), Stamina(stamina), HP(hp), Money(money) , Strength(strength) , Intelligence(intelligence) , Skill(skill){}
+    :Name(name), Age(age), Gender(gender), Level(level), Stamina(stamina), HP(hp), Money(money) , Strength(strength) , Intelligence(intelligence) , Skill(skill)
+    {
+        maxStamina = 50;
+        maxHp = 100;
+    }
+
+    
     string getName() {return Name;}
     void setName(string name) {Name = name;}
     int getAge() {return Age;}
@@ -166,12 +188,16 @@ public:
     int getStamina() { return Stamina; }
     void setStamina(int stam1) { Stamina = stam1; }
     string getcolor() {return textColor;}
+    int getStrength() { return Strength; }
     void setStrength(int strength) { Strength = strength; }
-	int getStrength() { return Strength; }
+    int getIntelligence() {	return Intelligence; }
 	void setIntelligence(int intelligence) { Intelligence = intelligence; }
-	int getIntelligence() {	return Intelligence; }
-	void setSkill(int skill) { Skill = skill; }
 	int getSkill() { return Skill; }
+	void setSkill(int skill) { Skill = skill; }
+    int getMaxHp() {return maxHp;}
+    int getMaxStamina() {return maxStamina;}
+
+
     void levelUp() {Level += 1;}
     virtual double attack() { return 8; }//DEFINITION NEEDED!!!!
     void damage(double enemyWeapon) { HP = HP - enemyWeapon; }//the parameter is the member function of Enemy
@@ -181,11 +207,11 @@ public:
     }
     void ShowMoney()
     {
-        cout << "Your Money: " << Money << "$";
+        cout << "Your Money: " << Money << "$" << endl;
     }
     void ShowShop(characters* &player)//shop for all characters
     {
-        //clearConsole(2);
+        clearConsole(2);
     	cout << endl;
     	cout << textColor << "'Hi Brave, You Chose The Best Shop! Here You Can Find Anything You Need.'" << endl;
         cout << "Your Money: " << player->Money << "$" << endl << endl;
@@ -240,7 +266,7 @@ public:
             }
             if(number == 16) 
             {
-                SavePlayer(player, backpack);
+                //SavePlayer(player, backpack);
             }
             if(!(number >= 1 && number <= 16))
             {
@@ -260,7 +286,7 @@ public:
                 string TypeOfWeapon = weapons[number - 1].type;
                 if(player->Money >= PriceOfWeapon)
                 {
-                    backpack->AddWeapon(NameOfWeapon ,PriceOfWeapon, PriceUpOFWeapon , DamageOfWeapon ,TypeOfWeapon);
+                    backpack->AddWeapon(NameOfWeapon ,PriceOfWeapon, PriceUpOFWeapon , DamageOfWeapon ,TypeOfWeapon, 1);
                     player->Money -= PriceOfWeapon;
                     cout << NameOfWeapon << " Is Now In Your Backpack." << endl << "Your Money: " << player->Money << "$" << endl ;
                 }
@@ -311,20 +337,20 @@ public:
     {
         Type = "Michelangelo";
         textColor = ORANGE;
-        weapons.push_back(Weapon("Sword" , 40 , 40 , 20 , "Cold"));//name and price and price of update and damage of weapons
-        weapons.push_back(Weapon("Dagger" , 20 , 20 , 20 , "Cold"));
-        weapons.push_back(Weapon("Nanchiko" , 20 , 20 , 20 , "Cold"));
-        weapons.push_back(Weapon("Colt" , 20 , 20 , 20 , "Firearm"));
-        weapons.push_back(Weapon("ShutGun" , 20 , 20 , 20 , "Firearm"));
-        weapons.push_back(Weapon("Winchester" , 20 , 20 , 20 , "Firearm"));
-        weapons.push_back(Weapon("Bomb" , 20 , 20 , 20 , "Throwing"));
-        weapons.push_back(Weapon("Smoker" , 20 , 20 , 20 , "Throwing"));
-        weapons.push_back(Weapon("Boomerang" , 20, 20 , 20 , "Throwing"));
-        weapons.push_back(Weapon("ThrowingKnife" , 20, 20 , 20 , "Throwing"));
-        weapons.push_back(Weapon("Coca" , 20, 20 , 20 , "ConsumableStamian"));
-        weapons.push_back(Weapon("IceMonkey" , 20, 20 , 20 , "ConsumableStamina"));
-        weapons.push_back(Weapon("Pizza" , 20, 20 , 20 , "ConsumableHp"));
-        weapons.push_back(Weapon("FrenchFries" , 20, 20 , 20 , "ConsumableHp")); 
+        weapons.push_back(Weapon("Sword" , 40 , 40 , 20 , "Cold", 1));//name, price, price of update, damage of weapons and the number of weapons
+        weapons.push_back(Weapon("Dagger" , 20 , 20 , 20 , "Cold", 1));
+        weapons.push_back(Weapon("Nanchiko" , 20 , 20 , 20 , "Cold", 1));
+        weapons.push_back(Weapon("Colt" , 20 , 20 , 20 , "Firearm", 1));
+        weapons.push_back(Weapon("ShutGun" , 20 , 20 , 20 , "Firearm", 1));
+        weapons.push_back(Weapon("Winchester" , 20 , 20 , 20 , "Firearm", 1));
+        weapons.push_back(Weapon("Bomb" , 20 , 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("Smoker" , 20 , 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("Boomerang" , 20, 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("ThrowingKnife" , 20, 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("Coca" , 20, 20 , 20 , "ConsumableStamian", 1));
+        weapons.push_back(Weapon("IceMonkey" , 20, 20 , 20 , "ConsumableStamina", 1));
+        weapons.push_back(Weapon("Pizza" , 20, 20 , 20 , "ConsumableHp", 1));
+        weapons.push_back(Weapon("FrenchFries" , 20, 20 , 20 , "ConsumableHp", 1)); 
     }
     //double Damege(string name,int damege) override
     //{
@@ -372,20 +398,20 @@ public:
     {
         Type = "Dumbledore";
         textColor = BLUE;
-        weapons.push_back(Weapon("Stupefy (Throwing Somthing)" , 40 , 20 , 20 , "Cold"));//name and price and price of update and damage of weapons
-        weapons.push_back(Weapon("SecfumSempra (To Injure)" , 20, 20 , 20 , "Cold"));
-        weapons.push_back(Weapon("Crucio (To Torture)" , 20, 20 , 20 , "Cold"));
-        weapons.push_back(Weapon("Incendio (Fire)" , 20, 20 , 20 , "Firearm"));
-        weapons.push_back(Weapon("Fiendfyre Curse (Dragon)" , 20, 20 , 20 , "Firearm"));
-        weapons.push_back(Weapon("Avada Kedavra (To Kill)" , 5000, 20 , 100 , "Firearm"));
-        weapons.push_back(Weapon("Redacto (Blow Up)" , 20 , 20 , 20 , "Throwing"));
-        weapons.push_back(Weapon("In Caeseros (Rope)" , 20, 20 , 20 , "Throwing"));
-        weapons.push_back(Weapon("Serpensortia (Throwing Snake)" , 20, 20 , 20 , "Throwing"));
-        weapons.push_back(Weapon("Draught Og Living Death (Go To Death Mode)" , 20, 20 , 20 , "Throwing"));
-        weapons.push_back(Weapon("Felix Felicis (Increas Energy)" , 20, 20 , 20 , "ConsumableStamina"));
-        weapons.push_back(Weapon("Fiantodon (Protect)" , 20, 20 , 20 , "ConsumableStamina"));
-        weapons.push_back(Weapon("Elixir OF Life (Increas HP)" , 20, 20 , 20 , "ConsumableHp"));
-        weapons.push_back(Weapon("Episci (Prevent Bleeding)" , 20, 20 , 20 , "ConsumableHp"));
+        weapons.push_back(Weapon("Stupefy (Throwing Somthing)" , 40 , 20 , 20 , "Cold", 1));//name, price, price of update, damage of weapons and the number of weapons
+        weapons.push_back(Weapon("SecfumSempra (To Injure)" , 20, 20 , 20 , "Cold", 1));
+        weapons.push_back(Weapon("Crucio (To Torture)" , 20, 20 , 20 , "Cold", 1));
+        weapons.push_back(Weapon("Incendio (Fire)" , 20, 20 , 20 , "Firearm", 1));
+        weapons.push_back(Weapon("Fiendfyre Curse (Dragon)" , 20, 20 , 20 , "Firearm", 1));
+        weapons.push_back(Weapon("Avada Kedavra (To Kill)" , 5000, 20 , 100 , "Firearm", 1));
+        weapons.push_back(Weapon("Redacto (Blow Up)" , 20 , 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("In Caeseros (Rope)" , 20, 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("Serpensortia (Throwing Snake)" , 20, 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("Draught Og Living Death (Go To Death Mode)" , 20, 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("Felix Felicis (Increas Energy)" , 20, 20 , 20 , "ConsumableStamina", 1));
+        weapons.push_back(Weapon("Fiantodon (Protect)" , 20, 20 , 20 , "ConsumableStamina", 1));
+        weapons.push_back(Weapon("Elixir OF Life (Increas HP)" , 20, 20 , 20 , "ConsumableHp", 1));
+        weapons.push_back(Weapon("Episci (Prevent Bleeding)" , 20, 20 , 20 , "ConsumableHp", 1));
     }
     //double Damege(string name,int damege) override
     //{
@@ -433,20 +459,20 @@ public:
     {
         Type = "JonSnow";
         textColor = GRAY;
-        weapons.push_back(Weapon("Sword" , 40, 20 , 20 , "Cold"));//name and price and price of update and damage of weapons
-        weapons.push_back(Weapon("Dagger" , 20, 20 , 20 , "Cold"));
-        weapons.push_back(Weapon("Chopper" , 20 , 20, 20 , "Cold"));
-        weapons.push_back(Weapon("Dragon" , 20 , 20, 20 , "Firearm"));
-        weapons.push_back(Weapon("Gun" , 20, 20 , 20 , "Firearm"));
-        weapons.push_back(Weapon("CataPult" , 20, 20 , 20 , "Firearm"));
-        weapons.push_back(Weapon("Shuriken" , 20 , 20, 20 , "Throwing"));
-        weapons.push_back(Weapon("FireBall" , 0, 20 , 20 , "Throwing"));
-        weapons.push_back(Weapon("SnowBall" , 20, 20 , 20 , "Throwing"));
-        weapons.push_back(Weapon("Bomb" , 20, 20 , 20 , "Throwing"));
-        weapons.push_back(Weapon("BluePotion" , 20, 20 , 20 , "ConsumableStamina"));
-        weapons.push_back(Weapon("RedPotion" , 20 , 20 , 20 , "ConsumableStamina"));
-        weapons.push_back(Weapon("Fish" , 20, 20 , 20 , "ConsumableHp"));
-        weapons.push_back(Weapon("Meat" , 20, 20 , 20 , "ConsumableHp"));
+        weapons.push_back(Weapon("Sword" , 40, 20 , 20 , "Cold", 1));////name, price, price of update, damage of weapons and the number of weapons
+        weapons.push_back(Weapon("Dagger" , 20, 20 , 20 , "Cold", 1));
+        weapons.push_back(Weapon("Chopper" , 20 , 20, 20 , "Cold", 1));
+        weapons.push_back(Weapon("Dragon" , 20 , 20, 20 , "Firearm", 1));
+        weapons.push_back(Weapon("Gun" , 20, 20 , 20 , "Firearm", 1));
+        weapons.push_back(Weapon("CataPult" , 20, 20 , 20 , "Firearm", 1));
+        weapons.push_back(Weapon("Shuriken" , 20 , 20, 20 , "Throwing", 1));
+        weapons.push_back(Weapon("FireBall" , 0, 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("SnowBall" , 20, 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("Bomb" , 20, 20 , 20 , "Throwing", 1));
+        weapons.push_back(Weapon("BluePotion" , 20, 20 , 20 , "ConsumableStamina", 1));
+        weapons.push_back(Weapon("RedPotion" , 20 , 20 , 20 , "ConsumableStamina", 1));
+        weapons.push_back(Weapon("Fish" , 20, 20 , 20 , "ConsumableHp", 1));
+        weapons.push_back(Weapon("Meat" , 20, 20 , 20 , "ConsumableHp", 1));
     }
     //double Damege(string name,int damege) override
     //{
@@ -486,29 +512,45 @@ public:
     //    return damege*(Level/2.5);
     //}
 };
+class CharFactory
+{
+public:
+    static characters* createChar(int type, string name, int age, string gender, int level, int stamina, int hp, int money , int strength , int intelligence , int skill)
+    {
+        if(type == 1)
+            return new JonSnow(name, age, gender, level, stamina, hp, money , strength , intelligence , skill);
+        if(type == 2)
+            return new Dumbledore(name, age, gender, level, stamina, hp, money , strength , intelligence , skill);
+        if(type == 3)
+            return new Michelangelo(name, age, gender, level, stamina, hp, money , strength , intelligence , skill);
+        else
+            return nullptr;
+    }
+};
 //ENEMY CLASS
 class Enemy
 {
-private:
+protected:
     int Level;
     double HP;
     int Stamina;
-protected:
     string wea;
     double e;
 public:
     Enemy(int PlayerLevel ,double E) : Level(PlayerLevel), HP(100), Stamina(50), wea(""), e(E) {} // The default constructor which initializes both HP and Stamina to 100.
-public:
+
     double getHP() { return HP; }
     int getStamina() { return Stamina; }
     string getWeapon() { return wea; }
     void damage(double playerAttack) { HP = HP - playerAttack; }
     void levelUp() { Level+=1; }    
     double Weapon();//randomly chooses a weapon between the three above. It is called when the enemy attacks and reduces the player's HP.
-    virtual string zombieName () { return "no name"; }
+    virtual void Attack(characters*) = 0;
+    virtual string zombieName () = 0;
 };
 double Enemy::Weapon() 
 {
+    srand(time(0));
     Stamina -= 3;
     int Rand = rand() % 100 + 1;
     if (Rand <= 33 && Level >= 1)
@@ -538,57 +580,198 @@ class zombie : public Enemy
 public:
     zombie(int PlayerLevel, double E) : Enemy(PlayerLevel, 1) {} // Initializes e from Enemy to 1
     string zombieName() override { return "Zombie"; }
+
+    virtual void Attack(characters*) override {}
 };
-
-
 class strongZombie : public Enemy
 {
 public:
     strongZombie(int PlayerLevel, double E) : Enemy(PlayerLevel, 1.2) {} // Initializes e from Enemy to 1.2
     string zombieName() override { return "Strong Zombie"; }
+
+    virtual void Attack(characters*) override {}
 };
-//*****//
-class CharFactory
+enum class EnemyState
 {
+    Increase_HP,
+    Increase_Stamina,
+    Upgrade_Inteligance,
+    Upgrade_Strength,
+    Attack
+};
+class Human : public Enemy
+{
+private:
+    int Strength;
+    int Intelligence;
+    int Skill;
+    bool attack;
+    int maxStamina;
+    int maxHp;
+    vector<tuple <string,int, string>> weapons;
+    EnemyState currentState;
+
 public:
-    static characters* createChar(int type, string name, int age, string gender, int level, int stamina, int hp, int money , int strength , int intelligence , int skill)
+    int getStrength() {return Strength;}
+    int getIntelligence() {return Intelligence;}
+    vector<tuple <string,int, string>> getWeapons() {return weapons;}
+
+    Human(int PlayerLevel, double E, characters* Player) : Enemy(PlayerLevel, 1) 
     {
-        if(type == 1)
-            return new JonSnow(name, age, gender, level, stamina, hp, money , strength , intelligence , skill);
-        if(type == 2)
-            return new Dumbledore(name, age, gender, level, stamina, hp, money , strength , intelligence , skill);
-        if(type == 3)
-            return new Michelangelo(name, age, gender, level, stamina, hp, money , strength , intelligence , skill);
+        srand(time(0));
+        Strength = 0;
+        Intelligence = 0;
+        Skill = Level - 1; 
+        maxStamina = 50;
+        maxHp = 100;
+        attack = false;
+
+        int n = rand() % 3;
+        string name;
+        int booster;
+        string type;
+        for(int i=0; i<2; i++)//choosing one cold weapon and firearm randomly
+        {
+            name = Player->weapons[n].name;
+            booster = Player->weapons[n].damage;
+            type = Player->weapons[n].type;
+            weapons.push_back(make_tuple(name,booster,type));
+            n = rand() % 3 + 3;
+        }
+
+        int j=0;
+        if(PlayerLevel < 6)
+            j=2;
+        else
+            j=5;
+
+        for(int i=0; i<j; i++)//Adding a Hp and stamina booster
+        {
+            n = rand() % 4 + 10;
+            name = Player->weapons[n].name;
+            booster = Player->weapons[n].damage;
+            type = Player->weapons[n].type;
+            weapons.push_back(make_tuple(name,booster,type));
+        }
+
+    }
+
+    string zombieName() override { return "Human"; }
+
+    void Action(characters* Player, EnemyState currentS)//defining actions
+    {
+        switch(currentS)
+        {
+            case EnemyState::Increase_HP:
+            if(!weapons.empty())
+            {
+                for(int i=0; i<weapons.size(); i++)
+                {
+                    if(get<2>(weapons[i]) == "ConsumableHp" && HP < maxHp)
+                    {
+                        int preHP = HP;
+                        HP += get<1>(weapons[i]);
+                        if(HP > maxHp)
+                            HP = maxHp;
+                        weapons.erase(weapons.begin() + i);
+                        cout << GREEN << "Your Enemy Has Increased His HP By " << HP-preHP << "." << Player->getcolor() << endl;
+                    }
+                }
+            }
+            break;
+            case EnemyState::Increase_Stamina:
+            if(!weapons.empty())
+            {
+                for(int i=0; i<weapons.size(); i++)
+                {
+                    if(get<2>(weapons[i]) == "ConsumableStamina" && Stamina < maxStamina)
+                    {
+                        int preStamina = Stamina;
+                        Stamina += get<1>(weapons[i]);
+                        if(Stamina > maxStamina)
+                            Stamina = maxStamina;
+                        weapons.erase(weapons.begin() + i);
+                        cout << GREEN << "Your Enemy Has Increased His Stamina By " << Stamina-preStamina << "." << Player->getcolor() << endl;
+                    }
+                }
+            }
+            break;
+            case EnemyState::Upgrade_Inteligance:
+            if(Skill != 0)
+            {
+                Intelligence += 1;
+                get<1>(weapons[0]) += 10;
+                Skill -= 1;
+                cout << GREEN << "Your Enemy Has Increased His Intelligence By 1 And Firearm's Damage By 10."<<  Player->getcolor() << endl;
+            }
+            break;
+            case EnemyState::Upgrade_Strength:
+            if(Skill != 0)
+            {
+                Strength += 1;
+                get<1>(weapons[1]) += 10;
+                Skill -= 1;
+                cout << GREEN << "Your Enemy Has Increased His Strength By 1 And Firearm's Damage By 10."<<  Player->getcolor() << endl;
+            }
+            break;
+            default://attack
+            attack = true;
+            int i = rand() % 2;
+            Player->damage(get<1>(weapons[i]));
+            cout << GREEN <<  "Enemy Is Attacking" << Player->getcolor() << endl;
+            
+            break;
+        }
+    } 
+    EnemyState UpdateStates()
+    {
+        int random = rand() % 6;
+        if(random == 0)
+            return EnemyState::Attack;
+        if(random == 5)
+            return EnemyState::Attack;
+        if(random == 1)
+            return EnemyState::Increase_HP;
+        if(random == 2)
+            return EnemyState::Increase_Stamina;
+        if(random == 3)
+            return EnemyState::Upgrade_Inteligance;
+        if(random == 4)
+            return EnemyState::Upgrade_Strength;
+        return EnemyState::Attack;
+    }
+    virtual void Attack(characters* Player) override
+    {
+        Stamina -= 3;
+        while(!attack)
+        {
+            currentState = UpdateStates();
+            Action(Player, currentState);
+            this_thread::sleep_for(chrono::milliseconds(1500));
+        }
+    }
+};
+class EnemyFactory{
+public:
+    static Enemy* createEnemy(string type, int playerLevel, characters* Player)
+    {
+        if(type == "Zombie")
+            {return new zombie(playerLevel, 1);}
+        if(type == "Strong Zombie")
+            {return new strongZombie(playerLevel, 1.2);}
+        if(type == "Human")
+            {return new Human(playerLevel, 1, Player);}
         else
             return nullptr;
-    }
+    }  
 };
-void clearConsole(double seconds) 
-{
-    this_thread::sleep_for(chrono::duration<double>(seconds));
-    system(CLEAR);
-}
-bool isDupName(string name)
-{
-    ifstream names("characters/CharNames.txt");
-    string line;
-    while(getline(names, line))
-    {
-        if(line == name)
-	    {
-	        names.close();
-            return false;
-	    }
-    }
-    names.close();
-    return true;
-}
+//Battlefield functions
 void UpgradeWeapon(characters* playerPtr , BackPack* playerBackpack)//function for upgrade of weapons in backpack
 {
 	if(playerBackpack->getWeaponCount() == 0)
 		return;
 	cout << endl;
-	cout << "Your Money = " << playerPtr->Money << "$" << endl;
+	playerPtr->ShowMoney();
 	cout << "Which One Do You Want To Upgrade " << playerPtr->getName() << "?" << endl;
 	cout << "(" << playerBackpack->getWeaponCount() + 1 << ")" << " Neither Of Them!" << endl;
 	cout << endl;
@@ -613,31 +796,37 @@ void UpgradeWeapon(characters* playerPtr , BackPack* playerBackpack)//function f
 		cout << "Upgraded Successfully!" << endl;
 	}
 }
-//Battlefield functions
-void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpack)
+void showInfoAndUpg(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpack)
 {
-    system("cls");
-    cout << "Your Character\n_______________\n";
+    cout << "Your Character\n~~~~~~~~~~~~~~~~~~\n";
     cout << "Name: " << playerPtr->getName() << endl
         << "Age: " << playerPtr->getAge() << endl
         << "Gender: " << playerPtr->getGender() << endl
-        << "Character type: " << playerPtr->getType() << endl
+        << "Character Type: " << playerPtr->getType() << endl
         << "Level: " << playerPtr->getLevel() << endl
         << "HP: " << playerPtr->getHP() << endl
         << "Stamina: " << playerPtr->getStamina() << endl
-        << "Strength: " << playerPtr->getStrength() << endl
-	    << "Intelligence: " << playerPtr->getIntelligence() << endl;
-    cout << endl << GREEN << "Your Enemy\n_______________\n";
-    cout << "Enemy type: " << enemyPtr->zombieName() << endl
+	    << "Intelligence: " << playerPtr->getIntelligence() << endl
+        << "Strength: " << playerPtr->getStrength() << endl;
+    
+    cout << endl << GREEN << "Your Enemy\n~~~~~~~~~~~~~~~~~~\n";
+    cout << "Enemy Type: " << enemyPtr->zombieName() << endl
         << "HP: " << enemyPtr->getHP() << endl
         << "Stamina: " << enemyPtr->getStamina() << playerPtr->getcolor()<< endl;
+        if(enemyPtr->zombieName() == "Human")
+        {
+            Human* en = (Human*) enemyPtr;
+            cout << GREEN << "Intelligence: " << en->getIntelligence() << endl
+                 << "Strength: " << en->getStrength() << endl << playerPtr->getcolor();
+            characters* enemyPtr = (characters*) en;
+        } 
     int number;
 	while(true)//upgrade skills of character
 	{
 		cout << endl;
-		cout << "What Do You Want To Upgrade?(Skill Points:" << playerPtr->getSkill() << ")" << endl;
-		cout << "(1) Strength(Improving Firearm Proficiency)" << endl;
-		cout << "(2) Intelligance(Improving Cold Weapon Proficiency)" << endl;
+		cout << "What Do You Want To Upgrade? (Skill Points: " << playerPtr->getSkill() << ")" << endl;
+		cout << "(1) Strength (Improving Firearm Proficiency)" << endl;
+		cout << "(2) Intelligence (Improving Cold Weapon Proficiency)" << endl;
 		cout << "(3) Back" << endl;
 		cin >> number;
 		cout << endl;
@@ -668,13 +857,13 @@ void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpa
 						playerPtr->setSkill(skill);
 						strength += 1;
 						playerPtr->setStrength(strength);
-						cout << "Your Firearms Have Successfully Upgraded By 10." << endl;
+						cout << "Your Firearms Have Been Successfully Upgraded By 10 Points." << endl;
 						cout << endl;
 						return;
 					}
 					else
 					{
-						cout << "Your Weapons Are Cold Weapons.Pleas Select The Intelligence Option." << endl;	
+						cout << "Your Weapons Are Cold Weapons. Please Select The Intelligence Option." << endl;	
 						cout << endl;
 						break;	
 					}
@@ -688,7 +877,7 @@ void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpa
 			}
 			else
 			{
-				cout << RED << "Sorry!You Don't Have Enough Skill Points." << playerPtr->getcolor() << endl;
+				cout << RED << "Sorry! You Don't Have Enough Skill Points." << playerPtr->getcolor() << endl;
 				cout << endl;
 				break;
 			}
@@ -716,13 +905,13 @@ void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpa
 						playerPtr->setSkill(skill);
 						intelligence += 1;
 						playerPtr->setIntelligence(intelligence);
-						cout << "Your Cold Weapons Have Successfully Upgraded By 10." << endl;
+						cout << "Your Cold Weapons Have Been Successfully Upgraded By 10 Points." << endl;
 						cout << endl;
 						return;
 					}
 					else
 					{
-						cout << "Your Weapons Are Firearm.Pleas Select The Strength Option" << endl;
+						cout << "Your Weapons Are Firearm. Please Select The Strength Option" << endl;
 						cout << endl;	
 						break;
 					}
@@ -736,7 +925,7 @@ void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpa
 			}
 			else
 			{
-				cout << RED << "Sorry!You Don't Have Enough Skill Points." << playerPtr->getcolor() << endl;
+				cout << RED << "Sorry! You Don't Have Enough Skill Points." << playerPtr->getcolor() << endl;
 				cout << endl;
 				break;
 			}
@@ -755,33 +944,38 @@ void showCharInfo(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBackpa
 void Battlefield (characters* PlayerPtr, BackPack* playerBackpack)
 {
     //_____________________________________//
-    cout << "You've Come To A Dangerous Place. Beware Of The Creatures Lurking In The Shadow.\n";
+    cout << PlayerPtr->getcolor() << "You've Come To A Dangerous Place. Beware Of The Creatures Lurking In The Shadow.\n";
     cout << "There Is An Enemy Against You!\n";
     //creating an enemy object
     srand ( time(NULL) );
-    int rand_1 = rand () % 4 + 1;
+    int rand_1 = rand () % 5 + 1;
     Enemy* zom;
+    EnemyFactory ef;
     switch (rand_1)
     {
         case 1: 
         {
-            zom = new zombie(PlayerPtr->getLevel(), 1);
+            zom = ef.createEnemy("Zombie", PlayerPtr->getLevel(), PlayerPtr);
             break;
         }
         case 2:
         {
-            zom = new zombie(PlayerPtr->getLevel(), 1);
+            zom = ef.createEnemy("Strong Zombie", PlayerPtr->getLevel(), PlayerPtr);
             break;
         }
         case 3:
         {
-            zom = new zombie(PlayerPtr->getLevel(), 1);
+            zom = ef.createEnemy("Zombie", PlayerPtr->getLevel(), PlayerPtr);
             break;
         }
         case 4:
         {
-            zom = new strongZombie(PlayerPtr->getLevel(), 1.2);
+            zom = ef.createEnemy("Strong Zombie", PlayerPtr->getLevel(), PlayerPtr);
             break;
+        }
+        case 5:
+        {
+            zom = ef.createEnemy("Human", PlayerPtr->getLevel(), PlayerPtr);
         }
     }
     int choice1(0);
@@ -789,6 +983,7 @@ void Battlefield (characters* PlayerPtr, BackPack* playerBackpack)
     while (choice1 != 4) // Examplary condition
     {
     	cout << endl;
+        clearConsole(2);
         cout << "What Would You Like To Do? (Attack Ends Your Turn.)\n";
         //options_1
         cout << "(1) Attack\n(2) Inventory\n(3) Character\n(4) Exit Battlefield\n(5) Exit Game\n";
@@ -802,15 +997,17 @@ void Battlefield (characters* PlayerPtr, BackPack* playerBackpack)
             case 2:
             {
                 // calling a function to show backpack
+                system(CLEAR);
             	playerBackpack->InsideTheBackpack(true);
             	UpgradeWeapon(PlayerPtr , playerBackpack);
                 break;
             }
             case 3:
             {
+                system(CLEAR);
                 //calling member functions to show player's name,
                 // character, HP, stamina, money and enemy's name, HP and stamina
-                showCharInfo(PlayerPtr, zom, playerBackpack);
+                showInfoAndUpg(PlayerPtr, zom, playerBackpack);
                 break;
             }
             case 4:
@@ -824,13 +1021,11 @@ void Battlefield (characters* PlayerPtr, BackPack* playerBackpack)
             {
                 //save player's info
 	            SavePlayer(PlayerPtr, playerBackpack);
-                cout << "Exiting The Game...\n";
-                exit(0);
                 break;
             }
             default:
             {
-                cout << RED << "Please Enter A Valid Number (1, 2, 3, 4 or 5)." << PlayerPtr->getcolor() << endl;
+                cout << RED << "Please Enter A Valid Number(1-5)." << PlayerPtr->getcolor() << endl;
                 Beep(500 , 800);
                 break;
             }
@@ -865,9 +1060,30 @@ void Game(characters* Player, BackPack* &backpack)
         }
     }
 }
+//SAVE OR MAKE CHARACTER
+void clearConsole(double seconds) 
+{
+    this_thread::sleep_for(chrono::duration<double>(seconds));
+    system(CLEAR);
+}
+bool isDupName(string name)
+{
+    ifstream names("characters/CharNames.txt");
+    string line;
+    while(getline(names, line))
+    {
+        if(line == name)
+	    {
+	        names.close();
+            return false;
+	    }
+    }
+    names.close();
+    return true;
+}
 characters* PreChar(characters* Player, CharFactory charfactorty, BackPack* backpack)
 {
-    system("cls");
+    system(CLEAR);
     bool isValidName = false;
     ifstream PreChar;
     while(!isValidName) //Openning the file
@@ -877,7 +1093,10 @@ characters* PreChar(characters* Player, CharFactory charfactorty, BackPack* back
         cin >> name;
         PreChar.open("characters/" + name + ".txt");
         if(!(PreChar.is_open()) && name != "1")
-            cout << RED << "Sorry, No Character Exists With This Name." << RESET << endl;
+            {
+                cout << RED << "Sorry, No Character Exists With This Name." << RESET << endl;
+                clearConsole(2);
+            }
         if(PreChar.is_open())
             isValidName = true;
         if(name == "1")
@@ -889,6 +1108,7 @@ characters* PreChar(characters* Player, CharFactory charfactorty, BackPack* back
     int num = 1;
     int damage = 0;
     int price = 0;
+    int numOfWeas = 0;
     double priceUp = 0;
     while(getline(PreChar, line)) //Quantification
     {
@@ -923,13 +1143,17 @@ characters* PreChar(characters* Player, CharFactory charfactorty, BackPack* back
         	Player->setSkill(stoi(line));
         if(num >= 12)
         {
-            if(num % 2 == 1)//First line is the name of weapon
+            if(num % 4 == 0)//First line is the name of weapon
                 WName = line;
-            else//Second line is the damage of weapon
-            {
+            if(num % 4 == 1)//Second line is the damage of weapon
                 damage = stoi(line);
-                backpack->AddWeapon(WName, price , priceUp , damage , type);//Quantification the weapon
-            }
+            if(num % 4 == 2)//Third line is the priceUp of weapon
+                priceUp = stoi(line);
+            if(num % 4 == 3)//Forth line is the number of weapons
+            {
+                numOfWeas = stoi(line);
+                backpack->AddWeapon(WName, price , priceUp , damage , type, numOfWeas);//Quantification the weapon
+            }           
         }
         num += 1;
     }    
@@ -937,18 +1161,68 @@ characters* PreChar(characters* Player, CharFactory charfactorty, BackPack* back
     PreChar.close();
     return Player;
 }
-void ChoosingChar()
+characters* NewChar(bool isValid, characters* player, CharFactory charfactory)
 {
-    cout << "Hello There! Welcome To This Game." << endl;
-    int choice1;
     int choice2;
     int age;
     string name;
     string gender;
+    cout << "Enter Your Name: " << endl;
+    cin >> name;
+    if(!isDupName(name))//To check if a name already contains a character
+    {
+        cout << RED << "You Have An Unfinished Game " << name << "!" << endl << "Finish It Or Enter Another Name." << RESET << endl << endl;
+        clearConsole(2.3);
+        return nullptr;
+    }
+    else
+    {
+        cout << "Enter Your Age: " << endl;
+        cin >> age;
+        cout << "Enter Your Gender(Male/Female): " << endl;
+        cin >> gender;
+        system(CLEAR);
+
+        cout << "The End Of Time Has Come And Every Being Is In A Battle For Existence." << endl 
+        << "The Greatest Heroes From Across The World Have Risen To Defend It." << endl 
+        << "Which Hero Would You Choose To Join In Safeguarding Our World?" << endl
+        << "(1) JonSnow" << endl << "(2) Dumbledore" << endl << "(3) Michelangelo" << endl;
+        while(!isValid)
+        {
+            cin >> choice2;
+            if(choice2 == 1)
+                {
+                    player = charfactory.createChar(1, name, age, gender, 1, 50, 100, 100, 0, 0, 0);
+                    isValid = true;
+                }
+            if(choice2 == 2)
+                {
+                    player = charfactory.createChar(2, name, age, gender, 1, 50, 100, 100, 0, 0, 0);
+                    isValid = true;
+                }
+            if(choice2 == 3)
+                {
+                    player = charfactory.createChar(3, name, age, gender, 1, 50, 100, 100, 0, 0, 0);
+                    isValid = true;
+                }
+            if(!(choice2 == 1 || choice2 == 2 || choice2 == 3))
+            {
+                cout << RED << "Please Enter A Valid Number(1,2 or 3): " << RESET << endl;
+                Beep(500 , 800);
+                isValid = false;
+            }
+        }
+    }
+    return player;
+}
+void ChoosingChar()
+{
+    cout << "Hello There! Welcome To This Game." << endl;
+    int choice1;
+    CharFactory charfactorty;
     bool isValid = false;
     characters* player;
     BackPack* backpack = new BackPack;
-    CharFactory charfactorty;
     while(!isValid)
     {
         cout << "Do You Want To: " << endl <<
@@ -958,62 +1232,20 @@ void ChoosingChar()
         cin >> choice1;
         if(choice1 == 1)//Creating new characters
         {
-            system("cls");
-            cout << "Enter Your Name: " << endl;
-            cin >> name;
-            if(!isDupName(name))//To check if a name already contains a character
-            {
-                cout << RED << "You Have An Unfinished Game " << name << "!" << endl << "Finish It Or Enter Another Name." << RESET << endl << endl;
-                isValid = false;
-            }
-            else
-            {
-                cout << "Enter Your Age: " << endl;
-                cin >> age;
-                cout << "Enter Your Gender(Male/Female): " << endl;
-                cin >> gender;
-                system("cls");
-
-                cout << "The End Of Time Has Come And Every Being Is In A Battle For Existence." << endl 
-                << "The Greatest Heroes From Across The World Have Risen To Defend It." << endl 
-                << "Which Hero Would You Choose To Join In Safeguarding Our World?" << endl
-                << "(1) JonSnow" << endl << "(2) Dumbledore" << endl << "(3) Michelangelo" << endl;
-                while(!isValid)
-                {
-                    cin >> choice2;
-                    if(choice2 == 1)
-                        {
-                            player = charfactorty.createChar(1, name, age, gender, 0, 50, 50, 100, 0, 0, 0);
-                            isValid = true;
-                        }
-                    if(choice2 == 2)
-                        {
-                            player = charfactorty.createChar(2, name, age, gender, 0, 50, 50, 100, 0, 0, 0);
-                            isValid = true;
-                        }
-                    if(choice2 == 3)
-                        {
-                            player = charfactorty.createChar(3, name, age, gender, 0, 50, 50, 100, 0, 0, 0);
-                            isValid = true;
-                        }
-                    if(!(choice2 == 1 || choice2 == 2 || choice2 == 3))
-                    {
-                        cout << RED << "Please Enter A Valid Number(1,2 or 3): " << RESET << endl;
-                        Beep(500 , 800);
-                        isValid = false;
-                    }
-                }
-            }
+            system(CLEAR);
+            player = NewChar(isValid, player, charfactorty);
+            if(player != nullptr)
+                isValid = true;
 	    }
         if(choice1 == 2)//Utilizing existing characters
         {
-            player = PreChar(player, charfactorty, backpack);//Chosing 
+            player = PreChar(player, charfactorty, backpack);//Choosing 
             if(player != nullptr)
                 isValid = true;
         }
         if(!(choice1 == 1 || choice1 == 2))
         {
-	    system("cls");
+	    system(CLEAR);
             cout << RED << "Please Enter A Valid Number(1 or 2): " << RESET << endl;
             Beep(500 , 800);
             isValid = false;
@@ -1036,6 +1268,7 @@ void SavePlayer(characters* Player, BackPack* backpack)
     	 << Player->getName() << endl
     	 << Player->getAge() << endl
 	     << Player->getGender() << endl
+         << Player->getLevel() << endl 
          << Player->getStamina() << endl
 	     << Player->getHP() << endl
          << Player->Money << endl
@@ -1043,9 +1276,11 @@ void SavePlayer(characters* Player, BackPack* backpack)
          << Player->getIntelligence() << endl
          << Player->getSkill() << endl;
         for(auto weapons : backpack->getWeapons())
-            File << weapons.name << endl << weapons.damage << endl << weapons.priceUp << endl;
+            File << weapons.name << endl << weapons.damage << endl << weapons.priceUp << endl << weapons.numOfWeas << endl;
     if(isDupName(Player->getName()))//To prevent outputting a name twice
         Names << Player->getName() << endl;
+
+    cout << "Exiting The Game...\n";
     exit(1);
 }
 //*************************************************************************************//
