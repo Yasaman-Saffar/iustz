@@ -3,6 +3,8 @@
 #include <vector>
 #include<conio.h>//for sound of error
 #include<windows.h>//for sound of error
+#include <chrono> 
+#include <thread> 
 using namespace std;
 
 //clear the console screen 
@@ -14,8 +16,6 @@ using namespace std;
 
 //for color of text
 #define RESET   "\033[0m"
-#define ORANGE    "\033[38;5;208m"
-#define GRAY    "\033[38;5;8m"
 #define BLUE    "\033[94m"
 #define RED		"\033[31m"
 #define GREEN   "\033[32m"
@@ -134,6 +134,7 @@ public:
 
 class characters
 {
+    friend class Human;
 private:
     string Name;
     int Age;
@@ -150,9 +151,9 @@ protected:
     int Strength;
     int Intelligence;
     int Skill;
+    vector<Weapon> weapons;
 
 public:
-    vector<Weapon> weapons;
     int Money;
     characters() = default;
     characters(string name, int age, string gender, int level, int stamina, int hp, int money , int strength , int intelligence , int skill)
@@ -389,7 +390,7 @@ protected:
     string wea;
     double e;
 public:
-    Enemy(int PlayerLevel ,double E) : Level(PlayerLevel), HP(70), Stamina(30), wea(""), e(E) {} // The default constructor which initializes both HP and Stamina to 100.
+    Enemy(int PlayerLevel ,double E) : Level(PlayerLevel), HP(90), Stamina(40), wea(""), e(E) {} // The default constructor which initializes both HP and Stamina to 100.
 
     double getHP() { return HP; }
     int getStamina() { return Stamina; }
@@ -397,24 +398,35 @@ public:
     int getLevel() {return Level;}
     void damage(double playerAttack) { HP = HP - playerAttack; }
     void levelUp() { Level+=1; }    
-    double Weapon(characters* Player);//randomly chooses a weapon between the three above. It is called when the enemy attacks and reduces the player's HP.
+    double weapon(characters* Player);//randomly chooses a weapon between the three above. It is called when the enemy attacks and reduces the player's HP.
     virtual string zombieName () = 0;
 };
 
-double Enemy::Weapon(characters* Player) 
+double Enemy::weapon(characters* Player) 
 {
-    Stamina += 3;
-    int Rand = rand() % 6;
-    wea = Player->weapons[Rand].name;
-
-    if (Level >= 1)  
+    srand(time(0));
+    Stamina -= 3;
+    int Rand = rand() % 100 + 1;
+    if (Rand <= 33 && Level >= 1)
+    {
+        wea = "ThrowingStar";
         return (1 * Level * e);
-    if (Level >= 2)  
+    }
+    else if (Rand > 33 && Rand <= 66 && Level >= 2)
+    {
+        wea = "Kife";
         return (2 * Level * e);
-    if (Level >= 5)  
+    }
+    else if (Rand > 66 && Level >= 5)
+    {
+        wea = "Sword";
         return (5 * Level * e);
-    else 
+    }
+    else
+    {
+        wea = "ThrowingStar";
         return (1 * Level * e);
+    }
 }
 
 enum class EnemyState
@@ -434,16 +446,13 @@ private:
     bool attack;
     int maxStamina;
     int maxHp;
-    vector<tuple <string,int, string>> weapons;
+    vector<Weapon> EnWeapons;
     EnemyState currentState;
 
 public:
     int getStrength() {return Strength;}
     int getIntelligence() {return Intelligence;}
-    vector<tuple <string,int, string>> getWeapons()
-    {
-        return weapons;
-    }
+    vector<Weapon> getWeapons() {return EnWeapons;}
 
 
     Human(int PlayerLevel, double E, characters* Player) : Enemy(PlayerLevel, 1) 
@@ -451,7 +460,7 @@ public:
         srand(time(0));
         Strength = 0;
         Intelligence = 0;
-        Skill = 5; //must be zero
+        Skill = 5; 
         maxStamina = 50;
         maxHp = 100;
         attack = false;
@@ -462,26 +471,20 @@ public:
         string type;
         for(int i=0; i<2; i++)//choosing one cold weapon and firearm randomly
         {
-            name = Player->weapons[n].name;
-            booster = Player->weapons[n].damage;
-            type = Player->weapons[n].type;
-            weapons.push_back(make_tuple(name,booster,type));
+            EnWeapons.push_back(Player->weapons[n]);
             n = rand() % 3 + 3;
         }
 
         int j=0;
-        if(PlayerLevel < 4)
+        if(PlayerLevel < 6)
             j=2;
         else
-            j=4; 
+            j=5;
 
         for(int i=0; i<j; i++)//Adding a Hp and stamina booster
         {
             n = rand() % 4 + 10;
-            name = Player->weapons[n].name;
-            booster = Player->weapons[n].damage;
-            type = Player->weapons[n].type;
-            weapons.push_back(make_tuple(name,booster,type));
+            EnWeapons.push_back(Player->weapons[n]);
         }
 
     }
@@ -493,34 +496,34 @@ public:
         switch(currentS)
         {
             case EnemyState::Increase_HP:
-            if(!weapons.empty())
+            if(!EnWeapons.empty())
             {
-                for(int i=0; i<weapons.size(); i++)
+                for(int i=0; i<EnWeapons.size(); i++)
                 {
-                    if(get<2>(weapons[i]) == "ConsumableHp" && HP < maxHp)
+                    if(EnWeapons[i].type == "ConsumableHp" && HP < maxHp)
                     {
                         int preHP = HP;
-                        HP += get<1>(weapons[i]);
+                        HP += EnWeapons[i].damage;
                         if(HP > maxHp)
                             HP = maxHp;
-                        weapons.erase(weapons.begin() + i);
+                        EnWeapons.erase(EnWeapons.begin() + i);
                         cout << GREEN << "Your Enemy Has Increased His HP By " << HP-preHP << "." << Player->getcolor() << endl;
                     }
                 }
             }
             break;
             case EnemyState::Increase_Stamina:
-            if(!weapons.empty())
+            if(!EnWeapons.empty())
             {
-                for(int i=0; i<weapons.size(); i++)
+                for(int i=0; i<EnWeapons.size(); i++)
                 {
-                    if(get<2>(weapons[i]) == "ConsumableStamina" && Stamina < maxStamina)
+                    if(EnWeapons[i].type == "ConsumableStamina" && Stamina < maxStamina)
                     {
                         int preStamina = Stamina;
-                        Stamina += get<1>(weapons[i]);
+                        Stamina += EnWeapons[i].damage;
                         if(Stamina > maxStamina)
                             Stamina = maxStamina;
-                        weapons.erase(weapons.begin() + i);
+                        EnWeapons.erase(EnWeapons.begin() + i);
                         cout << GREEN << "Your Enemy Has Increased His Stamina By " << Stamina-preStamina << "." << Player->getcolor() << endl;
                     }
                 }
@@ -530,16 +533,16 @@ public:
             if(Skill != 0)
             {
                 Intelligence += 1;
-                get<1>(weapons[1]) += 10;
+                EnWeapons[0].damage += 10;
                 Skill -= 1;
-                cout << GREEN << "Your Enemy Has Increased His Intelligence By 1 And Firearm's Damage By 10."<<  Player->getcolor() << endl;
+                cout << GREEN << "Your Enemy Has Increased His Intelligence By 1 And Cold Weapon's Damage By 10."<<  Player->getcolor() << endl;
             }
             break;
             case EnemyState::Upgrade_Strength:
             if(Skill != 0)
             {
                 Strength += 1;
-                get<1>(weapons[0]) += 10;
+                EnWeapons[1].damage += 10;
                 Skill -= 1;
                 cout << GREEN << "Your Enemy Has Increased His Strength By 1 And Firearm's Damage By 10."<<  Player->getcolor() << endl;
             }
@@ -547,8 +550,9 @@ public:
             default://attack
             attack = true;
             int i = rand() % 2;
-            Player->damage(get<1>(weapons[i]));
+            Player->damage(EnWeapons[i].damage);
             cout << GREEN <<  "Enemy Is Attacking" << Player->getcolor() << endl;
+            
             break;
         }
     } 
@@ -571,11 +575,38 @@ public:
     }
     void beforeAttack(characters* Player)
     {
+        Stamina -= 3;
         while(!attack)
         {
             currentState = UpdateStates();
             Action(Player, currentState);
+            this_thread::sleep_for(chrono::milliseconds(1500));
         }
     }
 };
 int main()
+{
+    characters* Player = new Dumbledore("yas", 18, "F", 1, 50, 50, 100, 0, 0, 0);
+    Human* human = new Human(1, 1, Player);
+
+    for(auto weapon : human->getWeapons())
+        cout << weapon.name << " " << weapon.damage << " " << weapon.type << " "  << endl;
+
+    cout << endl << "BEFORE ATTACK" << endl;
+    cout << "HP: " << human->getHP() << endl;
+    cout << "Stamina: " << human->getStamina() << endl;
+    cout << "Intelligence: " << human->getIntelligence() << endl;
+    cout << "Strength: " << human->getStrength() << endl << endl;
+
+    human->beforeAttack(Player);
+
+    cout << "AFTER ATTACK" << endl;
+    cout << "HP: " << human->getHP() << endl;
+    cout << "Stamina: " << human->getStamina() << endl;
+    cout << "Intelligence: " << human->getIntelligence() << endl;
+    cout << "Strength: " << human->getStrength() << endl << endl;
+
+    for(auto weapon : human->getWeapons())
+        cout << RESET << weapon.name << " " << weapon.damage << " " << weapon.type << " "  << endl;
+
+}
