@@ -78,9 +78,9 @@ public:
         {
             cout << "(" << i << ") " << weapon.name;
             if (weapon.type == "ConsumableHp") // for hp increas
-                cout << " [HP Increase: -" << weapon.damage << "]" << " x" << weapon.numOfWeas << endl;
+                cout << " [HP Increase: -" << weapon.damage << "] x" << weapon.numOfWeas << endl;
             else if (weapon.type == "ConsumableStamina") // for stamina increas
-                cout << " [Stamina Increase: -" << weapon.damage << "]" << " x" << weapon.numOfWeas << endl;
+                cout << " [Stamina Increase: -" << weapon.damage << "] x" << weapon.numOfWeas << endl;
             else // for throwing and cold weapons and firearm
                 cout << " [Damage: -" << weapon.damage;
             if (Bool == true) // show of price of update for upgrade
