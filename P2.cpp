@@ -62,7 +62,7 @@ public:
         	cout << "You Don't Have Any Weapons Yet!" << endl;
         	return;
 		}
-	for(int i = 0 ; i < BPWeapons.size() ; i++)
+	for(int i = 0 ; i < BPWeapons.size() ; i++)//remove weapon from vector
         {
         	if(BPWeapons[i].numOfWeas == 0)
         	{
