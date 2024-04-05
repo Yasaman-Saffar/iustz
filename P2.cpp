@@ -54,6 +54,14 @@ public:
         }
         if(isNew)
             BPWeapons.push_back(Weapon(name , price , priceUp , damage , type, numOfWeas));
+	for(int i = 0 ; i < BPWeapons.size() ; i++)
+        {
+        	if(BPWeapons[i].numOfWeas == 0)
+        	{
+        		BPWeapons.erase(BPWeapons.begin() + i);	
+        		i--;
+		}
+	}
     }
     void InsideTheBackpack(bool Bool)//show weapons in the backpack
     {
