@@ -41,6 +41,8 @@ class BackPack
 private:
     vector<Weapon> BPWeapons;//vector for weapons
 public:
+    string playerWeaType;
+    BackPack() : playerWeaType("") {}
     void AddWeapon(string name , int price , double priceUp , int damage , string type, int numOfWeas)
     {
         bool isNew = true;
@@ -55,62 +57,67 @@ public:
         if(isNew)
             BPWeapons.push_back(Weapon(name , price , priceUp , damage , type, numOfWeas));
     }
-    void InsideTheBackpack(bool Bool)//show weapons in the backpack
+    void InsideTheBackpack(bool Bool) // show weapons in the backpack
     {
-    	if(BPWeapons.size() == 0)//backpack is empty
+        if (BPWeapons.size() == 0) // backpack is empty
         {
-        	cout << "You Don't Have Any Weapons Yet!" << endl;
-        	return;
-		}
-	for(int i = 0 ; i < BPWeapons.size() ; i++)//remove weapon from vector
+            cout << "You Don't Have Any Weapons Yet!" << endl;
+            return;
+        }
+        for (int i = 0; i < BPWeapons.size(); i++)
         {
-        	if(BPWeapons[i].numOfWeas == 0)
-        	{
-        		BPWeapons.erase(BPWeapons.begin() + i);	
-        		i--;
-			}
-		}
-		cout << "Weapons In Your Backpack :" << endl;
+            if (BPWeapons[i].numOfWeas == 0)
+            {
+                BPWeapons.erase(BPWeapons.begin() + i);
+                i--;
+            }
+        }
+        cout << "Weapons In Your Backpack :" << endl;
         int i = 1;
-        for(const auto& weapon : BPWeapons)
+        for (const auto &weapon : BPWeapons)
         {
-            cout <<"(" << i << ") " << weapon.name;
-            if(weapon.type == "ConsumableHp")//for hp increas
-            	cout << " [HP Increase: -" << weapon.damage << "]" << " x" << weapon.numOfWeas << endl;
-            else if(weapon.type == "ConsumableStamina")//for stamina increas
-            	cout << " [Stamina Increase: -" << weapon.damage << "]" << " x" << weapon.numOfWeas << endl;
-            else//for throwing and cold weapons and firearm
-            	cout << " [Damage: -" << weapon.damage;
-            if(Bool == true)//show of price of update for upgrade
-            	cout << " ,Price Of Upgrade: " << weapon.priceUp << "$] x" << weapon.numOfWeas  << endl;
-            else//don't show price of update
-            	cout << "] x" << weapon.numOfWeas << endl;
+            cout << "(" << i << ") " << weapon.name;
+            if (weapon.type == "ConsumableHp") // for hp increas
+                cout << " [HP Increase: -" << weapon.damage << "]" << " x" << weapon.numOfWeas << endl;
+            else if (weapon.type == "ConsumableStamina") // for stamina increas
+                cout << " [Stamina Increase: -" << weapon.damage << "]" << " x" << weapon.numOfWeas << endl;
+            else // for throwing and cold weapons and firearm
+                cout << " [Damage: -" << weapon.damage;
+            if (Bool == true) // show of price of update for upgrade
+                cout << " ,Price Of Upgrade: " << weapon.priceUp << "$] x" << weapon.numOfWeas << endl;
+            else // don't show price of update
+                cout << "] x" << weapon.numOfWeas << endl;
             i++;
         }
-	}
-	int ChooseWeapon()
-	{
+    }
+    int ChooseWeapon()
+    {
 		if(BPWeapons.size() == 0)//backpack is empty
-			return 1;
+			return 0;
 		cout << "(" << BPWeapons.size() + 1 << ")" << " Back" << endl;
 		cout << endl;
         cout << "Whitch One Do You Want To Choose?" << endl;
         int number;
         cin >> number;
         cout << endl;
+        
         while(true)
         {
-        	if(number < 1 && number > BPWeapons.size() + 1)
+        	if(number < 1 || number > BPWeapons.size() + 1)
         	{
         		cout << "Please Enter A Valid Number(1-" << BPWeapons.size() + 1 << ") :" << endl;
 			}
 			else if(number == BPWeapons.size() + 1)//exit function
-				return 1;
+				return 0;
 			else
 			{
+                playerWeaType = BPWeapons[number - 1].type;
 				int YourWeapon = BPWeapons[number - 1].damage;
 				if(BPWeapons[number - 1].type == "ConsumableHp" || BPWeapons[number - 1].type == "ConsumableStamina" || BPWeapons[number - 1].type == "Throwing")
+                {
 					BPWeapons[number - 1].numOfWeas -= 1;
+
+                }
 				return YourWeapon;//damage of weapon for attack
 				break;
 			}	
@@ -171,7 +178,9 @@ protected:
     int Strength;
     int Intelligence;
     int Skill;
-    vector<Weapon> weapons;
+    vector<Weapon> weapons;    
+    int EXP;
+
 
 public:
     int Money;
@@ -181,6 +190,7 @@ public:
     {
         maxStamina = 50;
         maxHp = 100;
+        EXP = 0;
     }
 
     
@@ -207,13 +217,26 @@ public:
     int getMaxHp() {return maxHp;}
     int getMaxStamina() {return maxStamina;}
 
-
-    void levelUp() {Level += 1;}
-    virtual double attack() { return 8; }//DEFINITION NEEDED!!!!
+    void levelUp() { Level += 1; }
+    void increaseEXP(int exp)
+    {
+        if (EXP + exp - Level * 50 <= 0)
+        {
+            EXP = Level * 50 - (EXP + exp);
+            levelUp();
+            cout << "Congratulation, You've Leveled Up!\n"
+                 << "You Are NowOn Level " << Level << ".\n";
+            return;
+        }
+        else
+            EXP += exp;
+        return;
+    }
+    // virtual double attack() { return 8; }//DEFINITION NEEDED!!!!
     void damage(double enemyWeapon) { HP = HP - enemyWeapon; }//the parameter is the member function of Enemy
     void ShowInfo()
     {
-        cout << textColor << "Your Character: " << RED << "Level|" << Level << "|   " << "HP(50)|" << HP << "|   "<< "Stamina(50)|" << Stamina << "|   " << "Money|" << Money << "|   " << textColor << endl;
+        cout << textColor << "Your Character: " << RED << "Level|" << Level << "|   " << "HP(100)|" << HP << "|   "<< "Stamina(50)|" << Stamina << "|   " << "Money|" << Money << "|   " << textColor << endl;
     }
     void ShowMoney()
     {
@@ -556,7 +579,7 @@ public:
     void levelUp() { Level+=1; }    
     double weapon();//randomly chooses a weapon between the three above. It is called when the enemy attacks and reduces the player's HP.
     virtual void Attack(characters*) = 0;
-    virtual string zombieName () = 0;
+    virtual string EnemyName () = 0;
 };
 double Enemy::weapon() 
 {
@@ -589,7 +612,7 @@ class zombie : public Enemy
 {
 public:
     zombie(int PlayerLevel, double E) : Enemy(PlayerLevel, 1) {} // Initializes e from Enemy to 1
-    string zombieName() override { return "Zombie"; }
+    string EnemyName() override { return "Zombie"; }
 
     virtual void Attack(characters*) override {}
 };
@@ -597,7 +620,7 @@ class strongZombie : public Enemy
 {
 public:
     strongZombie(int PlayerLevel, double E) : Enemy(PlayerLevel, 1.2) {} // Initializes e from Enemy to 1.2
-    string zombieName() override { return "Strong Zombie"; }
+    string EnemyName() override { return "Strong Zombie"; }
 
     virtual void Attack(characters*) override {}
 };
@@ -660,7 +683,7 @@ public:
 
     }
 
-    string zombieName() override { return "Human"; }
+    string EnemyName() override { return "Human"; }
 
     void Action(characters* Player, EnemyState currentS)//defining actions
     {
@@ -769,7 +792,6 @@ public:
             return nullptr;
     }  
 };
-//Battlefield functions
 void UpgradeWeapon(characters* playerPtr , BackPack* playerBackpack)//function for upgrade of weapons in backpack
 {
 	if(playerBackpack->getWeaponCount() == 0)
@@ -814,10 +836,10 @@ void showInfoAndUpg(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBack
         << "Strength: " << playerPtr->getStrength() << endl;
     
     cout << endl << GREEN << "Your Enemy\n~~~~~~~~~~~~~~~~~~\n";
-    cout << "Enemy Type: " << enemyPtr->zombieName() << endl
+    cout << "Enemy Type: " << enemyPtr->EnemyName() << endl
         << "HP: " << enemyPtr->getHP() << endl
         << "Stamina: " << enemyPtr->getStamina() << playerPtr->getcolor()<< endl;
-        if(enemyPtr->zombieName() == "Human")
+        if(enemyPtr->EnemyName() == "Human")
         {
             Human* en = (Human*) enemyPtr;
             cout << GREEN << "Intelligence: " << en->getIntelligence() << endl
@@ -945,6 +967,48 @@ void showInfoAndUpg(characters* playerPtr, Enemy* enemyPtr, BackPack* playerBack
 		}
 	}
 }
+
+void Attack(Enemy *enemyPtr, characters *PlayerPtr, BackPack *playerBackpack)
+{
+    // 1. Show backpack
+    system(CLEAR);
+    playerBackpack->InsideTheBackpack(false);
+    // 2. choose weapon
+    int ImpactOfItem = playerBackpack->ChooseWeapon();
+    system(CLEAR);
+    // 3. impact on player/enemy
+    if (playerBackpack->playerWeaType == "ConsumableHp")
+    {
+        cout << "You Gained " << ImpactOfItem << " HP!\n";
+        PlayerPtr->setHP(PlayerPtr->getHP() + static_cast<double>(ImpactOfItem));
+    }
+    else if (playerBackpack->playerWeaType == "ConsumableStamina")
+    {
+        cout << "You Gained " << ImpactOfItem << " Stamina!\n";
+        PlayerPtr->setStamina(PlayerPtr->getStamina() + ImpactOfItem);
+    }
+    else
+    {
+        cout << "You Caused " << ImpactOfItem << " Damage On Enemy's HP!\n";
+        enemyPtr->damage(static_cast<double>(ImpactOfItem));
+    }
+    Sleep(5000);
+
+    //4. enemy's turn -> impact on player
+    cout << "It Is Now The Enemy's Turn.\nThe Enemy Has Attacked You"
+         << " Using A " << enemyPtr->getWeapon() << "----[enemy's weapon]. You Lost --- [Damage] HP!";
+    Sleep(5000);    
+    //5. showing information
+    char pass;
+    cout << "\nEnter Anything To See The Information On The Characters.\n";
+    cin >> pass;
+    PlayerPtr->ShowInfo();
+    string textColor = PlayerPtr->getcolor();
+    cout << endl << GREEN << "Your Enemy: " << RED << "Type|" << enemyPtr->EnemyName() << "|   " << "HP(100)|" << enemyPtr->getHP() << "|   " << "Stamina(50)|" << enemyPtr->getStamina() << "|   " << textColor << endl;
+    Sleep(5000);
+    return;
+}
+
 void Battlefield (characters* PlayerPtr, BackPack* playerBackpack)
 {
     //_____________________________________//
@@ -983,8 +1047,7 @@ void Battlefield (characters* PlayerPtr, BackPack* playerBackpack)
         }
     }
     int choice1(0);
-    // while ( zom->getHP() > 0 && ( PlayerObj.getHP() > 0 || false ) )
-    while (choice1 != 4) // Examplary condition
+    while (true)
     {
     	cout << endl;
         clearConsole(2);
@@ -996,7 +1059,8 @@ void Battlefield (characters* PlayerPtr, BackPack* playerBackpack)
         switch(choice1)
         {
             case 1:
-            // function to show the options (choose a weapon) and attack
+            // Attacking The Enemy
+            Attack(zom, PlayerPtr, playerBackpack);
             break;
             case 2:
             {
@@ -1034,6 +1098,41 @@ void Battlefield (characters* PlayerPtr, BackPack* playerBackpack)
                 break;
             }
         }
+        if ( zom->getHP() <= 0 )
+        {
+            system(CLEAR);
+            int exp;
+            int Mon;
+            cout << "Congratulation, You Have Defeated The Enemy.\n";
+            // Gaining EXP and Money
+            if (zom->EnemyName() == "Zombie")
+            {
+                exp = 10;
+                Mon = 10;
+            }
+            else if (zom->EnemyName() == "Strong Zombie")
+            {
+                exp = 20;
+                Mon = 20;
+            }
+            else if (zom->EnemyName() == "Human")
+            {
+                exp = 30;
+                Mon = 30;
+            }
+            cout << "You've Gained " << Mon <<"$ and " << exp << " experience.\n";
+            //Gaining Weapon
+            //................!!
+            PlayerPtr->Money += Mon;
+            PlayerPtr->increaseEXP(exp);
+            return;
+
+        }
+        else if (PlayerPtr->getHP() <= 0)
+        {
+            cout << "Oh No, Your HP is now 0.\nYou've Died!\n";
+            exit(0);
+        }
     }
 }
 void Game(characters* Player, BackPack* &backpack)
@@ -1067,8 +1166,8 @@ void Game(characters* Player, BackPack* &backpack)
 //SAVE OR MAKE CHARACTER
 void clearConsole(double seconds) 
 {
-    this_thread::sleep_for(chrono::duration<double>(seconds));
     system(CLEAR);
+    this_thread::sleep_for(chrono::duration<double>(seconds));
 }
 bool isDupName(string name)
 {
