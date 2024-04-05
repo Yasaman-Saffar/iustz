@@ -101,6 +101,8 @@ public:
 			else
 			{
 				int YourWeapon = BPWeapons[number - 1].damage;
+				if(BPWeapons[number - 1].type == "ConsumableHp" || BPWeapons[number - 1].type == "ConsumableStamina" || BPWeapons[number - 1].type == "Throwing")
+					BPWeapons[number - 1].numOfWeas -= 1;
 				return YourWeapon;//damage of weapon for attack
 				break;
 			}	
