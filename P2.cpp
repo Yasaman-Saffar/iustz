@@ -1166,8 +1166,8 @@ void Game(characters* Player, BackPack* &backpack)
 //SAVE OR MAKE CHARACTER
 void clearConsole(double seconds) 
 {
-    system(CLEAR);
     this_thread::sleep_for(chrono::duration<double>(seconds));
+    system(CLEAR);
 }
 bool isDupName(string name)
 {
