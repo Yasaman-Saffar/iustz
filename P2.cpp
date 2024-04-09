@@ -59,7 +59,7 @@ public:
     }
     void InsideTheBackpack(bool Bool) // show weapons in the backpack
     {
-    	for (int i = 0; i < BPWeapons.size(); i++)
+        for (int i = 0; i < BPWeapons.size(); i++)
         {
             if (BPWeapons[i].numOfWeas == 0)
             {
@@ -67,13 +67,13 @@ public:
                 i--;
             }
         }
-    
-        if(BPWeapons.size() == 0 && Bool == true) // backpack is empty
+
+        if (BPWeapons.size() == 0 && Bool == true) // backpack is empty
         {
             cout << "You Don't Have Any Weapons Yet!" << endl;
             return;
         }
-        if(BPWeapons.size() == 0 && Bool == false) // backpack is empty
+        if (BPWeapons.size() == 0 && Bool == false) // backpack is empty
         {
             cout << "You Don't Have Any Weapons Yet!" << endl;
             cout << "Sorry! You Can Only Use Your Fist :)" << endl;
@@ -168,7 +168,6 @@ class characters
 {
     friend class Human;
     friend class zombie;
-    friend class strongZombie;
 
 private:
     string Name;
@@ -195,8 +194,8 @@ public:
     characters(string name, int age, string gender, int level, int stamina, int hp, int money, int strength, int intelligence, int skill)
         : Name(name), Age(age), Gender(gender), Level(level), Stamina(stamina), HP(hp), Money(money), Strength(strength), Intelligence(intelligence), Skill(skill)
     {
-        maxStamina = 50;
-        maxHp = 100;
+        maxStamina = 50 + 20 * Level;
+        maxHp = 100 + 20 * Level;
         EXP = 0;
     }
 
@@ -230,19 +229,21 @@ public:
         {
             EXP = Level * 50 - (EXP + exp);
             levelUp();
-            cout << "Congratulation, You've Leveled Up!\n"
-                 << "You Are NowOn Level " << Level << ".\n";
+            cout << "Congratulation, You've Leveled Up!" << endl
+                 << "You Are Now On Level " << Level << "." << endl;
+            maxStamina = 50 + 20 * Level;
+            maxHp = 100 + 20 * Level;
+
             return;
         }
         else
             EXP += exp;
         return;
     }
-    // virtual double attack() { return 8; }//DEFINITION NEEDED!!!!
     void damage(double enemyWeapon) { HP = HP - enemyWeapon; } // the parameter is the member function of Enemy
     void ShowInfo()
     {
-        cout << textColor << "Your Character: " << RED << "Level|" << Level << "|   " << "HP(100)|" << HP << "|   " << "Stamina(50)|" << Stamina << "|   " << "Money|" << Money << "|   " << textColor << endl;
+        cout << textColor << "Your Character: " << RED << "Level|" << Level << "|   " << "HP(" << maxHp << ")|" << HP << "|   " << "Stamina(" << maxStamina << ")|" << Stamina << "|   " << "Money|" << Money << "|   " << textColor << endl;
     }
     void ShowMoney()
     {
@@ -318,8 +319,8 @@ public:
             {
                 if (number == 15 || number == 16)
                     break;
-                if(!(number >= 1 && number <= 16))
-                	break;
+                if (!(number >= 1 && number <= 16))
+                    break;
                 cout << textColor;
                 string NameOfWeapon = weapons[number - 1].name;
                 int PriceOfWeapon = weapons[number - 1].price;
@@ -369,9 +370,6 @@ public:
             }
         }
     }
-    // virtual double Damege(string name,int damege) { return 0; }
-    // virtual double IncreaseStamina(string name,int damege) { return 0; }
-    // virtual double IncreaseHp(string name,int damege) { return 0; }
 };
 class Michelangelo : public characters
 {
@@ -396,43 +394,6 @@ public:
         weapons.push_back(Weapon("Pizza", 20, 20, 20, "ConsumableHp", 1));
         weapons.push_back(Weapon("FrenchFries", 20, 20, 20, "ConsumableHp", 1));
     }
-    // double Damege(string name,int damege) override
-    //{
-    //     if(name=="Sword")
-    //     return damege*(Level/2);
-    //     if(name=="Dagger")
-    //     return damege*(Level/2.5);
-    //     if(name=="Nanchiko")
-    //     return damege*(Level/3);
-    //     if(name=="Colt")
-    //     return damege*(Level);
-    //     if(name=="ShutGun")
-    //     return damege*(Level/1.5);
-    //     if(name=="Winchester")
-    //     return damege*(Level/2);
-    //     if(name=="Bomb")
-    //     return damege*(Level/1.5);
-    //     if(name=="Smoker")
-    //     return damege*(Level/2);
-    //     if(name=="Boomerang")
-    //     return damege*(Level/2.5);
-    //     if(name=="ThrowingKnife")
-    //     return damege*(Level/3);
-    // }
-    // double IncreaseStamina(string name,int damege) override
-    //{
-    //     if(name=="Coca")
-    //     return damege*(Level/2);
-    //     if(name=="IceMonkey")
-    //     return damege*(Level/2.5);
-    // }
-    // double IncreaseHp(string name,int damege) override
-    //{
-    //     if(name=="Pizza")
-    //     return damege*(Level/2);
-    //     if(name=="FrenchFries")
-    //     return damege*(Level/2.5);
-    // }
 };
 class Dumbledore : public characters
 {
@@ -447,53 +408,16 @@ public:
         weapons.push_back(Weapon("Crucio (To Torture)", 20, 20, 20, "Cold", 1));
         weapons.push_back(Weapon("Incendio (Fire)", 20, 20, 20, "Firearm", 1));
         weapons.push_back(Weapon("Fiendfyre Curse (Dragon)", 20, 20, 20, "Firearm", 1));
-        weapons.push_back(Weapon("Avada Kedavra (To Kill)", 5000, 20, 100, "Firearm", 1));
+        weapons.push_back(Weapon("Draught Og Living Death (Go To Death Mode)", 5000, 20, 100, "Firearm", 1));
         weapons.push_back(Weapon("Redacto (Blow Up)", 20, 20, 20, "Throwing", 1));
         weapons.push_back(Weapon("In Caeseros (Rope)", 20, 20, 20, "Throwing", 1));
         weapons.push_back(Weapon("Serpensortia (Throwing Snake)", 20, 20, 20, "Throwing", 1));
-        weapons.push_back(Weapon("Draught Og Living Death (Go To Death Mode)", 20, 20, 20, "Throwing", 1));
+        weapons.push_back(Weapon("Avada Kedavra (To Kill)", 20, 20, 20, "Throwing", 1));
         weapons.push_back(Weapon("Felix Felicis (Increas Energy)", 20, 20, 20, "ConsumableStamina", 1));
         weapons.push_back(Weapon("Fiantodon (Protect)", 20, 20, 20, "ConsumableStamina", 1));
         weapons.push_back(Weapon("Elixir OF Life (Increas HP)", 20, 20, 20, "ConsumableHp", 1));
         weapons.push_back(Weapon("Episci (Prevent Bleeding)", 20, 20, 20, "ConsumableHp", 1));
     }
-    // double Damege(string name,int damege) override
-    //{
-    //     if(name=="Stupefy (Throwing Somthing)")
-    //     return damege*(Level/3);
-    //     if(name=="SecfumSempra (To Injure)")
-    //     return damege*(Level/2.5);
-    //     if(name=="Crucio (To Torture)")
-    //     return damege*(Level/2);
-    //     if(name=="Incendio (Fire)")
-    //     return damege*(Level/1.5);
-    //     if(name=="Fiendfyre Curse (Dragon)")
-    //     return damege*(Level);
-    //     if(name=="Avada Kedavra (To Kill)")
-    //     return damege; //hp(enemy)=0
-    //     if(name=="Redacto (Blow Up)")
-    //     return damege*(Level/3);
-    //     if(name=="In Caeseros (Rope)")
-    //     return damege*(Level/2.5);
-    //     if(name=="Serpensortia (Throwing Snake)")
-    //     return damege*(Level/2);
-    //     if(name=="Draught Og Living Death (Go To Death Mode)")
-    //     return damege*(Level/1.5);
-    // }
-    // double IncreaseStamina(string name,int damege) override
-    //{
-    //     if(name=="Felix Felicis (Increas Energy)")
-    //     return damege*(Level/2);
-    // }
-    // double IncreaseHp(string name,int damege) override
-    //{
-    //     if(name=="Elixir OF Life (Increas HP)")
-    //     return damege*(Level/2.5);
-    //     if(name=="Episci (Prevent Bleeding)")
-    //     return damege*(Level/2);
-    //     if(name=="Fiantodon (Protect)")
-    //     return damege*(Level/1.5);
-    // }
 };
 class JonSnow : public characters
 {
@@ -518,43 +442,6 @@ public:
         weapons.push_back(Weapon("Fish", 20, 20, 20, "ConsumableHp", 1));
         weapons.push_back(Weapon("Meat", 20, 20, 20, "ConsumableHp", 1));
     }
-    // double Damege(string name,int damege) override
-    //{
-    //     if(name=="Sword")
-    //     return damege*(Level/2);
-    //     if(name=="Dagger")
-    //     return damege*(Level/2.5);
-    //     if(name=="Chopper")
-    //     return damege*(Level/3);
-    //     if(name=="Dragon")
-    //     return damege*(Level);
-    //     if(name=="Gun")
-    //     return damege*(Level/1.5);
-    //     if(name=="CataPult")
-    //     return damege*(Level/2);
-    //     if(name=="Shuriken")
-    //     return damege*(Level/1.5);
-    //     if(name=="FireBall")
-    //     return damege*(Level/2);
-    //     if(name=="SnowBall")
-    //     return damege*(Level/2.5);
-    //     if(name=="Bomb")
-    //     return damege*(Level/3);
-    // }
-    // double IncreaseStamina(string name,int damege) override
-    //{
-    //     if(name=="BluePotion")
-    //     return damege*(Level/2);
-    //     if(name=="RedPotion")
-    //     return damege*(Level/2.5);
-    // }
-    // double IncreaseHp(string name,int damege) override
-    //{
-    //     if(name=="Fish")
-    //     return damege*(Level/2);
-    //     if(name=="Meat")
-    //     return damege*(Level/2.5);
-    // }
 };
 class CharFactory
 {
@@ -576,21 +463,32 @@ class Enemy
 {
 protected:
     int Level;
-    double HP;
+    int HP;
     int Stamina;
-
-public:    
+    int maxStamina;
+    int maxHp;
     vector<Weapon> EnWeapons;
-    double e;
-    Enemy(int PlayerLevel, double E) : Level(PlayerLevel), HP(100), Stamina(50), e(E) {} // The default constructor which initializes both HP and Stamina to 100.
 
-    double getHP() { return HP; }
+public:
+    double e;
+    Enemy(int PlayerLevel, double E) : Level(PlayerLevel), HP(100), Stamina(50), e(E) // The default constructor which initializes both HP and Stamina to 100.
+    {
+        maxStamina = 50 + 20 * Level;
+        maxHp = 100 + 20 * Level;
+    }
+
+    int getHP() { return HP; }
     int getStamina() { return Stamina; }
     vector<Weapon> getWeapons() { return EnWeapons; }
     void damage(double playerAttack) { HP = HP - playerAttack; }
+    int getLevel() { return Level; }
     void levelUp() { Level += 1; }
     virtual void Attack(characters *player) = 0;
     virtual string EnemyName() = 0;
+    void ShowInfo(characters *Player)
+    {
+        cout << GREEN << "Your Enemy: " << RED << "Type|" << EnemyName() << "|   " << "Level|" << Level << "|   " << "HP(" << maxHp << ")|" << getHP() << "|   " << "Stamina(" << maxStamina << ")|" << Stamina << "|   " << Player->getcolor() << endl;
+    }
 };
 //*****//
 class zombie : public Enemy
@@ -601,32 +499,30 @@ public:
         srand(time(0));
         int n = rand() % 6;
         EnWeapons.push_back(Player->weapons[n]);
-        EnWeapons[0].damage = Level * e;
+        EnWeapons[0].damage *= Level * e / 2;
     }
     string EnemyName() override { return "Zombie"; }
     virtual void Attack(characters *Player) override
     {
-        cout << "Enemy Is Attacking" << endl;
         Player->damage(EnWeapons[0].damage);
         Stamina -= 3;
+        cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[0].name << "." << endl
+             << Player->getcolor()
+             << "You Lost " << EnWeapons[0].damage << " HP!" << endl;
     }
 };
-class strongZombie : public Enemy
+class strongZombie : public zombie
 {
 public:
-    strongZombie(int PlayerLevel, double E, characters *Player) : Enemy(PlayerLevel, 1.2) // Initializes e from Enemy to 1.2
-    {
-        srand(time(0));
-        int n = rand() % 6;
-        EnWeapons.push_back(Player->weapons[n]);
-        EnWeapons[0].damage = Level * e;
-    }
+    strongZombie(int PlayerLevel, double E, characters *Player) : zombie(PlayerLevel, 1.2, Player) {} // Initializes e from Enemy to 1.2
     string EnemyName() override { return "Strong Zombie"; }
     virtual void Attack(characters *Player) override
     {
-        cout << "Enemy Is Attacking" << endl;
         Player->damage(EnWeapons[0].damage);
         Stamina -= 3;
+        cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[0].name << "." << endl
+             << Player->getcolor()
+             << "You Lost " << EnWeapons[0].damage << " HP!" << endl;
     }
 };
 enum class EnemyState
@@ -644,8 +540,6 @@ private:
     int Intelligence;
     int Skill;
     bool attack;
-    int maxStamina;
-    int maxHp;
     EnemyState currentState;
 
 public:
@@ -658,8 +552,6 @@ public:
         Strength = 0;
         Intelligence = 0;
         Skill = Level - 1;
-        maxStamina = 50;
-        maxHp = 100;
         attack = false;
 
         int n = rand() % 3;
@@ -669,6 +561,7 @@ public:
         for (int i = 0; i < 2; i++) // choosing one cold weapon and firearm randomly
         {
             EnWeapons.push_back(Player->weapons[n]);
+            EnWeapons[i].damage *= Level;
             n = rand() % 3 + 3;
         }
 
@@ -747,8 +640,9 @@ public:
             attack = true;
             int i = rand() % 2;
             Player->damage(EnWeapons[i].damage);
-            cout << GREEN << "Enemy Is Attacking" << Player->getcolor() << endl;
-
+            cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[i].name << "." << endl
+                 << Player->getcolor()
+                 << "You Lost " << EnWeapons[i].damage << " HP!" << endl;
             break;
         }
     }
@@ -777,7 +671,6 @@ public:
             currentState = UpdateStates();
             Action(Player, currentState);
             Sleep(1500);
-            system(CLEAR);
         }
     }
 };
@@ -834,7 +727,7 @@ void UpgradeWeapon(characters *playerPtr, BackPack *playerBackpack) // function 
 }
 void showInfoAndUpg(characters *playerPtr, Enemy *enemyPtr, BackPack *playerBackpack)
 {
-    cout << "Your Character\n~~~~~~~~~~~~~~~~~~\n";
+    cout << "Your Character\n~~~~~~~~~~~~~~~~~~" << endl;
     cout << "Name: " << playerPtr->getName() << endl
          << "Age: " << playerPtr->getAge() << endl
          << "Gender: " << playerPtr->getGender() << endl
@@ -846,7 +739,7 @@ void showInfoAndUpg(characters *playerPtr, Enemy *enemyPtr, BackPack *playerBack
          << "Strength: " << playerPtr->getStrength() << endl;
 
     cout << endl
-         << GREEN << "Your Enemy\n~~~~~~~~~~~~~~~~~~\n";
+         << GREEN << "Your Enemy\n~~~~~~~~~~~~~~~~~~" << endl;
     cout << "Enemy Type: " << enemyPtr->EnemyName() << endl
          << "HP: " << enemyPtr->getHP() << endl
          << "Stamina: " << enemyPtr->getStamina() << playerPtr->getcolor() << endl;
@@ -982,19 +875,23 @@ void showInfoAndUpg(characters *playerPtr, Enemy *enemyPtr, BackPack *playerBack
 
 void Attack(Enemy *enemyPtr, characters *PlayerPtr, BackPack *playerBackpack)
 {
+    system(CLEAR);
+    PlayerPtr->ShowInfo();
+    enemyPtr->ShowInfo(PlayerPtr);
     // 1. Show backpack
-    clearConsole(2);
     playerBackpack->InsideTheBackpack(false);
     // 2. choose weapon
     int ImpactOfItem = playerBackpack->ChooseWeapon();
-     clearConsole(2);
+    clearConsole(2);
+    PlayerPtr->ShowInfo();
+    enemyPtr->ShowInfo(PlayerPtr);
     // 3. impact on player/enemy
-    if(playerBackpack -> getWeaponCount() == 0)
+    if (playerBackpack->getWeaponCount() == 0)
     {
-    	ImpactOfItem = 10;
-    	cout << "You Caused " << ImpactOfItem << " Damage On Enemy's HP Using Your Fist!" << endl;
+        ImpactOfItem = 10;
+        cout << "You Caused " << ImpactOfItem << " Damage On Enemy's HP Using Your Fist!" << endl;
         enemyPtr->damage(static_cast<double>(ImpactOfItem));
-	}
+    }
     else if (playerBackpack->playerWeaType == "ConsumableHp")
     {
         cout << "You Gained " << ImpactOfItem << " HP!" << endl;
@@ -1010,31 +907,19 @@ void Attack(Enemy *enemyPtr, characters *PlayerPtr, BackPack *playerBackpack)
         cout << "You Caused " << ImpactOfItem << " Damage On Enemy's HP!" << endl;
         enemyPtr->damage(static_cast<double>(ImpactOfItem));
     }
-    Sleep(5000);
+    Sleep(2000);
 
     // 4. enemy's turn -> impact on player
     enemyPtr->Attack(PlayerPtr);
-    if (enemyPtr->EnemyName() != "Human")
-    {
-        Sleep(2000);
-        cout << "The Enemy Has Attacked You Using A " << enemyPtr->EnWeapons[0].name
-             << ". You Lost " << enemyPtr->EnWeapons[0].damage << " HP!" << endl;
-    }
-
-    Sleep(5000);
-    // 5. showing information
-    PlayerPtr->ShowInfo();
-    string textColor = PlayerPtr->getcolor();
-    cout << GREEN << "Your Enemy: " << RED << "Type|" << enemyPtr->EnemyName() << "|   " << "HP(100)|" << enemyPtr->getHP() << "|   " << "Stamina(50)|" << enemyPtr->getStamina() << "|   " << textColor << endl;
-    Sleep(5000);
+    Sleep(2000);
     return;
 }
 
 void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
 {
     //_____________________________________//
-    cout << PlayerPtr->getcolor() << "You've Come To A Dangerous Place. Beware Of The Creatures Lurking In The Shadow.\n";
-    cout << "There Is An Enemy Against You!\n";
+    cout << PlayerPtr->getcolor() << "You've Come To A Dangerous Place. Beware Of The Creatures Lurking In The Shadow." << endl;
+    cout << "There Is An Enemy Against You!" << endl;
     // creating an enemy object
     srand(time(NULL));
     int rand_1 = rand() % 5 + 1;
@@ -1072,19 +957,25 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
     {
         cout << endl;
         clearConsole(2);
-        cout << "What Would You Like To Do? (Attack Ends Your Turn.)\n";
+        PlayerPtr->ShowInfo();
+        zom->ShowInfo(PlayerPtr);
+        cout << "What Would You Like To Do? (Attack Ends Your Turn.)" << endl;
         // options_1
-        cout << "(1) Attack\n(2) Inventory\n(3) Character\n(4) Exit Battlefield\n(5) Exit Game\n";
+        cout << "(1) Attack\n(2) Inventory\n(3) Character\n(4) Exit Battlefield\n(5) Exit Game" << endl;
         cin >> choice1;
         cout << endl;
         switch (choice1)
         {
         case 1:
+            PlayerPtr->ShowInfo();
+            zom->ShowInfo(PlayerPtr);
             // Attacking The Enemy
             Attack(zom, PlayerPtr, playerBackpack);
             break;
         case 2:
         {
+            PlayerPtr->ShowInfo();
+            zom->ShowInfo(PlayerPtr);
             // calling a function to show backpack
             system(CLEAR);
             playerBackpack->InsideTheBackpack(true);
@@ -1097,12 +988,13 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
             // calling member functions to show player's name,
             //  character, HP, stamina, money and enemy's name, HP and stamina
             showInfoAndUpg(PlayerPtr, zom, playerBackpack);
+            system(CLEAR);
             break;
         }
         case 4:
         {
             // Exit battlefield
-            cout << "Exiting Battlefield...\n";
+            cout << "Exiting Battlefield..." << endl;
             return;
             break;
         }
@@ -1124,33 +1016,46 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
             system(CLEAR);
             int exp;
             int Mon;
-            cout << "Congratulation, You Have Defeated The Enemy.\n";
+            cout << "Congratulation, You Have Defeated The Enemy." << endl;
             // Gaining EXP and Money
             if (zom->EnemyName() == "Zombie")
             {
-                exp = 10;
-                Mon = 10;
+                exp = 10 + 2 * zom->getLevel();
+                Mon = 50 + zom->getLevel() * 10;
             }
             else if (zom->EnemyName() == "Strong Zombie")
             {
-                exp = 20;
-                Mon = 20;
+                exp = 20 + 2 * zom->getLevel();
+                Mon = 75 + zom->getLevel() * 10;
             }
             else if (zom->EnemyName() == "Human")
             {
-                exp = 30;
-                Mon = 30;
+                exp = 30 + 2 * zom->getLevel();
+                Mon = 100 + zom->getLevel() * 10;
             }
-            cout << "You've Gained " << Mon << "$ and " << exp << " experience.\n";
+
+            cout << "You've Gained " << Mon << "$, " << exp << " Experience And 10 Stamina." << endl;
             // Gaining Weapon
-            //................!!
-            PlayerPtr->Money += Mon;
             PlayerPtr->increaseEXP(exp);
+            PlayerPtr->Money += Mon;
+            vector<Weapon> EnWeapon = zom->getWeapons();
+            PlayerPtr->setStamina(PlayerPtr->getStamina() + 10);
+            for (int i = 0; i < EnWeapon.size(); i++)
+            {
+                string Name = EnWeapon[i].name;
+                int Price = EnWeapon[i].price;
+                int PriceU = EnWeapon[i].priceUp;
+                int Damage = EnWeapon[i].damage;
+                string Type = EnWeapon[i].type;
+                int Num = EnWeapon[i].numOfWeas;
+                playerBackpack->AddWeapon(Name, Price, PriceU, Damage, Type, Num);
+                cout << Name << "Added To Your Backpack." << endl;
+            }
             return;
         }
         else if (PlayerPtr->getHP() <= 0)
         {
-            cout << "Oh No, Your HP is now 0.\nYou've Died!\n";
+            cout << "Oh No, Your HP is now 0.\nYou've Died!" << endl;
             exit(0);
         }
     }
@@ -1388,7 +1293,7 @@ void SavePlayer(characters *Player, BackPack *backpack)
     ofstream Names("characters/CharNames.txt", ios::app);
     if (!(File.is_open()))
     {
-        cerr << "An Issue Occurred While Saving This Character.\n";
+        cerr << "An Issue Occurred While Saving This Character." << endl;
         exit(1);
         return;
     }
@@ -1411,7 +1316,7 @@ void SavePlayer(characters *Player, BackPack *backpack)
     if (isDupName(Player->getName())) // To prevent outputting a name twice
         Names << Player->getName() << endl;
 
-    cout << "Exiting The Game...\n";
+    cout << "Exiting The Game..." << endl;
     exit(1);
 }
 //*************************************************************************************//
