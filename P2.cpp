@@ -46,7 +46,7 @@ public:
     BackPack() : playerWeaType("") {}
     void AddWeapon(string name, int price, double priceUp, int damage, int damageUp , string type, int numOfWeas)
     {
-        bool isNew = true;
+        bool isNew = true;//for calculating the number of weapons
         for (int i = 0; i < BPWeapons.size(); i++)
         {
             if ((BPWeapons[i].name) == name)
@@ -60,15 +60,6 @@ public:
     }
     void InsideTheBackpack(bool Bool) // show weapons in the backpack
     {
-        for (int i = 0; i < BPWeapons.size(); i++)
-        {
-            if (BPWeapons[i].numOfWeas == 0)
-            {
-                BPWeapons.erase(BPWeapons.begin() + i);
-                i--;
-            }
-        }
-
         if (BPWeapons.size() == 0 && Bool == true) // backpack is empty
         {
             cout << "You Don't Have Any Weapons Yet!" << endl;
@@ -86,9 +77,9 @@ public:
         {
             cout << "(" << i << ") " << weapon.name;
             if (weapon.type == "ConsumableHp") // for hp increas
-                cout << " [HP Increase: -" << weapon.damage;
+                cout << " [HP Increase: +" << weapon.damage;
             else if (weapon.type == "ConsumableStamina") // for stamina increas
-                cout << " [Stamina Increase: -" << weapon.damage;
+                cout << " [Stamina Increase: +" << weapon.damage;
             else // for throwing and cold weapons and firearm
                 cout << " [Damage: -" << weapon.damage;
             if (Bool == true) // show of price of update for upgrade
@@ -102,7 +93,7 @@ public:
     {
         if (BPWeapons.size() == 0) // backpack is empty
             return 0;
-        cout << "(" << BPWeapons.size() + 1 << ")" << " Back" << endl;
+        cout << "(" << BPWeapons.size() + 1 << ")" << " None Of Them" << endl;
         cout << endl;
         cout << "Whitch One Do You Want To Choose?" << endl;
         int number;
@@ -115,8 +106,8 @@ public:
             {
                 cout << "Please Enter A Valid Number(1-" << BPWeapons.size() + 1 << ") :" << endl;
             }
-            else if (number == BPWeapons.size() + 1) // exit function
-                return 0;
+            else if (number == BPWeapons.size() + 1)// exit function
+                return 0; 
             else
             {
                 playerWeaType = BPWeapons[number - 1].type;
@@ -125,6 +116,14 @@ public:
                 {
                     BPWeapons[number - 1].numOfWeas -= 1;
                 }
+            for (int i = 0; i < BPWeapons.size(); i++)
+            {
+                if (BPWeapons[i].numOfWeas == 0)
+                {
+                    BPWeapons.erase(BPWeapons.begin() + i);
+                    i--;
+                }
+            }
                 return YourWeapon; // damage of weapon for attack
                 break;
             }
@@ -609,7 +608,6 @@ public:
         Strength = 0;
         Intelligence = 0;
         Skill = Level - 1;
-        attack = false;
 
         int n = rand() % 3;
         string name;
@@ -622,7 +620,7 @@ public:
             n = rand() % 3 + 3;
         }
 
-        int j = 3 + Level/4;
+        int j = 3 + Level/3;
         for (int i = 0; i < j; i++) // Adding a HP and Stamina booster
         {
             n = rand() % 4 + 10;
@@ -648,6 +646,7 @@ public:
                         if (HP > maxHp)
                             HP = maxHp;
                         EnWeapons.erase(EnWeapons.begin() + i);
+                        Sleep(1500);
                         cout << GREEN << "Your Enemy Has Increased His HP By " << HP - preHP << "." << Player->getcolor() << endl;
                     }
                 }
@@ -665,6 +664,7 @@ public:
                         if (Stamina > maxStamina)
                             Stamina = maxStamina;
                         EnWeapons.erase(EnWeapons.begin() + i);
+                        Sleep(1500);
                         cout << GREEN << "Your Enemy Has Increased His Stamina By " << Stamina - preStamina << "." << Player->getcolor() << endl;
                     }
                 }
@@ -676,6 +676,7 @@ public:
                 Intelligence += 1;
                 EnWeapons[0].damage += 10;
                 Skill -= 1;
+                Sleep(1500);
                 cout << GREEN << "Your Enemy Has Increased His Intelligence By 1 And Cold Weapon's Damage By 10." << Player->getcolor() << endl;
             }
             break;
@@ -685,6 +686,7 @@ public:
                 Strength += 1;
                 EnWeapons[1].damage += 10;
                 Skill -= 1;
+                Sleep(1500);
                 cout << GREEN << "Your Enemy Has Increased His Strength By 1 And Firearm's Damage By 10." << Player->getcolor() << endl;
             }
             break;
@@ -692,6 +694,7 @@ public:
             attack = true;
             int i = rand() % 2;
             Player->damage(EnWeapons[i].damage);
+            Sleep(1500);
             cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[i].name << "." << endl;
             Sleep(1500);
             cout << Player->getcolor()
@@ -701,13 +704,11 @@ public:
     }
     EnemyState UpdateStates()
     {
-        int random = rand() % 7;
+        int random = rand() % 6;
         if (random == 0)
             return EnemyState::Attack;
         if (random == 5)
             return EnemyState::Attack;
-        if (random == 6)
-        	return EnemyState::Attack;
         if (random == 1)
             return EnemyState::Increase_HP;
         if (random == 2)
@@ -720,12 +721,12 @@ public:
     }
     virtual void Attack(characters *Player) override
     {
+        attack = false;
         Stamina -= 3;
         while (!attack)
         {
             currentState = UpdateStates();
             Action(Player, currentState);
-            Sleep(1500);
         }
     }
 };
@@ -951,7 +952,7 @@ void Attack(Enemy *enemyPtr, characters *PlayerPtr, BackPack *playerBackpack)
     enemyPtr->ShowInfo(PlayerPtr);
     cout << endl;
     // 3. impact on player/enemy
-    if (playerBackpack->getWeaponCount() == 0)
+    if (playerBackpack->getWeaponCount() == 0 || ImpactOfItem == 0)
     {
         ImpactOfItem = 10;
         cout << "You Caused " << ImpactOfItem << " Damage On Enemy's HP Using Your Fist!" << endl;
@@ -961,23 +962,25 @@ void Attack(Enemy *enemyPtr, characters *PlayerPtr, BackPack *playerBackpack)
     {
         int preHP = PlayerPtr->getHP();
         PlayerPtr->setHP(PlayerPtr->getHP() + static_cast<double>(ImpactOfItem));
+        int curHP = PlayerPtr->getHP();
         if(PlayerPtr->getHP() > PlayerPtr->getMaxHp())
             PlayerPtr->setHP(PlayerPtr->getMaxHp());
         if(preHP-ImpactOfItem == 0)
             cout << "Your HP Is Full!" << endl;
         else
-            cout << "You Gained " << preHP-ImpactOfItem << " HP!" << endl;
+            cout << "You Gained " << curHP-preHP << " HP!" << endl;
     }
     else if (playerBackpack->playerWeaType == "ConsumableStamina")
     {
         int preStamina = PlayerPtr->getStamina();
         PlayerPtr->setStamina(PlayerPtr->getStamina() + static_cast<double>(ImpactOfItem));
+        int curStamina = PlayerPtr->getStamina();
         if(PlayerPtr->getStamina() > PlayerPtr->getMaxStamina())
-            PlayerPtr->setHP(PlayerPtr->getMaxHp());
+            PlayerPtr->setStamina(PlayerPtr->getMaxStamina());
         if(preStamina-ImpactOfItem == 0)
             cout << "Your Stamina Is Full!" << endl;
         else
-            cout << "You Gained " << preStamina-ImpactOfItem << " HP!" << endl;
+            cout << "You Gained " << curStamina-preStamina << " Stamina!" << endl;
     }
     else
     {
@@ -999,7 +1002,7 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
     cout << "There Is An Enemy Against You!" << endl;
     // creating an enemy object
     srand(time(NULL));
-    int rand_1 = rand() % 5 + 1;
+    int rand_1 = rand() % 6 + 1;
     Enemy *zom;
     EnemyFactory ef;
     switch (rand_1)
@@ -1025,6 +1028,10 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
         break;
     }
     case 5:
+    {
+        zom = ef.createEnemy("Human", PlayerPtr->getLevel(), PlayerPtr);
+    }
+    case 6:
     {
         zom = ef.createEnemy("Human", PlayerPtr->getLevel(), PlayerPtr);
     }
