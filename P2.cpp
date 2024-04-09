@@ -32,9 +32,10 @@ public:
     int price;
     int priceUp;
     int damage;
+    int damageUp;
     string type;
     int numOfWeas;
-    Weapon(string _name, int _price, double _priceUp, int _damage, string _type, int _numofweas) : name(_name), price(_price), priceUp(_priceUp), damage(_damage), type(_type), numOfWeas(_numofweas) {}
+    Weapon(string _name, int _price, double _priceUp, int _damage, int _damageUp , string _type, int _numofweas) : name(_name), price(_price), priceUp(_priceUp), damage(_damage), damageUp(_damageUp) , type(_type), numOfWeas(_numofweas) {}
 };
 class BackPack
 {
@@ -43,7 +44,7 @@ private:
 public:
     string playerWeaType;
     BackPack() : playerWeaType("") {}
-    void AddWeapon(string name, int price, double priceUp, int damage, string type, int numOfWeas)
+    void AddWeapon(string name, int price, double priceUp, int damage, int damageUp , string type, int numOfWeas)
     {
         bool isNew = true;
         for (int i = 0; i < BPWeapons.size(); i++)
@@ -55,7 +56,7 @@ public:
             }
         }
         if (isNew)
-            BPWeapons.push_back(Weapon(name, price, priceUp, damage, type, numOfWeas));
+            BPWeapons.push_back(Weapon(name, price, priceUp, damage , damageUp , type, numOfWeas));
     }
     void InsideTheBackpack(bool Bool) // show weapons in the backpack
     {
@@ -141,6 +142,10 @@ public:
     {
         return BPWeapons[index].type;
     }
+    string getWeaponName(int index) // return name of weapon
+    {
+        return BPWeapons[index].name;
+    }
     void setWeaponDamage(int NewDamage, int index) // change damage
     {
         BPWeapons[index].damage = NewDamage;
@@ -149,6 +154,14 @@ public:
     {
         return BPWeapons[index].damage;
     }
+    void setWeaponDamageUp(int NewDamageUp, int index) // change damage
+    {
+        BPWeapons[index].damageUp = NewDamageUp;
+    }
+    int getWeaponDamageUp(int index)
+    {
+    	return BPWeapons[index].damageUp;
+	}
     void setWeaponPriceUp(int NewPriceUp, int index) // change price if update
     {
         BPWeapons[index].priceUp = NewPriceUp;
@@ -194,9 +207,17 @@ public:
     characters(string name, int age, string gender, int level, int stamina, int hp, int money, int strength, int intelligence, int skill)
         : Name(name), Age(age), Gender(gender), Level(level), Stamina(stamina), HP(hp), Money(money), Strength(strength), Intelligence(intelligence), Skill(skill)
     {
-        maxStamina = 50 + 20 * Level;
-        maxHp = 100 + 20 * Level;
         EXP = 0;
+        if(Level == 1)
+        {
+            maxStamina = 50;
+            maxHp = 100;
+        }
+        else
+        {        
+            maxStamina = 50 + 20 * Level;
+            maxHp = 100 + 20 * Level;
+        }
     }
 
     string getName() { return Name; }
@@ -229,8 +250,10 @@ public:
         {
             EXP = Level * 50 - (EXP + exp);
             levelUp();
+            Skill += 1;
             cout << "Congratulation, You've Leveled Up!" << endl
                  << "You Are Now On Level " << Level << "." << endl;
+                 cout << endl;
             maxStamina = 50 + 20 * Level;
             maxHp = 100 + 20 * Level;
 
@@ -243,7 +266,7 @@ public:
     void damage(double enemyWeapon) { HP = HP - enemyWeapon; } // the parameter is the member function of Enemy
     void ShowInfo()
     {
-        cout << textColor << "Your Character: " << RED << "Level|" << Level << "|   " << "HP(" << maxHp << ")|" << HP << "|   " << "Stamina(" << maxStamina << ")|" << Stamina << "|   " << "Money|" << Money << "|   " << textColor << endl;
+        cout << textColor << "Your Character: " << RED << "Level|" << Level << "|   " << "HP|" << HP << "|[" << maxHp << "]   " << "Stamina|" << Stamina << "|[" << maxStamina << "]   " << "Money|" << Money << "|   " << textColor << endl;
     }
     void ShowMoney()
     {
@@ -291,6 +314,14 @@ public:
     void BuyWeapon(characters *&player, BackPack *&backpack)
     {
         int number = 0;
+        if(player->getHP() < 30)
+        {
+        	cout << RED << "Your HP Is " << player->getHP() << " ,It Is Time To Eat!!" << textColor << endl;
+		}
+		if(player->getStamina() < 10)
+		{
+			cout << RED << "Your Stamina Is " << player->getStamina() << " ,It Is Time To Drink!!" << textColor << endl;
+		}
         while (true)
         {
             cout << textColor << endl;
@@ -326,10 +357,26 @@ public:
                 int PriceOfWeapon = weapons[number - 1].price;
                 int PriceUpOFWeapon = weapons[number - 1].priceUp;
                 int DamageOfWeapon = weapons[number - 1].damage;
+                int DamageUpOfWeapon = weapons[number - 1].damageUp;
                 string TypeOfWeapon = weapons[number - 1].type;
+                bool MyBool = false;
+                if(number >= 1 && number <= 6)//not allowing to have more than one of the same type of permanent weapon
+                {
+                	for(int i = 0 ; i < backpack->getWeaponCount() ; i++)
+                	{
+                		if(backpack->getWeaponName(i) == NameOfWeapon)
+                		{
+                			MyBool = true;
+                			cout << RED << "Sorry!You Can't Have More Than One Of This Weapon.Pleas Choose Another One." << textColor << endl;
+                			break;
+						}
+					}
+					if(MyBool == true)
+						break;
+				}
                 if (player->Money >= PriceOfWeapon)
                 {
-                    backpack->AddWeapon(NameOfWeapon, PriceOfWeapon, PriceUpOFWeapon, DamageOfWeapon, TypeOfWeapon, 1);
+                    backpack->AddWeapon(NameOfWeapon, PriceOfWeapon, PriceUpOFWeapon, DamageOfWeapon, DamageUpOfWeapon ,TypeOfWeapon, 1);
                     player->Money -= PriceOfWeapon;
                     cout << NameOfWeapon << " Is Now In Your Backpack." << endl
                          << "Your Money: " << player->Money << "$" << endl;
@@ -379,20 +426,20 @@ public:
     {
         Type = "Michelangelo";
         textColor = ORANGE;
-        weapons.push_back(Weapon("Sword", 40, 40, 20, "Cold", 1)); // name, price, price of update, damage of weapons and the number of weapons
-        weapons.push_back(Weapon("Dagger", 20, 20, 20, "Cold", 1));
-        weapons.push_back(Weapon("Nanchiko", 20, 20, 20, "Cold", 1));
-        weapons.push_back(Weapon("Colt", 20, 20, 20, "Firearm", 1));
-        weapons.push_back(Weapon("ShutGun", 20, 20, 20, "Firearm", 1));
-        weapons.push_back(Weapon("Winchester", 20, 20, 20, "Firearm", 1));
-        weapons.push_back(Weapon("Bomb", 20, 20, 20, "Throwing", 1));
-        weapons.push_back(Weapon("Smoker", 20, 20, 20, "Throwing", 1));
-        weapons.push_back(Weapon("Boomerang", 20, 20, 20, "Throwing", 1));
-        weapons.push_back(Weapon("ThrowingKnife", 20, 20, 20, "Throwing", 1));
-        weapons.push_back(Weapon("Coca", 20, 20, 20, "ConsumableStamian", 1));
-        weapons.push_back(Weapon("IceMonkey", 20, 20, 20, "ConsumableStamina", 1));
-        weapons.push_back(Weapon("Pizza", 20, 20, 20, "ConsumableHp", 1));
-        weapons.push_back(Weapon("FrenchFries", 20, 20, 20, "ConsumableHp", 1));
+        weapons.push_back(Weapon("Sword", 120, 50, 16, 6 , "Cold", 1)); // name, price, price of update, damage of weapons and the number of weapons
+        weapons.push_back(Weapon("Dagger", 150, 50, 20, 6 , "Cold", 1));
+        weapons.push_back(Weapon("Nanchiko", 140, 50, 18, 6,"Cold", 1));
+        weapons.push_back(Weapon("Colt", 120, 50, 16, 6,"Firearm", 1));
+        weapons.push_back(Weapon("ShutGun", 150, 50, 20, 6,"Firearm", 1));
+        weapons.push_back(Weapon("Winchester", 140, 50, 18, 6,"Firearm", 1));
+        weapons.push_back(Weapon("Bomb", 45, 25, 7, 2 ,"Throwing",1));
+        weapons.push_back(Weapon("Smoker", 35, 25, 5, 2,"Throwing", 1));
+        weapons.push_back(Weapon("Boomerang", 40, 25, 6, 2,"Throwing", 1));
+        weapons.push_back(Weapon("ThrowingKnife", 50, 25, 8, 2, "Throwing", 1));
+        weapons.push_back(Weapon("Coca", 30, 15, 20, 5, "ConsumableStamian", 1));
+        weapons.push_back(Weapon("IceMonkey", 35, 15, 20, 5, "ConsumableStamina", 1));
+        weapons.push_back(Weapon("Pizza", 40, 20, 30, 10 , "ConsumableHp", 1));
+        weapons.push_back(Weapon("FrenchFries", 35, 20, 30, 10, "ConsumableHp", 1));
     }
 };
 class Dumbledore : public characters
@@ -403,20 +450,20 @@ public:
     {
         Type = "Dumbledore";
         textColor = BLUE;
-        weapons.push_back(Weapon("Stupefy (Throwing Somthing)", 40, 20, 20, "Cold", 1)); // name, price, price of update, damage of weapons and the number of weapons
-        weapons.push_back(Weapon("SecfumSempra (To Injure)", 20, 20, 20, "Cold", 1));
-        weapons.push_back(Weapon("Crucio (To Torture)", 20, 20, 20, "Cold", 1));
-        weapons.push_back(Weapon("Incendio (Fire)", 20, 20, 20, "Firearm", 1));
-        weapons.push_back(Weapon("Fiendfyre Curse (Dragon)", 20, 20, 20, "Firearm", 1));
-        weapons.push_back(Weapon("Draught Og Living Death (Go To Death Mode)", 5000, 20, 100, "Firearm", 1));
-        weapons.push_back(Weapon("Redacto (Blow Up)", 20, 20, 20, "Throwing", 1));
-        weapons.push_back(Weapon("In Caeseros (Rope)", 20, 20, 20, "Throwing", 1));
-        weapons.push_back(Weapon("Serpensortia (Throwing Snake)", 20, 20, 20, "Throwing", 1));
-        weapons.push_back(Weapon("Avada Kedavra (To Kill)", 20, 20, 20, "Throwing", 1));
-        weapons.push_back(Weapon("Felix Felicis (Increas Energy)", 20, 20, 20, "ConsumableStamina", 1));
-        weapons.push_back(Weapon("Fiantodon (Protect)", 20, 20, 20, "ConsumableStamina", 1));
-        weapons.push_back(Weapon("Elixir OF Life (Increas HP)", 20, 20, 20, "ConsumableHp", 1));
-        weapons.push_back(Weapon("Episci (Prevent Bleeding)", 20, 20, 20, "ConsumableHp", 1));
+        weapons.push_back(Weapon("Stupefy (Throwing Somthing)", 120, 50, 16, 6 ,"Cold", 1)); // name, price, price of update, damage of weapons and the number of weapons
+        weapons.push_back(Weapon("SecfumSempra (To Injure)", 150, 50, 20, 6,"Cold", 1));
+        weapons.push_back(Weapon("Crucio (To Torture)", 140, 50, 18, 6 ,"Cold", 1));
+        weapons.push_back(Weapon("Incendio (Fire)", 120, 50, 16, 6,"Firearm", 1));
+        weapons.push_back(Weapon("Fiendfyre Curse (Dragon)", 150, 50, 20,6 , "Firearm", 1));
+        weapons.push_back(Weapon("Draught Og Living Death (Go To Death Mode)", 140, 50, 18, 6 ,"Firearm", 1));
+        weapons.push_back(Weapon("Redacto (Blow Up)", 45, 25, 7, 2 ,"Throwing", 1));
+        weapons.push_back(Weapon("In Caeseros (Rope)", 35, 25, 5, 2 ,"Throwing", 1));
+        weapons.push_back(Weapon("Serpensortia (Throwing Snake)", 50, 25, 8, 2 ,"Throwing", 1));
+        weapons.push_back(Weapon("Avada Kedavra (To Kill)", 1500, 6, 999999, 2 ,"Throwing", 1));
+        weapons.push_back(Weapon("Felix Felicis (Increas Energy)", 30, 15, 20,5 , "ConsumableStamina", 1));
+        weapons.push_back(Weapon("Fiantodon (Protect)", 35, 15, 20, 5 ,"ConsumableStamina", 1));
+        weapons.push_back(Weapon("Elixir OF Life (Increas HP)", 40, 20, 30, 10 ,"ConsumableHp", 1));
+        weapons.push_back(Weapon("Episci (Prevent Bleeding)", 35, 20, 30, 10, "ConsumableHp", 1));
     }
 };
 class JonSnow : public characters
@@ -427,20 +474,20 @@ public:
     {
         Type = "JonSnow";
         textColor = GRAY;
-        weapons.push_back(Weapon("Sword", 40, 20, 20, "Cold", 1)); ////name, price, price of update, damage of weapons and the number of weapons
-        weapons.push_back(Weapon("Dagger", 20, 20, 20, "Cold", 1));
-        weapons.push_back(Weapon("Chopper", 20, 20, 20, "Cold", 1));
-        weapons.push_back(Weapon("Dragon", 20, 20, 20, "Firearm", 1));
-        weapons.push_back(Weapon("Gun", 20, 20, 20, "Firearm", 1));
-        weapons.push_back(Weapon("CataPult", 20, 20, 20, "Firearm", 1));
-        weapons.push_back(Weapon("Shuriken", 20, 20, 20, "Throwing", 1));
-        weapons.push_back(Weapon("FireBall", 0, 20, 20, "Throwing", 1));
-        weapons.push_back(Weapon("SnowBall", 20, 20, 20, "Throwing", 1));
-        weapons.push_back(Weapon("Bomb", 20, 20, 20, "Throwing", 1));
-        weapons.push_back(Weapon("BluePotion", 20, 20, 20, "ConsumableStamina", 1));
-        weapons.push_back(Weapon("RedPotion", 20, 20, 20, "ConsumableStamina", 1));
-        weapons.push_back(Weapon("Fish", 20, 20, 20, "ConsumableHp", 1));
-        weapons.push_back(Weapon("Meat", 20, 20, 20, "ConsumableHp", 1));
+        weapons.push_back(Weapon("Sword", 120, 50, 16, 6 ,"Cold", 1)); ////name, price, price of update, damage of weapons and the number of weapons
+        weapons.push_back(Weapon("Dagger", 150, 50, 20, 6 ,"Cold", 1));
+        weapons.push_back(Weapon("Chopper", 140, 50, 18, 6 ,"Cold", 1));
+        weapons.push_back(Weapon("Dragon", 150, 50, 20, 6 ,"Firearm", 1));
+        weapons.push_back(Weapon("Gun", 120, 50, 16, 6 ,"Firearm", 1));
+        weapons.push_back(Weapon("CataPult", 140, 50, 18, 6 ,"Firearm", 1));
+        weapons.push_back(Weapon("Shuriken", 45, 25, 7, 2 ,"Throwing", 1));
+        weapons.push_back(Weapon("FireBall", 40, 25, 6, 2 ,"Throwing", 1));
+        weapons.push_back(Weapon("SnowBall", 50, 25, 8, 2 ,"Throwing", 1));
+        weapons.push_back(Weapon("Bomb", 35, 25, 5, 2 ,"Throwing", 1));
+        weapons.push_back(Weapon("BluePotion", 30, 15, 20, 5 ,"ConsumableStamina", 1));
+        weapons.push_back(Weapon("RedPotion", 35, 15, 20, 5 ,"ConsumableStamina", 1));
+        weapons.push_back(Weapon("Fish", 40, 20, 30, 10, "ConsumableHp", 1));
+        weapons.push_back(Weapon("Meat", 35, 20, 30, 10 ,"ConsumableHp", 1));
     }
 };
 class CharFactory
@@ -473,8 +520,16 @@ public:
     double e;
     Enemy(int PlayerLevel, double E) : Level(PlayerLevel), HP(100), Stamina(50), e(E) // The default constructor which initializes both HP and Stamina to 100.
     {
-        maxStamina = 50 + 20 * Level;
-        maxHp = 100 + 20 * Level;
+        if(Level == 1)
+        {
+            maxStamina = 50;
+            maxHp = 100;
+        }
+        else
+        {        
+            maxStamina = 50 + 20 * Level;
+            maxHp = 100 + 20 * Level;
+        }
     }
 
     int getHP() { return HP; }
@@ -487,7 +542,7 @@ public:
     virtual string EnemyName() = 0;
     void ShowInfo(characters *Player)
     {
-        cout << GREEN << "Your Enemy: " << RED << "Type|" << EnemyName() << "|   " << "Level|" << Level << "|   " << "HP(" << maxHp << ")|" << getHP() << "|   " << "Stamina(" << maxStamina << ")|" << Stamina << "|   " << Player->getcolor() << endl;
+        cout << GREEN << "Your Enemy:     " << RED << "Level|" << Level << "|   " <<  "HP|" << HP << "|[" << maxHp << "]   " "Stamina|" << Stamina << "|[" << maxStamina << "]   " << "Type|" << EnemyName() << "|   "  << Player->getcolor() << endl;
     }
 };
 //*****//
@@ -506,8 +561,9 @@ public:
     {
         Player->damage(EnWeapons[0].damage);
         Stamina -= 3;
-        cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[0].name << "." << endl
-             << Player->getcolor()
+        cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[0].name << "." << endl;
+        Sleep(1500);
+        cout << Player->getcolor()
              << "You Lost " << EnWeapons[0].damage << " HP!" << endl;
     }
 };
@@ -520,8 +576,9 @@ public:
     {
         Player->damage(EnWeapons[0].damage);
         Stamina -= 3;
-        cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[0].name << "." << endl
-             << Player->getcolor()
+        cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[0].name << "." << endl;
+        Sleep(1500);
+        cout << Player->getcolor()
              << "You Lost " << EnWeapons[0].damage << " HP!" << endl;
     }
 };
@@ -565,13 +622,8 @@ public:
             n = rand() % 3 + 3;
         }
 
-        int j = 0;
-        if (PlayerLevel < 6)
-            j = 2;
-        else
-            j = 5;
-
-        for (int i = 0; i < j; i++) // Adding a Hp and stamina booster
+        int j = 3 + Level/4;
+        for (int i = 0; i < j; i++) // Adding a HP and Stamina booster
         {
             n = rand() % 4 + 10;
             EnWeapons.push_back(Player->weapons[n]);
@@ -640,19 +692,22 @@ public:
             attack = true;
             int i = rand() % 2;
             Player->damage(EnWeapons[i].damage);
-            cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[i].name << "." << endl
-                 << Player->getcolor()
+            cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[i].name << "." << endl;
+            Sleep(1500);
+            cout << Player->getcolor()
                  << "You Lost " << EnWeapons[i].damage << " HP!" << endl;
             break;
         }
     }
     EnemyState UpdateStates()
     {
-        int random = rand() % 6;
+        int random = rand() % 7;
         if (random == 0)
             return EnemyState::Attack;
         if (random == 5)
             return EnemyState::Attack;
+        if (random == 6)
+        	return EnemyState::Attack;
         if (random == 1)
             return EnemyState::Increase_HP;
         if (random == 2)
@@ -709,8 +764,10 @@ void UpgradeWeapon(characters *playerPtr, BackPack *playerBackpack) // function 
     cout << endl;
     if (choose == playerBackpack->getWeaponCount() + 1)
         return;
+    string TypeOfWeapon = playerBackpack->getWeaponType(choose - 1);
     int NewPriceUp = playerBackpack->getWeaponPriceUp(choose - 1);
     int NewDamage = playerBackpack->getWeaponDamage(choose - 1);
+    int DamageUp = playerBackpack->getWeaponDamageUp(choose - 1);
     if (playerPtr->Money < playerBackpack->getWeaponPriceUp(choose - 1))
     {
         cout << RED << "I'm Sorry.You Don't Have Enough Money!" << playerPtr->getcolor() << endl;
@@ -718,10 +775,16 @@ void UpgradeWeapon(characters *playerPtr, BackPack *playerBackpack) // function 
     else
     {
         playerPtr->Money -= playerBackpack->getWeaponPriceUp(choose - 1);
-        NewPriceUp += 20;
+        if(TypeOfWeapon == "Cold" || TypeOfWeapon == "Firearm" || TypeOfWeapon == "Throwing")//increas of price of upgrade
+        	NewPriceUp += 50;
+        else
+        	NewPriceUp += 30;
         playerBackpack->setWeaponPriceUp(NewPriceUp, choose - 1);
-        NewDamage += 10;
+        int damageOfUpgrade;
+        NewDamage += DamageUp;
+        DamageUp += 1;//increas of damage of upgrade
         playerBackpack->setWeaponDamage(NewDamage, choose - 1);
+        playerBackpack->setWeaponDamageUp(DamageUp , choose - 1);
         cout << "Upgraded Successfully!" << endl;
     }
 }
@@ -878,6 +941,7 @@ void Attack(Enemy *enemyPtr, characters *PlayerPtr, BackPack *playerBackpack)
     system(CLEAR);
     PlayerPtr->ShowInfo();
     enemyPtr->ShowInfo(PlayerPtr);
+    cout << endl;
     // 1. Show backpack
     playerBackpack->InsideTheBackpack(false);
     // 2. choose weapon
@@ -885,6 +949,7 @@ void Attack(Enemy *enemyPtr, characters *PlayerPtr, BackPack *playerBackpack)
     clearConsole(2);
     PlayerPtr->ShowInfo();
     enemyPtr->ShowInfo(PlayerPtr);
+    cout << endl;
     // 3. impact on player/enemy
     if (playerBackpack->getWeaponCount() == 0)
     {
@@ -894,13 +959,25 @@ void Attack(Enemy *enemyPtr, characters *PlayerPtr, BackPack *playerBackpack)
     }
     else if (playerBackpack->playerWeaType == "ConsumableHp")
     {
-        cout << "You Gained " << ImpactOfItem << " HP!" << endl;
+        int preHP = PlayerPtr->getHP();
         PlayerPtr->setHP(PlayerPtr->getHP() + static_cast<double>(ImpactOfItem));
+        if(PlayerPtr->getHP() > PlayerPtr->getMaxHp())
+            PlayerPtr->setHP(PlayerPtr->getMaxHp());
+        if(preHP-ImpactOfItem == 0)
+            cout << "Your HP Is Full!" << endl;
+        else
+            cout << "You Gained " << preHP-ImpactOfItem << " HP!" << endl;
     }
     else if (playerBackpack->playerWeaType == "ConsumableStamina")
     {
-        cout << "You Gained " << ImpactOfItem << " Stamina!" << endl;
-        PlayerPtr->setStamina(PlayerPtr->getStamina() + ImpactOfItem);
+        int preStamina = PlayerPtr->getStamina();
+        PlayerPtr->setStamina(PlayerPtr->getStamina() + static_cast<double>(ImpactOfItem));
+        if(PlayerPtr->getStamina() > PlayerPtr->getMaxStamina())
+            PlayerPtr->setHP(PlayerPtr->getMaxHp());
+        if(preStamina-ImpactOfItem == 0)
+            cout << "Your Stamina Is Full!" << endl;
+        else
+            cout << "You Gained " << preStamina-ImpactOfItem << " HP!" << endl;
     }
     else
     {
@@ -911,7 +988,7 @@ void Attack(Enemy *enemyPtr, characters *PlayerPtr, BackPack *playerBackpack)
 
     // 4. enemy's turn -> impact on player
     enemyPtr->Attack(PlayerPtr);
-    Sleep(2000);
+    Sleep(1000);
     return;
 }
 
@@ -959,9 +1036,13 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
         clearConsole(2);
         PlayerPtr->ShowInfo();
         zom->ShowInfo(PlayerPtr);
+        cout << endl;
         cout << "What Would You Like To Do? (Attack Ends Your Turn.)" << endl;
         // options_1
-        cout << "(1) Attack\n(2) Inventory\n(3) Character\n(4) Exit Battlefield\n(5) Exit Game" << endl;
+        cout << "(1) Attack" << endl;
+        cout << "(2) Inventory" << endl;
+        cout << "(3) Character" << endl;
+        cout << "(4) Exit Game" << endl;
         cin >> choice1;
         cout << endl;
         switch (choice1)
@@ -969,6 +1050,7 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
         case 1:
             PlayerPtr->ShowInfo();
             zom->ShowInfo(PlayerPtr);
+            cout << endl;
             // Attacking The Enemy
             Attack(zom, PlayerPtr, playerBackpack);
             break;
@@ -976,6 +1058,7 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
         {
             PlayerPtr->ShowInfo();
             zom->ShowInfo(PlayerPtr);
+            cout << endl;
             // calling a function to show backpack
             system(CLEAR);
             playerBackpack->InsideTheBackpack(true);
@@ -988,17 +1071,10 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
             // calling member functions to show player's name,
             //  character, HP, stamina, money and enemy's name, HP and stamina
             showInfoAndUpg(PlayerPtr, zom, playerBackpack);
-            system(CLEAR);
+            clearConsole(2);
             break;
         }
         case 4:
-        {
-            // Exit battlefield
-            cout << "Exiting Battlefield..." << endl;
-            return;
-            break;
-        }
-        case 5:
         {
             // save player's info
             SavePlayer(PlayerPtr, playerBackpack);
@@ -1040,25 +1116,41 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
             PlayerPtr->Money += Mon;
             vector<Weapon> EnWeapon = zom->getWeapons();
             PlayerPtr->setStamina(PlayerPtr->getStamina() + 10);
-            for (int i = 0; i < EnWeapon.size(); i++)
+            for(int i = 0; i < EnWeapon.size(); i++)
             {
-                string Name = EnWeapon[i].name;
-                int Price = EnWeapon[i].price;
-                int PriceU = EnWeapon[i].priceUp;
-                int Damage = EnWeapon[i].damage;
-                string Type = EnWeapon[i].type;
-                int Num = EnWeapon[i].numOfWeas;
-                playerBackpack->AddWeapon(Name, Price, PriceU, Damage, Type, Num);
-                cout << Name << "Added To Your Backpack." << endl;
+            	bool MyBool = false;
+            	for(int i = 0 ; i < playerBackpack->getWeaponCount() ; i++)
+                {
+                	if(playerBackpack->getWeaponName(i) == EnWeapon[i].name)
+                	{
+                		MyBool = true;
+                		break;
+					}
+				}
+				if(MyBool == false)
+				{
+					string Name = EnWeapon[i].name;
+                	int Price = EnWeapon[i].price;
+                	int PriceU = EnWeapon[i].priceUp;
+                	int Damage = EnWeapon[i].damage;
+                	int DamageUp = EnWeapon[i].damageUp;
+                	string Type = EnWeapon[i].type;
+                	int Num = EnWeapon[i].numOfWeas;
+                	playerBackpack->AddWeapon(Name, Price, PriceU, Damage, DamageUp , Type, Num);
+                	cout << Name << "Added To Your Backpack." << endl;	
+				}
             }
+            Sleep(2000);
             return;
         }
         else if (PlayerPtr->getHP() <= 0)
         {
-            cout << "Oh No, Your HP is now 0.\nYou've Died!" << endl;
-            exit(0);
+            cout << "Oh No, Your HP is now 0." << endl;
+            cout << "You've Died!" << endl;
+            exit(1);
         }
     }
+    delete zom;
 }
 void Game(characters *Player, BackPack *&backpack)
 {
@@ -1136,6 +1228,7 @@ characters *PreChar(characters *Player, CharFactory charfactorty, BackPack *back
     string type;
     int num = 1;
     int damage = 0;
+    int damageUp = 0;
     int price = 0;
     int numOfWeas = 0;
     double priceUp = 0;
@@ -1181,7 +1274,7 @@ characters *PreChar(characters *Player, CharFactory charfactorty, BackPack *back
             if (num % 4 == 3) // Forth line is the number of weapons
             {
                 numOfWeas = stoi(line);
-                backpack->AddWeapon(WName, price, priceUp, damage, type, numOfWeas); // Quantification the weapon
+                backpack->AddWeapon(WName, price, priceUp, damage, damageUp , type, numOfWeas); // Quantification the weapon
             }
         }
         num += 1;
@@ -1311,6 +1404,7 @@ void SavePlayer(characters *Player, BackPack *backpack)
     for (auto weapons : backpack->getWeapons())
         File << weapons.name << endl
              << weapons.damage << endl
+             << weapons.damageUp << endl
              << weapons.priceUp << endl
              << weapons.numOfWeas << endl;
     if (isDupName(Player->getName())) // To prevent outputting a name twice
