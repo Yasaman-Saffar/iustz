@@ -37,10 +37,9 @@ A)Cold Weapons:
 1)Stupefy(Throwing Somthing) 2)SecfumSempra(To Injure) 3)Crucio(To Torture)
 
 B)Firearm:
-1)Incendio(Fire) 2)Fiendfyre Curse(Dragon) 3)Avada Kedavra(To Kill)
-
+1)Incendio(Fire) 2)Fiendfyre Curse(Dragon) 3)Draught Og Living Death(Go To Death Mode)
 C)Throwing Weapon:
-1)Redacto(Blow Up) 2)In Caeseros(Rope) 3)Serpensortia(Throwing Snake) 4)Draught Og Living Death(Go To Death Mode)
+1)Redacto(Blow Up) 2)In Caeseros(Rope) 3)Serpensortia(Throwing Snake) 4)Avada Kedavra(To Kill)
  
 D)Consumable Weapon:
 1)Felix Felicis(Increas Energy/+Stamina) 2)Fiantodon(Protect/+Stamina) 3)Elixir OF Life(+HP) 4)Episci(Prevent Bleeding/+HP)
