@@ -59,12 +59,7 @@ public:
     }
     void InsideTheBackpack(bool Bool) // show weapons in the backpack
     {
-        if (BPWeapons.size() == 0) // backpack is empty
-        {
-            cout << "You Don't Have Any Weapons Yet!" << endl;
-            return;
-        }
-        for (int i = 0; i < BPWeapons.size(); i++)
+    	for (int i = 0; i < BPWeapons.size(); i++)
         {
             if (BPWeapons[i].numOfWeas == 0)
             {
@@ -72,15 +67,27 @@ public:
                 i--;
             }
         }
+    
+        if(BPWeapons.size() == 0 && Bool == true) // backpack is empty
+        {
+            cout << "You Don't Have Any Weapons Yet!" << endl;
+            return;
+        }
+        if(BPWeapons.size() == 0 && Bool == false) // backpack is empty
+        {
+            cout << "You Don't Have Any Weapons Yet!" << endl;
+            cout << "Sorry! You Can Only Use Your Fist :)" << endl;
+            return;
+        }
         cout << "Weapons In Your Backpack :" << endl;
         int i = 1;
         for (const auto &weapon : BPWeapons)
         {
             cout << "(" << i << ") " << weapon.name;
             if (weapon.type == "ConsumableHp") // for hp increas
-                cout << " [HP Increase: -" << weapon.damage << "] x" << weapon.numOfWeas << endl;
+                cout << " [HP Increase: -" << weapon.damage;
             else if (weapon.type == "ConsumableStamina") // for stamina increas
-                cout << " [Stamina Increase: -" << weapon.damage << "] x" << weapon.numOfWeas << endl;
+                cout << " [Stamina Increase: -" << weapon.damage;
             else // for throwing and cold weapons and firearm
                 cout << " [Damage: -" << weapon.damage;
             if (Bool == true) // show of price of update for upgrade
@@ -299,7 +306,7 @@ public:
             }
             if (number == 16)
             {
-                // SavePlayer(player, backpack);
+                SavePlayer(player, backpack);
             }
             if (!(number >= 1 && number <= 16))
             {
@@ -311,6 +318,8 @@ public:
             {
                 if (number == 15 || number == 16)
                     break;
+                if(!(number >= 1 && number <= 16))
+                	break;
                 cout << textColor;
                 string NameOfWeapon = weapons[number - 1].name;
                 int PriceOfWeapon = weapons[number - 1].price;
@@ -974,25 +983,31 @@ void showInfoAndUpg(characters *playerPtr, Enemy *enemyPtr, BackPack *playerBack
 void Attack(Enemy *enemyPtr, characters *PlayerPtr, BackPack *playerBackpack)
 {
     // 1. Show backpack
-    system(CLEAR);
+    clearConsole(2);
     playerBackpack->InsideTheBackpack(false);
     // 2. choose weapon
     int ImpactOfItem = playerBackpack->ChooseWeapon();
-    system(CLEAR);
+     clearConsole(2);
     // 3. impact on player/enemy
-    if (playerBackpack->playerWeaType == "ConsumableHp")
+    if(playerBackpack -> getWeaponCount() == 0)
     {
-        cout << "You Gained " << ImpactOfItem << " HP!\n";
+    	ImpactOfItem = 10;
+    	cout << "You Caused " << ImpactOfItem << " Damage On Enemy's HP Using Your Fist!" << endl;
+        enemyPtr->damage(static_cast<double>(ImpactOfItem));
+	}
+    else if (playerBackpack->playerWeaType == "ConsumableHp")
+    {
+        cout << "You Gained " << ImpactOfItem << " HP!" << endl;
         PlayerPtr->setHP(PlayerPtr->getHP() + static_cast<double>(ImpactOfItem));
     }
     else if (playerBackpack->playerWeaType == "ConsumableStamina")
     {
-        cout << "You Gained " << ImpactOfItem << " Stamina!\n";
+        cout << "You Gained " << ImpactOfItem << " Stamina!" << endl;
         PlayerPtr->setStamina(PlayerPtr->getStamina() + ImpactOfItem);
     }
     else
     {
-        cout << "You Caused " << ImpactOfItem << " Damage On Enemy's HP!\n";
+        cout << "You Caused " << ImpactOfItem << " Damage On Enemy's HP!" << endl;
         enemyPtr->damage(static_cast<double>(ImpactOfItem));
     }
     Sleep(5000);
@@ -1003,15 +1018,14 @@ void Attack(Enemy *enemyPtr, characters *PlayerPtr, BackPack *playerBackpack)
     {
         Sleep(2000);
         cout << "The Enemy Has Attacked You Using A " << enemyPtr->EnWeapons[0].name
-             << ". You Lost " << enemyPtr->EnWeapons[0].damage << " HP!";
+             << ". You Lost " << enemyPtr->EnWeapons[0].damage << " HP!" << endl;
     }
 
     Sleep(5000);
     // 5. showing information
     PlayerPtr->ShowInfo();
     string textColor = PlayerPtr->getcolor();
-    cout << endl
-         << GREEN << "Your Enemy: " << RED << "Type|" << enemyPtr->EnemyName() << "|   " << "HP(100)|" << enemyPtr->getHP() << "|   " << "Stamina(50)|" << enemyPtr->getStamina() << "|   " << textColor << endl;
+    cout << GREEN << "Your Enemy: " << RED << "Type|" << enemyPtr->EnemyName() << "|   " << "HP(100)|" << enemyPtr->getHP() << "|   " << "Stamina(50)|" << enemyPtr->getStamina() << "|   " << textColor << endl;
     Sleep(5000);
     return;
 }
