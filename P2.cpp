@@ -58,8 +58,20 @@ public:
         if (isNew)
             BPWeapons.push_back(Weapon(name, price, priceUp, damage , damageUp , type, numOfWeas));
     }
+    void Remove()
+    {
+    	for (int i = 0; i < BPWeapons.size(); i++)//remove used weapon
+        {
+            if (BPWeapons[i].numOfWeas == 0)
+            {
+                BPWeapons.erase(BPWeapons.begin() + i);
+                i--;
+            }
+        }
+	}
     void InsideTheBackpack(bool Bool) // show weapons in the backpack
     {
+    	Remove();
         if (BPWeapons.size() == 0 && Bool == true) // backpack is empty
         {
             cout << "You Don't Have Any Weapons Yet!" << endl;
@@ -116,14 +128,6 @@ public:
                 {
                     BPWeapons[number - 1].numOfWeas -= 1;
                 }
-            for (int i = 0; i < BPWeapons.size(); i++)
-            {
-                if (BPWeapons[i].numOfWeas == 0)
-                {
-                    BPWeapons.erase(BPWeapons.begin() + i);
-                    i--;
-                }
-            }
                 return YourWeapon; // damage of weapon for attack
                 break;
             }
@@ -435,7 +439,7 @@ public:
         weapons.push_back(Weapon("Smoker", 35, 25, 5, 2,"Throwing", 1));
         weapons.push_back(Weapon("Boomerang", 40, 25, 6, 2,"Throwing", 1));
         weapons.push_back(Weapon("ThrowingKnife", 50, 25, 8, 2, "Throwing", 1));
-        weapons.push_back(Weapon("Coca", 30, 15, 20, 5, "ConsumableStamian", 1));
+        weapons.push_back(Weapon("Coca", 30, 15, 20, 5, "ConsumableStamina", 1));
         weapons.push_back(Weapon("IceMonkey", 35, 15, 20, 5, "ConsumableStamina", 1));
         weapons.push_back(Weapon("Pizza", 40, 20, 30, 10 , "ConsumableHp", 1));
         weapons.push_back(Weapon("FrenchFries", 35, 20, 30, 10, "ConsumableHp", 1));
@@ -778,7 +782,7 @@ void UpgradeWeapon(characters *playerPtr, BackPack *playerBackpack) // function 
         playerPtr->Money -= playerBackpack->getWeaponPriceUp(choose - 1);
         if(TypeOfWeapon == "Cold" || TypeOfWeapon == "Firearm" || TypeOfWeapon == "Throwing")//increas of price of upgrade
         	NewPriceUp += 50;
-        else
+        else if(TypeOfWeapon == "ConsumableStamina" || TypeOfWeapon == "ConsumableHp")
         	NewPriceUp += 30;
         playerBackpack->setWeaponPriceUp(NewPriceUp, choose - 1);
         int damageOfUpgrade;
@@ -1089,7 +1093,7 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
         }
         default:
         {
-            cout << RED << "Please Enter A Valid Number(1-5)." << PlayerPtr->getcolor() << endl;
+            cout << RED << "Please Enter A Valid Number(1-4)." << PlayerPtr->getcolor() << endl;
             Beep(500, 800);
             break;
         }
@@ -1296,7 +1300,7 @@ characters *NewChar(bool isValid, characters *player, CharFactory charfactory)
     int age;
     string name;
     string gender;
-    cout << "Enter Your Name: " << endl;
+    cout << "Enter Your User Name: " << endl;
     cin >> name;
     if (!isDupName(name)) // To check if a name already contains a character
     {
@@ -1389,6 +1393,7 @@ void ChoosingChar()
 }
 void SavePlayer(characters *Player, BackPack *backpack)
 {
+	backpack->Remove();
     ofstream File("characters/" + Player->getName() + ".txt");
     ofstream Names("characters/CharNames.txt", ios::app);
     if (!(File.is_open()))
