@@ -247,14 +247,14 @@ public:
     int getMaxStamina() { return maxStamina; }
 
     void levelUp() { Level += 1; }
-    void increaseEXP(int exp)
+    void IncreaseEXP(int exp)
     {
         if (EXP + exp - Level * 50 <= 0)
         {
             EXP = Level * 50 - (EXP + exp);
             levelUp();
             Skill += 1;
-            cout << "Congratulation, You've Leveled Up!" << endl
+            cout << "You've Leveled Up!" << endl
                  << "You Are Now On Level " << Level << "." << endl;
                  cout << endl;
             maxStamina = 50 + 20 * Level;
@@ -563,7 +563,7 @@ public:
     virtual void Attack(characters *Player) override
     {
         Player->damage(EnWeapons[0].damage);
-        Stamina -= 3;
+        Stamina -= 7;
         cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[0].name << "." << endl;
         Sleep(1500);
         cout << Player->getcolor()
@@ -578,7 +578,7 @@ public:
     virtual void Attack(characters *Player) override
     {
         Player->damage(EnWeapons[0].damage);
-        Stamina -= 3;
+        Stamina -= 5;
         cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[0].name << "." << endl;
         Sleep(1500);
         cout << Player->getcolor()
@@ -726,7 +726,7 @@ public:
     virtual void Attack(characters *Player) override
     {
         attack = false;
-        Stamina -= 3;
+        Stamina -= 5;
         while (!attack)
         {
             currentState = UpdateStates();
@@ -755,45 +755,45 @@ public:
             return nullptr;
     }
 };
-void UpgradeWeapon(characters *playerPtr, BackPack *playerBackpack) // function for upgrade of weapons in backpack
+void UpgradeWeapon(characters *playerPtr, BackPack *PlayerBackpack) // function for upgrade of weapons in backpack
 {
-    if (playerBackpack->getWeaponCount() == 0)
+    if (PlayerBackpack->getWeaponCount() == 0)
         return;
     cout << endl;
     playerPtr->ShowMoney();
     cout << "Which One Do You Want To Upgrade " << playerPtr->getName() << "?" << endl;
-    cout << "(" << playerBackpack->getWeaponCount() + 1 << ")" << " Neither Of Them!" << endl;
+    cout << "(" << PlayerBackpack->getWeaponCount() + 1 << ")" << " Neither Of Them!" << endl;
     cout << endl;
     int choose;
     cin >> choose;
     cout << endl;
-    if (choose == playerBackpack->getWeaponCount() + 1)
+    if (choose == PlayerBackpack->getWeaponCount() + 1)
         return;
-    string TypeOfWeapon = playerBackpack->getWeaponType(choose - 1);
-    int NewPriceUp = playerBackpack->getWeaponPriceUp(choose - 1);
-    int NewDamage = playerBackpack->getWeaponDamage(choose - 1);
-    int DamageUp = playerBackpack->getWeaponDamageUp(choose - 1);
-    if (playerPtr->Money < playerBackpack->getWeaponPriceUp(choose - 1))
+    string TypeOfWeapon = PlayerBackpack->getWeaponType(choose - 1);
+    int NewPriceUp = PlayerBackpack->getWeaponPriceUp(choose - 1);
+    int NewDamage = PlayerBackpack->getWeaponDamage(choose - 1);
+    int DamageUp = PlayerBackpack->getWeaponDamageUp(choose - 1);
+    if (playerPtr->Money < PlayerBackpack->getWeaponPriceUp(choose - 1))
     {
         cout << RED << "I'm Sorry.You Don't Have Enough Money!" << playerPtr->getcolor() << endl;
     }
     else
     {
-        playerPtr->Money -= playerBackpack->getWeaponPriceUp(choose - 1);
+        playerPtr->Money -= PlayerBackpack->getWeaponPriceUp(choose - 1);
         if(TypeOfWeapon == "Cold" || TypeOfWeapon == "Firearm" || TypeOfWeapon == "Throwing")//increas of price of upgrade
         	NewPriceUp += 50;
         else if(TypeOfWeapon == "ConsumableStamina" || TypeOfWeapon == "ConsumableHp")
         	NewPriceUp += 30;
-        playerBackpack->setWeaponPriceUp(NewPriceUp, choose - 1);
+        PlayerBackpack->setWeaponPriceUp(NewPriceUp, choose - 1);
         int damageOfUpgrade;
         NewDamage += DamageUp;
         DamageUp += 1;//increas of damage of upgrade
-        playerBackpack->setWeaponDamage(NewDamage, choose - 1);
-        playerBackpack->setWeaponDamageUp(DamageUp , choose - 1);
+        PlayerBackpack->setWeaponDamage(NewDamage, choose - 1);
+        PlayerBackpack->setWeaponDamageUp(DamageUp , choose - 1);
         cout << "Upgraded Successfully!" << endl;
     }
 }
-void showInfoAndUpg(characters *playerPtr, Enemy *enemyPtr, BackPack *playerBackpack)
+void showInfoAndUpg(characters *playerPtr, Enemy *EnemyPtr, BackPack *PlayerBackpack)
 {
     cout << "Your Character\n~~~~~~~~~~~~~~~~~~" << endl;
     cout << "Name: " << playerPtr->getName() << endl
@@ -808,16 +808,16 @@ void showInfoAndUpg(characters *playerPtr, Enemy *enemyPtr, BackPack *playerBack
 
     cout << endl
          << GREEN << "Your Enemy\n~~~~~~~~~~~~~~~~~~" << endl;
-    cout << "Enemy Type: " << enemyPtr->EnemyName() << endl
-         << "HP: " << enemyPtr->getHP() << endl
-         << "Stamina: " << enemyPtr->getStamina() << playerPtr->getcolor() << endl;
-    if (enemyPtr->EnemyName() == "Human")
+    cout << "Enemy Type: " << EnemyPtr->EnemyName() << endl
+         << "HP: " << EnemyPtr->getHP() << endl
+         << "Stamina: " << EnemyPtr->getStamina() << playerPtr->getcolor() << endl;
+    if (EnemyPtr->EnemyName() == "Human")
     {
-        Human *en = (Human *)enemyPtr;
+        Human *en = (Human *)EnemyPtr;
         cout << GREEN << "Intelligence: " << en->getIntelligence() << endl
              << "Strength: " << en->getStrength() << endl
              << playerPtr->getcolor();
-        characters *enemyPtr = (characters *)en;
+        characters *EnemyPtr = (characters *)en;
     }
     int number;
     while (true) // upgrade skills of character
@@ -830,7 +830,7 @@ void showInfoAndUpg(characters *playerPtr, Enemy *enemyPtr, BackPack *playerBack
         cin >> number;
         cout << endl;
         int skill = playerPtr->getSkill();
-        int CountOfWeapons = playerBackpack->getWeaponCount();
+        int CountOfWeapons = PlayerBackpack->getWeaponCount();
         int strength = playerPtr->getStrength();
         int intelligence = playerPtr->getIntelligence();
         if (number == 1)
@@ -842,11 +842,11 @@ void showInfoAndUpg(characters *playerPtr, Enemy *enemyPtr, BackPack *playerBack
                     int temp = 0;
                     for (int i = 0; i < CountOfWeapons; i++)
                     {
-                        if (playerBackpack->getWeaponType(i) == "Firearm")
+                        if (PlayerBackpack->getWeaponType(i) == "Firearm")
                         {
-                            int WeaponDamage = playerBackpack->getWeaponDamage(i);
+                            int WeaponDamage = PlayerBackpack->getWeaponDamage(i);
                             WeaponDamage += 10;
-                            playerBackpack->setWeaponDamage(WeaponDamage, i);
+                            PlayerBackpack->setWeaponDamage(WeaponDamage, i);
                             temp++;
                         }
                     }
@@ -890,11 +890,11 @@ void showInfoAndUpg(characters *playerPtr, Enemy *enemyPtr, BackPack *playerBack
                     int temp = 0;
                     for (int i = 0; i < CountOfWeapons; i++)
                     {
-                        if (playerBackpack->getWeaponType(i) == "Cold")
+                        if (PlayerBackpack->getWeaponType(i) == "Cold")
                         {
-                            int WeaponDamage = playerBackpack->getWeaponDamage(i);
+                            int WeaponDamage = PlayerBackpack->getWeaponDamage(i);
                             WeaponDamage += 10;
-                            playerBackpack->setWeaponDamage(WeaponDamage, i);
+                            PlayerBackpack->setWeaponDamage(WeaponDamage, i);
                             temp++;
                         }
                     }
@@ -941,28 +941,29 @@ void showInfoAndUpg(characters *playerPtr, Enemy *enemyPtr, BackPack *playerBack
     }
 }
 
-void Attack(Enemy *enemyPtr, characters *PlayerPtr, BackPack *playerBackpack)
+void Attack(Enemy *EnemyPtr, characters *PlayerPtr, BackPack *PlayerBackpack)
 {
     system(CLEAR);
     PlayerPtr->ShowInfo();
-    enemyPtr->ShowInfo(PlayerPtr);
+    EnemyPtr->ShowInfo(PlayerPtr);
     cout << endl;
     // 1. Show backpack
-    playerBackpack->InsideTheBackpack(false);
+    PlayerBackpack->InsideTheBackpack(false);
     // 2. choose weapon
-    int ImpactOfItem = playerBackpack->ChooseWeapon();
+    int ImpactOfItem = PlayerBackpack->ChooseWeapon();
     clearConsole(2);
     PlayerPtr->ShowInfo();
-    enemyPtr->ShowInfo(PlayerPtr);
+    EnemyPtr->ShowInfo(PlayerPtr);
     cout << endl;
     // 3. impact on player/enemy
-    if (playerBackpack->getWeaponCount() == 0 || ImpactOfItem == 0)
+    if (PlayerBackpack->getWeaponCount() == 0 || ImpactOfItem == 0)
     {
         ImpactOfItem = 10;
         cout << "You Caused " << ImpactOfItem << " Damage On Enemy's HP Using Your Fist!" << endl;
-        enemyPtr->damage(static_cast<double>(ImpactOfItem));
+        PlayerPtr->setStamina(PlayerPtr->getStamina() - (PlayerPtr->getLevel() * 2 + 5));
+        EnemyPtr->damage(static_cast<double>(ImpactOfItem));
     }
-    else if (playerBackpack->playerWeaType == "ConsumableHp")
+    else if (PlayerBackpack->playerWeaType == "ConsumableHp")
     {
         int preHP = PlayerPtr->getHP();
         PlayerPtr->setHP(PlayerPtr->getHP() + static_cast<double>(ImpactOfItem));
@@ -974,7 +975,7 @@ void Attack(Enemy *enemyPtr, characters *PlayerPtr, BackPack *playerBackpack)
         else
             cout << "You Gained " << curHP-preHP << " HP!" << endl;
     }
-    else if (playerBackpack->playerWeaType == "ConsumableStamina")
+    else if (PlayerBackpack->playerWeaType == "ConsumableStamina")
     {
         int preStamina = PlayerPtr->getStamina();
         PlayerPtr->setStamina(PlayerPtr->getStamina() + static_cast<double>(ImpactOfItem));
@@ -989,17 +990,17 @@ void Attack(Enemy *enemyPtr, characters *PlayerPtr, BackPack *playerBackpack)
     else
     {
         cout << "You Caused " << ImpactOfItem << " Damage On Enemy's HP!" << endl;
-        enemyPtr->damage(static_cast<double>(ImpactOfItem));
+        EnemyPtr->damage(static_cast<double>(ImpactOfItem));
     }
     Sleep(2000);
 
     // 4. enemy's turn -> impact on player
-    enemyPtr->Attack(PlayerPtr);
+    EnemyPtr->Attack(PlayerPtr);
     Sleep(1000);
     return;
 }
 
-void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
+void Battlefield(characters *PlayerPtr, BackPack *PlayerBackpack)
 {
     //_____________________________________//
     cout << PlayerPtr->getcolor() << "You've Come To A Dangerous Place. Beware Of The Creatures Lurking In The Shadow." << endl;
@@ -1007,37 +1008,37 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
     // creating an enemy object
     srand(time(NULL));
     int rand_1 = rand() % 6 + 1;
-    Enemy *zom;
+    Enemy *EnemyPtr;
     EnemyFactory ef;
     switch (rand_1)
     {
     case 1:
     {
-        zom = ef.createEnemy("Zombie", PlayerPtr->getLevel(), PlayerPtr);
+        EnemyPtr = ef.createEnemy("Zombie", PlayerPtr->getLevel(), PlayerPtr);
         break;
     }
     case 2:
     {
-        zom = ef.createEnemy("Strong Zombie", PlayerPtr->getLevel(), PlayerPtr);
+        EnemyPtr = ef.createEnemy("Strong Zombie", PlayerPtr->getLevel(), PlayerPtr);
         break;
     }
     case 3:
     {
-        zom = ef.createEnemy("Zombie", PlayerPtr->getLevel(), PlayerPtr);
+        EnemyPtr = ef.createEnemy("Zombie", PlayerPtr->getLevel(), PlayerPtr);
         break;
     }
     case 4:
     {
-        zom = ef.createEnemy("Strong Zombie", PlayerPtr->getLevel(), PlayerPtr);
+        EnemyPtr = ef.createEnemy("Strong Zombie", PlayerPtr->getLevel(), PlayerPtr);
         break;
     }
     case 5:
     {
-        zom = ef.createEnemy("Human", PlayerPtr->getLevel(), PlayerPtr);
+        EnemyPtr = ef.createEnemy("Human", PlayerPtr->getLevel(), PlayerPtr);
     }
     case 6:
     {
-        zom = ef.createEnemy("Human", PlayerPtr->getLevel(), PlayerPtr);
+        EnemyPtr = ef.createEnemy("Human", PlayerPtr->getLevel(), PlayerPtr);
     }
     }
     int choice1(0);
@@ -1046,7 +1047,7 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
         cout << endl;
         clearConsole(2);
         PlayerPtr->ShowInfo();
-        zom->ShowInfo(PlayerPtr);
+        EnemyPtr->ShowInfo(PlayerPtr);
         cout << endl;
         cout << "What Would You Like To Do? (Attack Ends Your Turn.)" << endl;
         // options_1
@@ -1060,20 +1061,20 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
         {
         case 1:
             PlayerPtr->ShowInfo();
-            zom->ShowInfo(PlayerPtr);
+            EnemyPtr->ShowInfo(PlayerPtr);
             cout << endl;
             // Attacking The Enemy
-            Attack(zom, PlayerPtr, playerBackpack);
+            Attack(EnemyPtr, PlayerPtr, PlayerBackpack);
             break;
         case 2:
         {
             PlayerPtr->ShowInfo();
-            zom->ShowInfo(PlayerPtr);
+            EnemyPtr->ShowInfo(PlayerPtr);
             cout << endl;
             // calling a function to show backpack
             system(CLEAR);
-            playerBackpack->InsideTheBackpack(true);
-            UpgradeWeapon(PlayerPtr, playerBackpack);
+            PlayerBackpack->InsideTheBackpack(true);
+            UpgradeWeapon(PlayerPtr, PlayerBackpack);
             break;
         }
         case 3:
@@ -1081,14 +1082,14 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
             system(CLEAR);
             // calling member functions to show player's name,
             //  character, HP, stamina, money and enemy's name, HP and stamina
-            showInfoAndUpg(PlayerPtr, zom, playerBackpack);
+            showInfoAndUpg(PlayerPtr, EnemyPtr, PlayerBackpack);
             clearConsole(2);
             break;
         }
         case 4:
         {
             // save player's info
-            SavePlayer(PlayerPtr, playerBackpack);
+            SavePlayer(PlayerPtr, PlayerBackpack);
             break;
         }
         default:
@@ -1098,41 +1099,50 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
             break;
         }
         }
-        if (zom->getHP() <= 0)
+        if (EnemyPtr->getHP() <= 0)
         {
             system(CLEAR);
             int exp;
             int Mon;
             cout << "Congratulation, You Have Defeated The Enemy." << endl;
-            // Gaining EXP and Money
-            if (zom->EnemyName() == "Zombie")
+            // Gaining EXP, Money, Stamina And Weapon
+            if (EnemyPtr->EnemyName() == "Zombie")
             {
-                exp = 10 + 2 * zom->getLevel();
-                Mon = 50 + zom->getLevel() * 10;
+                exp = 10 + 2 * EnemyPtr->getLevel();
+                Mon = 50 + EnemyPtr->getLevel() * 10;
             }
-            else if (zom->EnemyName() == "Strong Zombie")
+            else if (EnemyPtr->EnemyName() == "Strong Zombie")
             {
-                exp = 20 + 2 * zom->getLevel();
-                Mon = 75 + zom->getLevel() * 10;
+                exp = 20 + 2 * EnemyPtr->getLevel();
+                Mon = 75 + EnemyPtr->getLevel() * 10;
             }
-            else if (zom->EnemyName() == "Human")
+            else if (EnemyPtr->EnemyName() == "Human")
             {
-                exp = 30 + 2 * zom->getLevel();
-                Mon = 100 + zom->getLevel() * 10;
+                exp = 30 + 2 * EnemyPtr->getLevel();
+                Mon = 100 + EnemyPtr->getLevel() * 10;
             }
-
-            cout << "You've Gained " << Mon << "$, " << exp << " Experience And 10 Stamina." << endl;
-            // Gaining Weapon
-            PlayerPtr->increaseEXP(exp);
+            PlayerPtr->IncreaseEXP(exp);
             PlayerPtr->Money += Mon;
-            vector<Weapon> EnWeapon = zom->getWeapons();
-            PlayerPtr->setStamina(PlayerPtr->getStamina() + 10);
+
+            int curStamina = PlayerPtr->getStamina();
+            int maxStamina = PlayerPtr->getMaxStamina();
+            if (curStamina + 10 >= maxStamina)
+            {
+                PlayerPtr->setStamina(maxStamina);
+            }
+            else 
+            {
+                PlayerPtr->setStamina(PlayerPtr->getStamina() + 10);
+            }
+            cout << "You've Gained " << Mon << "$, " << exp << " Experience And " << PlayerPtr->getStamina() - curStamina << " Stamina." << endl;
+            
+            vector<Weapon> EnWeapon = EnemyPtr->getWeapons();
             for(int i = 0; i < EnWeapon.size(); i++)
             {
             	bool MyBool = false;
-            	for(int i = 0 ; i < playerBackpack->getWeaponCount() ; i++)
+            	for(int i = 0 ; i < PlayerBackpack->getWeaponCount() ; i++)
                 {
-                	if(playerBackpack->getWeaponName(i) == EnWeapon[i].name)
+                	if(PlayerBackpack->getWeaponName(i) == EnWeapon[i].name)
                 	{
                 		MyBool = true;
                 		break;
@@ -1147,11 +1157,11 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
                 	int DamageUp = EnWeapon[i].damageUp;
                 	string Type = EnWeapon[i].type;
                 	int Num = EnWeapon[i].numOfWeas;
-                	playerBackpack->AddWeapon(Name, Price, PriceU, Damage, DamageUp , Type, Num);
+                	PlayerBackpack->AddWeapon(Name, Price, PriceU, Damage, DamageUp , Type, Num);
                 	cout << Name << "Added To Your Backpack." << endl;	
 				}
             }
-            Sleep(2000);
+            Sleep(4000);
             return;
         }
         else if (PlayerPtr->getHP() <= 0)
@@ -1161,7 +1171,7 @@ void Battlefield(characters *PlayerPtr, BackPack *playerBackpack)
             exit(1);
         }
     }
-    delete zom;
+    delete EnemyPtr;
 }
 void Game(characters *Player, BackPack *&backpack)
 {
