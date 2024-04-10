@@ -563,7 +563,7 @@ public:
     virtual void Attack(characters *Player) override
     {
         Player->damage(EnWeapons[0].damage);
-        Stamina -= 7;
+        Stamina -= Level * 2 + 4;
         cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[0].name << "." << endl;
         Sleep(1500);
         cout << Player->getcolor()
@@ -578,7 +578,7 @@ public:
     virtual void Attack(characters *Player) override
     {
         Player->damage(EnWeapons[0].damage);
-        Stamina -= 5;
+        Stamina -= Level * 2 + 3;
         cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[0].name << "." << endl;
         Sleep(1500);
         cout << Player->getcolor()
@@ -726,7 +726,7 @@ public:
     virtual void Attack(characters *Player) override
     {
         attack = false;
-        Stamina -= 5;
+        Stamina -= Level * 2 + 3;
         while (!attack)
         {
             currentState = UpdateStates();
@@ -958,7 +958,7 @@ void Attack(Enemy *EnemyPtr, characters *PlayerPtr, BackPack *PlayerBackpack)
     // 3. impact on player/enemy
     if (PlayerBackpack->getWeaponCount() == 0 || ImpactOfItem == 0)
     {
-        ImpactOfItem = 10;
+        ImpactOfItem = PlayerPtr->getLevel() + 5;
         cout << "You Caused " << ImpactOfItem << " Damage On Enemy's HP Using Your Fist!" << endl;
         PlayerPtr->setStamina(PlayerPtr->getStamina() - (PlayerPtr->getLevel() * 2 + 5));
         EnemyPtr->damage(static_cast<double>(ImpactOfItem));
@@ -1158,7 +1158,7 @@ void Battlefield(characters *PlayerPtr, BackPack *PlayerBackpack)
                 	string Type = EnWeapon[i].type;
                 	int Num = EnWeapon[i].numOfWeas;
                 	PlayerBackpack->AddWeapon(Name, Price, PriceU, Damage, DamageUp , Type, Num);
-                	cout << Name << "Added To Your Backpack." << endl;	
+                	cout << Name << " Added To Your Backpack." << endl;	
 				}
             }
             Sleep(4000);
@@ -1166,9 +1166,9 @@ void Battlefield(characters *PlayerPtr, BackPack *PlayerBackpack)
         }
         else if (PlayerPtr->getHP() <= 0)
         {
-            cout << "Oh No, Your HP is now 0." << endl;
+            cout << "Sorry, Your HP is now 0." << endl;
             cout << "You've Died!" << endl;
-            exit(1);
+            exit(0);
         }
     }
     delete EnemyPtr;
