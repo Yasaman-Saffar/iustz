@@ -284,7 +284,7 @@ public:
     void damage(double enemyWeapon) { HP = ChangingValue(HP, enemyWeapon); } // the parameter is the member function of Enemy
     void ShowInfo()
     {
-        cout << textColor << "Your Character: " << RED << "Level|" << Level << "|   " << "HP|" << HP << "(" << maxHp << ")|    " << "Stamina|" << Stamina << "(" << maxStamina << ")|    " << "Money|" << Money << "$|   " << textColor << endl;
+        cout << textColor << "Your Character: " << RED << "Level|" << Level << "|   " << "HP|" << HP << " (" << maxHp << ")|    " << "Stamina|" << Stamina << " (" << maxStamina << ")|    " << "Money|" << Money << "$|   " << textColor << endl;
     }
     void ShowMoney()
     {
@@ -477,7 +477,7 @@ public:
         weapons.push_back(Weapon("Redacto (Blow Up)", 45, 25, 7, 2, "Throwing", 1));
         weapons.push_back(Weapon("In Caeseros (Rope)", 35, 25, 5, 2, "Throwing", 1));
         weapons.push_back(Weapon("Serpensortia (Throwing Snake)", 50, 25, 8, 2, "Throwing", 1));
-        weapons.push_back(Weapon("Avada Kedavra (To Kill)", 1500, 6, 999999, 2, "Throwing", 1));
+        weapons.push_back(Weapon("Avada Kedavra (To Kill)", 1500, 6, 500, 2, "Throwing", 1));
         weapons.push_back(Weapon("Felix Felicis (Increas Energy)", 30, 15, 20, 5, "ConsumableStamina", 1));
         weapons.push_back(Weapon("Fiantodon (Protect)", 35, 15, 20, 5, "ConsumableStamina", 1));
         weapons.push_back(Weapon("Elixir OF Life (Increas HP)", 40, 20, 30, 10, "ConsumableHp", 1));
@@ -560,7 +560,7 @@ public:
     virtual string EnemyName() = 0;
     void ShowInfo(characters *Player)
     {
-        cout << GREEN << "Your Enemy:     " << RED << "Level|" << Level << "|   " << "HP|" << HP << "(" << maxHp << ")|    " << "Stamina|" << Stamina << "(" << maxStamina << ")|    " << "Type|" << EnemyName() << "|   " << Player->getcolor() << endl;
+        cout << GREEN << "Your Enemy:     " << RED << "Level|" << Level << "|   " << "HP|" << HP << " (" << maxHp << ")|    " << "Stamina|" << Stamina << " (" << maxStamina << ")|    " << "Type|" << EnemyName() << "|   " << Player->getcolor() << endl;
     }
 };
 //*****//
