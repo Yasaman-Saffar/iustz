@@ -77,49 +77,84 @@ D) Consumable Weapon:
 
 *Shop Of Dumbledore:
 ----------------------------
-A)Cold Weapons:
-1)Stupefy(Throwing Somthing) 
-2)SecfumSempra(To Injure)
-3)Crucio(To Torture)
+A) Cold Weapons:
 
-B)Firearm:
-1)Incendio(Fire) 
-2)Fiendfyre Curse(Dragon) 
-3)Draught Og Living Death(Go To Death Mode)
+1) Stupefy(Throwing Somthing)
 
-C)Throwing Weapon:
-1)Redacto(Blow Up)
-2)In Caeseros(Rope) 
-3)Serpensortia(Throwing Snake) 
-4)Avada Kedavra(To Kill)
+2) SecfumSempra(To Injure)
+
+3) Crucio(To Torture)
+
+B) Firearm:
+
+1) Incendio(Fire) 
+
+2) Fiendfyre Curse(Dragon) 
+
+3) Draught Og Living Death(Go To Death Mode)
+
+C) Throwing Weapon:
+
+1) Redacto(Blow Up)
+
+2) In Caeseros(Rope)
+
+3) Serpensortia(Throwing Snake)
+
+4) Avada Kedavra(To Kill)
  
-D)Consumable Weapon:
-1)Felix Felicis(Increas Energy/+Stamina) 
-2)Fiantodon(Protect/+Stamina) 
-3)Elixir OF Life(+HP) 
-4)Episci(Prevent Bleeding/+HP)
+D) Consumable Weapon:
+
+1) Felix Felicis(Increas Energy/+Stamina)
+
+2) Fiantodon(Protect/+Stamina)
+   
+3) Elixir OF Life(+HP) 
+
+4) Episci(Prevent Bleeding/+HP)
 
 *Shop Of Michelangelo:
 ----------------------------
-A)Cold Weapons:
-1)Sword 
-2)Dagger
-3)Nanchiko
+A) Cold Weapons:
 
-B)Firearm:
-1)Colt
-2)ShutGun
-3)Winchester
+1) Sword
 
-C)Throwing Weapon:
-1)Bomb 
-2)Smoker
-3)Boomerang 
-4)ThrowingKnife
+2) Dagger
+
+3) Nanchiko
+
+B) Firearm:
+
+1) Colt
+  
+3) ShutGun
+  
+4) Winchester
+
+C) Throwing Weapon:
+
+1) Bomb 
+
+2) Smoker
+
+3) Boomerang 
+
+4) ThrowingKnife
  
-D)Consumable Weapon:
-1)Coca(+Stamina) 
-2)IceMonkey(+Stamina)
-3)Pizza(+HP) 
-4)FrenchFries(+HP)
- 
+D) Consumable Weapon:
+
+1) Coca(+Stamina) 
+
+2) IceMonkey(+Stamina)
+
+3) Pizza(+HP) 
+
+4) FrenchFries(+HP)
+   
+*Enemy:
+----------------------------
+1) Zombie
+
+2) Strong Zombie
+
+3) Human
