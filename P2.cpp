@@ -183,15 +183,15 @@ class characters;
 void SavePlayer(characters *, BackPack *);
 void ChoosingChar();
 void clearConsole(double);
-int ChangingValue(int curVal, int change)
+int ChangeOfVal(int curVal, int change)
 {
     if (curVal - change <= 0)
     {
-        return 0;
+        return curVal;
     }
     else
     {
-        return (curVal - change);
+        return change;
     }
 }
 // CHARACTERS CLASSES
@@ -281,7 +281,7 @@ public:
             EXP += exp;
         return;
     }
-    void damage(double enemyWeapon) { HP = ChangingValue(HP, enemyWeapon); } // the parameter is the member function of Enemy
+    void damage(double enemyWeapon) { HP = HP - enemyWeapon; } // the parameter is the member function of Enemy
     void ShowInfo()
     {
         cout << textColor << "Your Character: " << RED << "Level|" << Level << "|   " << "HP|" << HP << " (" << maxHp << ")|    " << "Stamina|" << Stamina << " (" << maxStamina << ")|    " << "Money|" << Money << "$|   " << textColor << endl;
@@ -553,7 +553,7 @@ public:
     int getHP() { return HP; }
     int getStamina() { return Stamina; }
     vector<Weapon> getWeapons() { return EnWeapons; }
-    void damage(double playerAttack) { HP = ChangingValue(HP, playerAttack); }
+    void damage(double playerAttack) { HP = HP - playerAttack; }
     int getLevel() { return Level; }
     void levelUp() { Level += 1; }
     virtual void Attack(characters *player) = 0;
@@ -577,19 +577,13 @@ public:
     string EnemyName() override { return "Zombie"; }
     virtual void Attack(characters *Player) override
     {
-        Player->damage(EnWeapons[0].damage);
-        if (Stamina - (Level * 2 + 4) <= 0)
-        {
-            Stamina = 0;
-        }
-        else
-        {
-            Stamina -= (Level * 2 + 4);
-        }
+        int change = ChangeOfVal(Player->getHP(),EnWeapons[0].damage);
+        Player->damage(change);
+        Stamina = Stamina - ChangeOfVal(Stamina,(Level * 2 + 4));
         cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[0].name << "." << endl;
         Sleep(1500);
         cout << Player->getcolor()
-             << "You Lost " << EnWeapons[0].damage << " HP!" << endl;
+             << "You Lost " << change << " HP!" << endl;
     }
 };
 class strongZombie : public zombie
@@ -600,14 +594,7 @@ public:
     virtual void Attack(characters *Player) override
     {
         Player->damage(EnWeapons[0].damage);
-        if (Stamina - (Level * 2 + 3) <= 0)
-        {
-            Stamina = 0;
-        }
-        else
-        {
-            Stamina -= (Level * 2 + 3);
-        }
+        Stamina = Stamina - ChangeOfVal(Stamina,(Level * 2 + 3));
         cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[0].name << "." << endl;
         Sleep(1500);
         cout << Player->getcolor()
@@ -726,12 +713,13 @@ public:
         default: // attack
             attack = true;
             int i = rand() % 2;
-            Player->damage(EnWeapons[i].damage);
+            int change = ChangeOfVal(Player->getHP(),EnWeapons[i].damage);
+            Player->damage(change);
             Sleep(1500);
             cout << GREEN << "The Enemy Has Attacked You Using A " << EnWeapons[i].name << "." << endl;
             Sleep(1500);
             cout << Player->getcolor()
-                 << "You Lost " << EnWeapons[i].damage << " HP!" << endl;
+                 << "You Lost " << change << " HP!" << endl;
             break;
         }
     }
@@ -995,13 +983,13 @@ void Attack(Enemy *EnemyPtr, characters *PlayerPtr, BackPack *PlayerBackpack)
         // 3. impact on player/enemy
         if (PlayerBackpack->getWeaponCount() == 0 || ImpactOfItem == 0)
         {
-            ImpactOfItem = PlayerPtr->getLevel() + 5;
+            ImpactOfItem = ChangeOfVal(EnemyPtr->getHP(),PlayerPtr->getLevel() + 5);
             system(CLEAR);
             PlayerPtr->ShowInfo();
             EnemyPtr->ShowInfo(PlayerPtr);
             cout << "You Caused " << ImpactOfItem << " Damage On Enemy's HP Using Your Fist!" << endl;
             EnemyPtr->damage(static_cast<double>(ImpactOfItem));
-            PlayerPtr->setStamina(ChangingValue(PlayerPtr->getStamina(), (PlayerPtr->getLevel() * 2 + 5)));
+            PlayerPtr->setStamina(PlayerPtr->getStamina() - ChangeOfVal(PlayerPtr->getStamina(), (PlayerPtr->getLevel() * 2 + 5)));
         }
         else if (PlayerBackpack->playerWeaType == "ConsumableHp")
         {
@@ -1049,9 +1037,10 @@ void Attack(Enemy *EnemyPtr, characters *PlayerPtr, BackPack *PlayerBackpack)
         }
         else
         {
+            ImpactOfItem = ChangeOfVal(EnemyPtr->getHP(),ImpactOfItem);
             cout << "You Caused " << ImpactOfItem << " Damage On Enemy's HP!" << endl;
             EnemyPtr->damage(static_cast<double>(ImpactOfItem));
-            PlayerPtr->setStamina(ChangingValue(PlayerPtr->getStamina(), (PlayerPtr->getLevel() * 2 + 5)));
+            PlayerPtr->setStamina(PlayerPtr->getStamina() - ChangeOfVal(PlayerPtr->getStamina(), (PlayerPtr->getLevel() * 2 + 5)));
         }
         Sleep(2000);
     }
