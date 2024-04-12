@@ -247,6 +247,8 @@ public:
     string getType() { return Type; }
     int getLevel() { return Level; }
     void setLevel(int level) { Level = level; }
+    int getExp() {return EXP;}
+    void setExp(int exp) {EXP = exp;}
     double getHP() { return HP; }
     void setHP(double hp1) { HP = hp1; }
     int getStamina() { return Stamina; }
@@ -477,7 +479,7 @@ public:
         weapons.push_back(Weapon("Redacto (Blow Up)", 45, 25, 7, 2, "Throwing", 1));
         weapons.push_back(Weapon("In Caeseros (Rope)", 35, 25, 5, 2, "Throwing", 1));
         weapons.push_back(Weapon("Serpensortia (Throwing Snake)", 50, 25, 8, 2, "Throwing", 1));
-        weapons.push_back(Weapon("Avada Kedavra (To Kill)", 1500, 6, 9999, 2, "Throwing", 1));
+        weapons.push_back(Weapon("Avada Kedavra (To Kill)", 1500, 6, 99999, 2, "Throwing", 1));
         weapons.push_back(Weapon("Felix Felicis (Increas Energy)", 30, 15, 20, 5, "ConsumableStamina", 1));
         weapons.push_back(Weapon("Fiantodon (Protect)", 35, 15, 20, 5, "ConsumableStamina", 1));
         weapons.push_back(Weapon("Elixir OF Life (Increas HP)", 40, 20, 30, 10, "ConsumableHp", 1));
@@ -668,6 +670,7 @@ public:
                         EnWeapons.erase(EnWeapons.begin() + i);
                         Sleep(1500);
                         cout << GREEN << "Your Enemy Has Increased His HP By " << HP - preHP << "." << Player->getcolor() << endl;
+                        break;
                     }
                 }
             }
@@ -686,6 +689,7 @@ public:
                         EnWeapons.erase(EnWeapons.begin() + i);
                         Sleep(1500);
                         cout << GREEN << "Your Enemy Has Increased His Stamina By " << Stamina - preStamina << "." << Player->getcolor() << endl;
+                        break;
                     }
                 }
             }
@@ -1096,39 +1100,39 @@ void Battlefield(characters *PlayerPtr, BackPack *PlayerBackpack)
     cout << "There Is An Enemy Against You!" << endl;
     // creating an enemy object
     srand(time(NULL));
-    int rand_1 = rand() % 6 + 1;
+    int rand_1 = rand() % 4 + 1;
     Enemy *EnemyPtr;
     EnemyFactory ef;
     switch (rand_1)
     {
-    case 1:
-    {
-        EnemyPtr = ef.createEnemy("Zombie", PlayerPtr->getLevel(), PlayerPtr);
-        break;
-    }
-    case 2:
-    {
-        EnemyPtr = ef.createEnemy("Strong Zombie", PlayerPtr->getLevel(), PlayerPtr);
-        break;
-    }
-    case 3:
-    {
-        EnemyPtr = ef.createEnemy("Zombie", PlayerPtr->getLevel(), PlayerPtr);
-        break;
-    }
-    case 4:
-    {
-        EnemyPtr = ef.createEnemy("Strong Zombie", PlayerPtr->getLevel(), PlayerPtr);
-        break;
-    }
-    case 5:
-    {
-        EnemyPtr = ef.createEnemy("Human", PlayerPtr->getLevel(), PlayerPtr);
-    }
-    case 6:
-    {
-        EnemyPtr = ef.createEnemy("Human", PlayerPtr->getLevel(), PlayerPtr);
-    }
+        case 1:
+        {
+            EnemyPtr = ef.createEnemy("Zombie", PlayerPtr->getLevel(), PlayerPtr);
+            break;
+        }
+        case 2:
+        {
+            EnemyPtr = ef.createEnemy("Strong Zombie", PlayerPtr->getLevel(), PlayerPtr);
+            break;
+        }
+        case 3:
+        {
+            EnemyPtr = ef.createEnemy("Zombie", PlayerPtr->getLevel(), PlayerPtr);
+            break;
+        }
+        case 4:
+        {
+            EnemyPtr = ef.createEnemy("Strong Zombie", PlayerPtr->getLevel(), PlayerPtr);
+            break;
+        }
+        default:
+        {
+            if(PlayerPtr->getLevel() > 4)
+                EnemyPtr = ef.createEnemy("Human", PlayerPtr->getLevel(), PlayerPtr);
+            else
+                EnemyPtr = ef.createEnemy("Strong Zombie", PlayerPtr->getLevel(), PlayerPtr);
+            break;
+        }
     }
     int choice1(0);
     while (true)
@@ -1392,26 +1396,28 @@ characters *PreChar(characters *Player, CharFactory charfactorty, BackPack *back
         if (num == 5)
             Player->setLevel(stoi(line));
         if (num == 6)
-            Player->setStamina(stoi(line));
+            Player->setExp(stoi(line));
         if (num == 7)
-            Player->setHP(stoi(line));
+            Player->setStamina(stoi(line));
         if (num == 8)
-            Player->Money = stoi(line);
+            Player->setHP(stoi(line));
         if (num == 9)
-            Player->setStrength(stoi(line));
+            Player->Money = stoi(line);
         if (num == 10)
-            Player->setIntelligence(stoi(line));
+            Player->setStrength(stoi(line));
         if (num == 11)
+            Player->setIntelligence(stoi(line));
+        if (num == 12)
             Player->setSkill(stoi(line));
-        if (num >= 12)
+        if (num >= 13)
         {
-            if (num % 4 == 0) // First line is the name of weapon
+            if (num % 4 == 1) // First line is the name of weapon
                 WName = line;
-            if (num % 4 == 1) // Second line is the damage of weapon
+            if (num % 4 == 2) // Second line is the damage of weapon
                 damage = stoi(line);
-            if (num % 4 == 2) // Third line is the priceUp of weapon
+            if (num % 4 == 3) // Third line is the priceUp of weapon
                 priceUp = stoi(line);
-            if (num % 4 == 3) // Forth line is the number of weapons
+            if (num % 4 == 0) // Forth line is the number of weapons
             {
                 numOfWeas = stoi(line);
                 backpack->AddWeapon(WName, price, priceUp, damage, damageUp, type, numOfWeas); // Quantification the weapon
@@ -1536,6 +1542,7 @@ void SavePlayer(characters *Player, BackPack *backpack)
          << Player->getAge() << endl
          << Player->getGender() << endl
          << Player->getLevel() << endl
+         << Player->getExp() << endl
          << Player->getStamina() << endl
          << Player->getHP() << endl
          << Player->Money << endl
