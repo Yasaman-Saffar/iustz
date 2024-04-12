@@ -1,52 +1,79 @@
 *Charactres:
 ----------------------------
-1)Jon Snow
+1) Jon Snow
 
-2)Albus Dumbledore
-3)Michelangelo
+2) Albus Dumbledore
+
+3) Michelangelo
 
 *Skills:
 ----------------------------
-1)Strength(for forearm)
-2)Intelligence(for cold weapons)
+1) Strength(for forearm)
+
+2) Intelligence(for cold weapons)
 
 *Features:
 ----------------------------
-1)Name
-2)Age
-3)Gender
-4)Money
-5)Skill Point
-6)Skills
-7)Hp
-8)Stamina
-9)Level
-10)Exp
-11)BackPack
+1) Name
+
+2) Age
+
+3) Gender
+
+4) Money
+
+5) Skill Point
+
+6) Skills
+
+7) Hp
+
+8) Stamina
+
+9) Level
+
+10) Exp
+
+11) BackPack
 
 *Shop Of Jon Snow:
 ----------------------------
-A)Cold Weapons:
-1)Sword
-2)Dagger 
-3)Chopper
+A) Cold Weapons:
 
-B)Firearm:
-1)Dragon 
-2)Gun 
-3)CatePult
+1) Sword
 
-C)Throwing Weapon:
-1)Bomb 
-2)Snow Ball 
-3)Fire Ball
-4)Shuriken
+2) Dagger 
+
+3) Chopper
+
+B) Firearm:
+
+1) Dragon 
+
+2) Gun 
+
+3) CatePult
+
+
+C) Throwing Weapon:
+
+1) Bomb
+  
+2) Snow Ball
+  
+3) Fire Ball
+   
+4) Shuriken
  
-D)Consumable Weapon:
-1)Blue Potion(+Stamina)
-2)Red Potion(+Stamina) 
-3)Meat(+HP) 
-4)Fish(+HP)
+D) Consumable Weapon:
+
+1) Blue Potion(+Stamina)
+
+2) Red Potion(+Stamina) 
+
+3) Meat(+HP) 
+
+4) Fish(+HP)
 
 *Shop Of Dumbledore:
 ----------------------------
