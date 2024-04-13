@@ -245,9 +245,9 @@ public:
     int getExp() {return EXP;}
     void setExp(int exp) {EXP = exp;}
     double getHP() { return HP; }
-    void setHP(double hp1) { HP = hp1; }
+    void setHP(double hp) { HP = hp; }
     int getStamina() { return Stamina; }
-    void setStamina(int stam1) { Stamina = stam1; }
+    void setStamina(int stamina) { Stamina = stamina; }
     string getcolor() { return textColor; }
     int getStrength() { return Strength; }
     void setStrength(int strength) { Strength = strength; }
@@ -278,10 +278,15 @@ public:
             EXP += exp;
         return;
     }
-    void damage(double enemyWeapon) { HP = HP - enemyWeapon; } 
+    void damage(double enemyWeapon)
+    {
+        HP = HP - enemyWeapon;
+        if(HP < 0)
+            HP = 0;
+    } 
     void ShowInfo()
     {
-        cout << textColor << "Your Character: " << RED << "Level|" << Level << "|   " << "HP|" << HP << " (" << maxHp << ")|    " << "Stamina|" << Stamina << " (" << maxStamina << ")|    " << "Money|" << Money << "$|   " << textColor << endl;
+        cout << textColor << "Your Character: " << RED << "Level|" << Level << "|   " << "HP|" << HP << "(" << maxHp << ")|    " << "Stamina|" << Stamina << "(" << maxStamina << ")|    " << "Money|" << Money << "$|   " << textColor << endl;
     }
     void ShowMoney()
     {
@@ -382,7 +387,7 @@ public:
                         if (backpack->getWeaponName(i) == NameOfWeapon)
                         {
                             MyBool = true;
-                            cout << RED << "Sorry!You Can't Have More Than One Of This Weapon.Pleas Choose Another One." << textColor << endl;
+                            cout << RED << "Sorry!You Can't Have More Than One Of This Weapon.Please Choose Another One." << textColor << endl;
                             break;
                         }
                     }
@@ -542,14 +547,19 @@ public:
     int getHP() { return HP; }
     int getStamina() { return Stamina; }
     vector<Weapon> getWeapons() { return EnWeapons; }
-    void damage(double playerAttack) { HP = HP - playerAttack; }
     int getLevel() { return Level; }
     void levelUp() { Level += 1; }
     virtual void Attack(characters *player) = 0;
     virtual string EnemyName() = 0;
+    void damage(double playerAttack)
+    {
+        HP = HP - playerAttack;
+        if(HP < 0)
+            HP = 0;
+    }
     void ShowInfo(characters *Player)
     {
-        cout << GREEN << "Your Enemy:     " << RED << "Level|" << Level << "|   " << "HP|" << HP << " (" << maxHp << ")|    " << "Stamina|" << Stamina << " (" << maxStamina << ")|    " << "Type|" << EnemyName() << "|   " << Player->getcolor() << endl;
+        cout << GREEN << "Your Enemy:     " << RED << "Level|" << Level << "|   " << "HP|" << HP << "(" << maxHp << ")|    " << "Stamina|" << Stamina << "(" << maxStamina << ")|    " << "Type|" << EnemyName() << "|   " << Player->getcolor() << endl;
     }
 };
 //*****//
@@ -1261,7 +1271,7 @@ void Battlefield(characters *PlayerPtr, BackPack *PlayerBackpack)
             while (!back)
             {
                 cout << endl
-                     << "(0)Leave Battlefield" << endl;
+                     << "(0) Leave Battlefield" << endl;
                 cin >> num;
                 if (num == 0)
                 {
@@ -1280,7 +1290,7 @@ void Battlefield(characters *PlayerPtr, BackPack *PlayerBackpack)
             system(CLEAR);
             PlayerPtr->ShowInfo();
             EnemyPtr->ShowInfo(PlayerPtr);
-            cout << "Sorry, Your HP is now 0." << endl;
+            cout << "Sorry, Your HP Is Now 0." << endl;
             cout << "You've Died!" << endl;
             exit(1);
         }
@@ -1361,6 +1371,7 @@ characters *PreChar(characters *Player, CharFactory charfactorty, BackPack *back
     string WName;
     string type;
     int num = 1;
+    int level = 0;
     int damage = 0;
     int damageUp = 0;
     int price = 0;
@@ -1368,23 +1379,23 @@ characters *PreChar(characters *Player, CharFactory charfactorty, BackPack *back
     double priceUp = 0;
     while (getline(PreChar, line)) // Quantification
     {
-        if (num == 1)
+    	if (num == 1)
+    		level = stoi(line);
+        if (num == 2)
         {
             if (line == "JonSnow")
-                Player = charfactorty.createChar(1, "", 0, "", 0, 0, 0, 0, 0, 0, 0);
+                Player = charfactorty.createChar(1, "", 0, "", level, 0, 0, 0, 0, 0, 0);
             if (line == "Dumbledore")
-                Player = charfactorty.createChar(2, "", 0, "", 0, 0, 0, 0, 0, 0, 0);
+                Player = charfactorty.createChar(2, "", 0, "", level, 0, 0, 0, 0, 0, 0);
             if (line == "Michelangelo")
-                Player = charfactorty.createChar(3, "", 0, "", 0, 0, 0, 0, 0, 0, 0);
+                Player = charfactorty.createChar(3, "", 0, "", level, 0, 0, 0, 0, 0, 0);
         }
-        if (num == 2)
-            Player->setName(line);
         if (num == 3)
-            Player->setAge(stoi(line));
+            Player->setName(line);
         if (num == 4)
-            Player->setGender(line);
+            Player->setAge(stoi(line));
         if (num == 5)
-            Player->setLevel(stoi(line));
+            Player->setGender(line);
         if (num == 6)
             Player->setExp(stoi(line));
         if (num == 7)
@@ -1425,7 +1436,7 @@ characters *NewChar(bool isValid, characters *player, CharFactory charfactory)
     int age;
     string name;
     string gender;
-    cout << "Enter Your User Name: " << endl;
+    cout << "Enter Your Username: " << endl;
     cin >> name;
     if (!isDupName(name)) // To check if a name already contains a character
     {
@@ -1454,17 +1465,17 @@ characters *NewChar(bool isValid, characters *player, CharFactory charfactory)
             cin >> choice2;
             if (choice2 == 1)
             {
-                player = charfactory.createChar(1, name, age, gender, 1, 50, 100, 100, 0, 0, 0);
+                player = charfactory.createChar(1, name, age, gender, 1, 50, 100, 150, 0, 0, 0);
                 isValid = true;
             }
             if (choice2 == 2)
             {
-                player = charfactory.createChar(2, name, age, gender, 1, 50, 100, 100, 0, 0, 0);
+                player = charfactory.createChar(2, name, age, gender, 1, 50, 100, 150, 0, 0, 0);
                 isValid = true;
             }
             if (choice2 == 3)
             {
-                player = charfactory.createChar(3, name, age, gender, 1, 50, 100, 100, 0, 0, 0);
+                player = charfactory.createChar(3, name, age, gender, 1, 50, 100, 150, 0, 0, 0);
                 isValid = true;
             }
             if (!(choice2 == 1 || choice2 == 2 || choice2 == 3))
@@ -1527,11 +1538,11 @@ void SavePlayer(characters *Player, BackPack *backpack)
         exit(1);
         return;
     }
-    File << Player->getType() << endl
+    File << Player->getLevel() << endl
+    	 << Player->getType() << endl
          << Player->getName() << endl
          << Player->getAge() << endl
          << Player->getGender() << endl
-         << Player->getLevel() << endl
          << Player->getExp() << endl
          << Player->getStamina() << endl
          << Player->getHP() << endl
