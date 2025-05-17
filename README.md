@@ -2,7 +2,7 @@
 
 **Advanced Programming Course - Spring 1403**  
 **Department of Mathematics and Computer Science 
-**Iran University of Science and Technology**  
+**Iran University of Science and Technology
 
 
 ## About the Project
