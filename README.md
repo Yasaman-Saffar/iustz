@@ -1,8 +1,8 @@
 # IUSTZ - Text-Based RPG Game
 
 **Advanced Programming Course - Spring 1403**  
-**Department of Mathematics and Computer Science 
-**Iran University of Science and Technology
+**Department of Mathematics and Computer Science**
+**Iran University of Science and Technology**
 
 
 ## About the Project
