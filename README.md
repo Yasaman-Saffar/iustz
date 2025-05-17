@@ -1,4 +1,4 @@
-# Maze Maverick - Text-Based RPG Game
+# IUSTZ - Text-Based RPG Game
 
 **Advanced Programming Course - Spring 1403**  
 **Department of Mathematics and Computer Science - Iran University of Science and Technology**  
@@ -6,7 +6,7 @@ Instructor: Dr. Ebrahim Ardeshir Elraijani
 
 ## About the Project
 
-Maze Maverick is a C++ text-based RPG (Role Playing Game) project, designed and implemented using object-oriented principles. The game immerses players in a post-apocalyptic world where they must fight for survival against zombies and hostile humans.
+IUSTZ is a C++ text-based RPG (Role Playing Game) project, designed and implemented using object-oriented principles. The game immerses players in a post-apocalyptic world where they must fight for survival against zombies and hostile humans.
 
 ## Gameplay Summary
 
