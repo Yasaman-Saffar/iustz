@@ -59,4 +59,5 @@ IUSTZ is a C++ text-based RPG (Role Playing Game) project, designed and implemen
 ---
 
 > Final submission tagged as v1.0 in the Releases section
+
 > This project was developed as the first course project for the "Advanced Programming" class at IUST (Spring 1403).
