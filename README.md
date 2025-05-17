@@ -1,160 +1,58 @@
-*Charactres:
-----------------------------
-1) Jon Snow
+# Maze Maverick - Text-Based RPG Game
 
-2) Albus Dumbledore
+**Advanced Programming Course - Spring 1403**  
+**Department of Mathematics and Computer Science - Iran University of Science and Technology**  
+Instructor: Dr. Ebrahim Ardeshir Elraijani
 
-3) Michelangelo
+## About the Project
 
-*Skills:
-----------------------------
-1) Strength(for forearm)
+Maze Maverick is a C++ text-based RPG (Role Playing Game) project, designed and implemented using object-oriented principles. The game immerses players in a post-apocalyptic world where they must fight for survival against zombies and hostile humans.
 
-2) Intelligence(for cold weapons)
+## Gameplay Summary
 
-*Features:
-----------------------------
-1) Name
+- Players begin by creating and customizing a character (name, age, gender).
+- The game alternates between different **story phases** like battles and visiting the shop.
+- All interactions take place through the **terminal/console** using keyboard inputs.
+- Save/load system allows resuming a character's journey.
 
-2) Age
+## Key Features
 
-3) Gender
+- Turn-based battle system
+- 3 main characters to choose from:
+  - Jon Snow
+  - Dumbledore
+  - Michelangelo
+- Multiple enemy types:
+  - Normal Zombie
+  - Strong Zombie
+  - Human Enemy with FSM (Finite State Machine) logic
+- Skill & Leveling System:
+  - Level up by gaining XP
+  - Upgrade Strength or Intelligence to boost weapons
+- Backpack & Inventory Management:
+  - Cold Weapons, Firearms, Consumables, Throwables
+  - Weapon upgrade mechanics
+- In-game shop for purchasing items and weapons
+- Save/Load system (using `.txt` files)
 
-4) Money
+## Project Structure
 
-5) Skill Point
+- `characters/` → Character saves and name list  
+- `BackPack` & `Weapon` classes → Inventory system  
+- `characters`, `zombie`, `Human`, `EnemyFactory` → All game entities  
+- `main()` → Game loop and entry point
 
-6) Skills
+## Notes
 
-7) Hp
+- Please do **not rename, move or delete** folders/files (e.g., `characters/CharNames.txt`), as this may break the save/load system.
+- Built for **Windows OS** (due to `windows.h`, `Beep`, `conio.h`).
+- Ensure terminal supports ANSI color codes for colored text.
 
-8) Stamina
+## Team Members
 
-9) Level
+- Fateme Bakhshi  
+- Yasaman Saffar Tabasi
 
-10) Exp
+---
 
-11) BackPack
-
-*Shop Of Jon Snow:
-----------------------------
-A) Cold Weapons:
-
-1) Sword
-
-2) Dagger 
-
-3) Chopper
-
-B) Firearm:
-
-1) Dragon 
-
-2) Gun 
-
-3) CatePult
-
-
-C) Throwing Weapon:
-
-1) Bomb
-  
-2) Snow Ball
-  
-3) Fire Ball
-   
-4) Shuriken
- 
-D) Consumable Weapon:
-
-1) Blue Potion(+Stamina)
-
-2) Red Potion(+Stamina) 
-
-3) Meat(+HP) 
-
-4) Fish(+HP)
-
-*Shop Of Dumbledore:
-----------------------------
-A) Cold Weapons:
-
-1) Stupefy(Throwing Somthing)
-
-2) SecfumSempra(To Injure)
-
-3) Crucio(To Torture)
-
-B) Firearm:
-
-1) Incendio(Fire) 
-
-2) Fiendfyre Curse(Dragon) 
-
-3) Draught Og Living Death(Go To Death Mode)
-
-C) Throwing Weapon:
-
-1) Redacto(Blow Up)
-
-2) In Caeseros(Rope)
-
-3) Serpensortia(Throwing Snake)
-
-4) Avada Kedavra(To Kill)
- 
-D) Consumable Weapon:
-
-1) Felix Felicis(Increas Energy/+Stamina)
-
-2) Fiantodon(Protect/+Stamina)
-   
-3) Elixir OF Life(+HP) 
-
-4) Episci(Prevent Bleeding/+HP)
-
-*Shop Of Michelangelo:
-----------------------------
-A) Cold Weapons:
-
-1) Sword
-
-2) Dagger
-
-3) Nanchiko
-
-B) Firearm:
-
-1) Colt
-  
-3) ShutGun
-  
-4) Winchester
-
-C) Throwing Weapon:
-
-1) Bomb 
-
-2) Smoker
-
-3) Boomerang 
-
-4) ThrowingKnife
- 
-D) Consumable Weapon:
-
-1) Coca(+Stamina) 
-
-2) IceMonkey(+Stamina)
-
-3) Pizza(+HP) 
-
-4) FrenchFries(+HP)
-   
-*Enemy:
-----------------------------
-1) Zombie
-
-2) Strong Zombie
-
-3) Human
+> This project was developed as the first course project for the "Advanced Programming" class at IUST (Spring 1403).
