@@ -51,8 +51,10 @@ IUSTZ is a C++ text-based RPG (Role Playing Game) project, designed and implemen
 
 ## Team Members
 
-- Fateme Bakhshi  
+- Fateme Bakhshi
+- Mahshid Rajabirad
 - Yasaman Saffar Tabasi
+- Parmis Miremadi
 
 ---
 
